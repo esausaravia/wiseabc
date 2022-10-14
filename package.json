@@ -1,0 +1,37 @@
+{
+    "private": true,
+    "scripts": {
+        "dev": "npm run development",
+        "development": "npm-run-all -s dev:*",
+        "dev:twcss": "tailwindcss -o resources/css/tailwind.css",
+        "dev:mix": "mix",
+        "watch": "npm-run-all -p watch:*",
+        "watchbak": "mix watch",
+        "watch:twcss": "tailwindcss -o resources/css/tailwind.css -w",
+        "watch:mix": "mix watch -- --watch-options-poll=1000",
+        "watch-poll": "mix watch -- --watch-options-poll=1000",
+        "hot": "mix watch --hot",
+        "prod": "npm run production",
+        "production": "npm-run-all -s prod:*",
+        "productionbak": "mix --production",
+        "prod:twcss": "npm run dev:twcss",
+        "prod:mix": "mix --production"
+    },
+    "devDependencies": {
+        "@fortawesome/fontawesome-svg-core": "^6.2.0",
+        "@fortawesome/free-brands-svg-icons": "^6.2.0",
+        "@fullhuman/postcss-purgecss": "^5.0.0",
+        "@tailwindcss/aspect-ratio": "^0.4.2",
+        "autoprefixer": "^10.4.12",
+        "axios": "^0.27",
+        "laravel-mix": "^6.0.49",
+        "lodash": "^4.17.19",
+        "npm-run-all": "^4.1.5",
+        "postcss": "^8.4.16",
+        "postcss-import": "^15.0.0",
+        "tailwindcss": "^3.1.8"
+    },
+    "dependencies": {
+        "lazysizes": "^5.3.2"
+    }
+}
