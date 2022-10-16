@@ -31,7 +31,11 @@ class FortifyServiceProvider extends ServiceProvider
       public function toResponse($request) {
         $user = Auth::user();
 
-        //dd(['user_type'=>$user->user_type, 'status'=>$user->status]);
+        if ($user->user_type===1) {
+          return $request->wantsJson()
+            ? response()->json(['redirect' => route('admin.home') ])
+            : redirect()->route('admin.home');
+        }
 
         if ($user->user_type===2 && $user->status===1) {
           return $request->wantsJson()

@@ -7,7 +7,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\Rule;
 
-class ProfesorController extends Controller
+class TeacherController extends Controller
 {
   public function registro(Request $request) {
     $validated = $request->validate([
@@ -49,10 +49,11 @@ class ProfesorController extends Controller
     $user = User::create([
         'name' => $input['name'],
         'email' => $input['email'],
-        'password' => Hash::make($input['password']),
-        'user_type' => 3,
-        'status' => 0
+        'password' => Hash::make($input['password'])
     ]);
+    $user->user_type = 3;
+    $user->status = 0;
+    $user->save();
 
     foreach ( $metasrc AS $mk=>$mv)
     {

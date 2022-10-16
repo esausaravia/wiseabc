@@ -1,6 +1,7 @@
 <?php
 
-use App\Http\Controllers\ProfesorController;
+use App\Models\User;
+use App\Http\Controllers\TeacherController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
@@ -27,6 +28,10 @@ Route::get('/', function () {
 })->middleware('auth')->name('home');
 
 Route::get('/elegir-suscripcion', function(){
+	$user = Auth::user();
+	if ( $user->user_type!=2 ) {
+		return redirect()->route('home');
+	}
 	return view('student.elegir-suscripcion');
 })->middleware('auth')->name('elegir-suscripcion');
 
@@ -40,23 +45,33 @@ Route::post('/elegir-suscripcion', function(Request $request){
 		'metaval' => $request->suscripcion
 	]);
 	$user->save();
-	$user->refresh();
 
 	return redirect()->route('home');
 
 })->middleware('auth')->name('elegir-suscripcion');
 
 Route::get('/registro-profesor', function () {
-	return view('profesor.registro');
+	return view('teacher.registro');
 })->name('regprof');
 
-Route::post('/registro-profesor2', [ProfesorController::class, 'registro'])->name('regprof2');
+Route::post('/registro-profesor', [TeacherController::class, 'registro'])->name('regprof');
 
 Route::get('/gracias-profesor', function(){
-	return view('profesor.gracias-registro');
+	return view('teacher.gracias-registro');
 })->name('gracias-profesor');
 
 Route::get('/salir', function(){
 	\Illuminate\Support\Facades\Auth::logout();
 	return redirect('/login');
 })->name('logout');
+
+/**
+ * ADMINISTRADOR
+ */
+Route::group(['prefix'=>'admin','as'=>'admin.','middleware' => ['auth','admin']], function(){
+
+	Route::get('dashboard', function(){
+		return view('admin.dashboard');
+	})->name('home');
+
+});

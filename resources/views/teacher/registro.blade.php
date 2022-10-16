@@ -1,7 +1,7 @@
 <x-layoutreg container-class="py-12 lg:flex">
   <section class="lg:w-2/3 xl:w-3/4 mb-12 lg:mb-0">
     <h2 class="text-2xl md:text-3xl font-bold font-accent">Registro de profesor</h2>
-    <form id="frmRegProf" name="frmRegProf" class="form-stepped" action="{{ route('regprof2') }}" method="post" >
+    <form id="frmRegProf" name="frmRegProf" class="form-stepped" action="{{ route('regprof') }}" method="post" >
       @csrf
       <input type="hidden" name="jstimezone" value="" />
       <input type="hidden" name="jsTimezoneOffset" value="" />
@@ -32,15 +32,15 @@
       <section class="form-step grid gap-5 md:grid-cols-2">
         <div>
           <label for="ifname" class="block">Nombre <span class="text-rojo">*</span></label>
-          <input type="text" id="ifname" name="fname" placeholder="Nombre *" required aria-required="true" class=" w-full border border-gray-600 dark:border-gray-400 px-2 py-[3px] rounded-[4px] leading-8 dark:text-gray-600" value="{{ old('fname') }}" />
+          <input type="text" id="ifname" name="fname" placeholder="Nombre *" required aria-required="true" class=" block w-full shadow-sm rounded-md px-3 py-2 sm:text-sm bg-white border border-slate-300 placeholder-slate-400 focus:border-sky-500 focus:ring-sky-500 focus:ring-1 invalid:border-pink-500 invalid:text-pink-600 focus:invalid:border-pink-500 focus:invalid:ring-pink-500" value="{{ old('fname') }}" />
         </div>
         <div>
           <label for="ilname" class="block">Apellidos <span class="text-rojo">*</span></label>
-          <input type="text" id="ilname" name="lname" placeholder="Apellido *" required aria-required="true" class="w-full border border-gray-600 dark:border-gray-400 px-2 py-[3px] rounded-[4px] leading-8 dark:text-gray-600" value="{{ old('lname') }}" />
+          <input type="text" id="ilname" name="lname" placeholder="Apellido *" required aria-required="true" class="block w-full shadow-sm rounded-md px-3 py-2 sm:text-sm bg-white border border-slate-300 placeholder-slate-400 focus:border-sky-500 focus:ring-sky-500 focus:ring-1 invalid:border-pink-500 invalid:text-pink-600 focus:invalid:border-pink-500 focus:invalid:ring-pink-500" value="{{ old('lname') }}" />
         </div>
         <div>
           <label for="iemail" class="block">Email <span class="text-rojo">*</span></label>
-          <input type="email" id="iemail" name="email" placeholder="Correo electrónico *" required aria-required="true" class="w-full border border-gray-600 dark:border-gray-400 px-2 py-[3px] rounded-[4px] leading-8 dark:text-gray-600 invalid:border-rose-900 invalid:bg-rose-200  peer" value="{{ old('email') }}" />
+          <input type="email" id="iemail" name="email" placeholder="Correo electrónico *" required aria-required="true" class="block w-full shadow-sm rounded-md px-3 py-2 sm:text-sm bg-white border border-slate-300 placeholder-slate-400 focus:border-sky-500 focus:ring-sky-500 focus:ring-1 invalid:border-pink-500 invalid:text-pink-600 focus:invalid:border-pink-500 focus:invalid:ring-pink-500" value="{{ old('email') }}" />
           @error('email')
             <script>document.getElementById('iemail').focus();</script>
             <p class="alert text-sm text-rose-700">{{ $message }}</p>
@@ -48,25 +48,25 @@
         </div>
         <div>
           <label for="itel" class="block">Teléfono <span class="text-rojo">*</span></label>
-          <input type="tel" id="itel" name="tel" placeholder="Teléfono *" required aria-required="true" pattern="[0-9()#&+*-=.]+" class="w-full border border-gray-600 dark:border-gray-400 px-2 py-[3px] rounded-[4px] leading-8 dark:text-gray-600" value="{{ old('tel') }}" />
+          <input type="tel" id="itel" name="tel" placeholder="Teléfono *" required aria-required="true" pattern="[0-9()#&+*-=.]+" class="block w-full shadow-sm rounded-md px-3 py-2 sm:text-sm bg-white border border-slate-300 placeholder-slate-400 focus:border-sky-500 focus:ring-sky-500 focus:ring-1 invalid:border-pink-500 invalid:text-pink-600 focus:invalid:border-pink-500 focus:invalid:ring-pink-500" value="{{ old('tel') }}" />
         </div>
         <div>
           <label for="ipais" class="block">País <span class="text-rojo">*</span></label>
-          <input type="text" id="ipais" name="pais" placeholder="País *" required aria-required="true" class=" w-full border border-gray-600 dark:border-gray-400 px-2 py-[3px] rounded-[4px] leading-8 dark:text-gray-600" value="{{ old('pais') }}" />
+          <input type="text" id="ipais" name="pais" placeholder="País *" required aria-required="true" class=" block w-full shadow-sm rounded-md px-3 py-2 sm:text-sm bg-white border border-slate-300 placeholder-slate-400 focus:border-sky-500 focus:ring-sky-500 focus:ring-1 invalid:border-pink-500 invalid:text-pink-600 focus:invalid:border-pink-500 focus:invalid:ring-pink-500" value="{{ old('pais') }}" />
         </div>
         <div>
           <label for="icity" class="block">Ciudad <span class="text-rojo">*</span></label>
-          <input type="text" id="icity" name="city" placeholder="Ciudad *" required aria-required="true" class="w-full border border-gray-600 dark:border-gray-400 px-2 py-[3px] rounded-[4px] leading-8 dark:text-gray-600" value="{{ old('city') }}" />
+          <input type="text" id="icity" name="city" placeholder="Ciudad *" required aria-required="true" class="block w-full shadow-sm rounded-md px-3 py-2 sm:text-sm bg-white border border-slate-300 placeholder-slate-400 focus:border-sky-500 focus:ring-sky-500 focus:ring-1 invalid:border-pink-500 invalid:text-pink-600 focus:invalid:border-pink-500 focus:invalid:ring-pink-500" value="{{ old('city') }}" />
         </div>
 
         <div class="col-span-2">
           <label for="iexpe" class="block">Experiencia <span class="text-rojo">*</span></label>
-          <textarea name="experiencia" id="iexpe" rows="6" required aria-required="true" class="w-full border border-gray-600 dark:border-gray-400 px-2 py-[3px] rounded-[4px] dark:text-gray-600" placeholder="Describanos su experiencia impartiendo clases de Ingles">{{ old('experiencia') }}</textarea>
+          <textarea name="experiencia" id="iexpe" rows="6" required aria-required="true" class="block w-full shadow-sm rounded-md px-3 py-2 sm:text-sm bg-white border border-slate-300 placeholder-slate-400 focus:border-sky-500 focus:ring-sky-500 focus:ring-1 invalid:border-pink-500 invalid:text-pink-600 focus:invalid:border-pink-500 focus:invalid:ring-pink-500" placeholder="Describanos su experiencia impartiendo clases de Ingles">{{ old('experiencia') }}</textarea>
         </div>
 
         <div class="col-span-2">
           <label for="icerts" class="block">Certificaciones <span class="text-rojo">*</span></label>
-          <textarea name="certificaciones" id="icerts" rows="6" required aria-required="true" class="w-full border border-gray-600 dark:border-gray-400 px-2 py-[3px] rounded-[4px] dark:text-gray-600" placeholder="Enliste las certificaciones con las que cuenta, en materia de enseñanza y dominio del idioma.">{{ old('certificaciones') }}</textarea>
+          <textarea name="certificaciones" id="icerts" rows="6" required aria-required="true" class="block w-full shadow-sm rounded-md px-3 py-2 sm:text-sm bg-white border border-slate-300 placeholder-slate-400 focus:border-sky-500 focus:ring-sky-500 focus:ring-1 invalid:border-pink-500 invalid:text-pink-600 focus:invalid:border-pink-500 focus:invalid:ring-pink-500" placeholder="Enliste las certificaciones con las que cuenta, en materia de enseñanza y dominio del idioma.">{{ old('certificaciones') }}</textarea>
         </div>
 
         <span></span>
