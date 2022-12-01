@@ -15,13 +15,14 @@ class StudentController extends Controller
    *
    * @return \Illuminate\Http\Response
    */
-  public function index()
+  public function index(Request $request)
   {
     //
-    $students = User::where('user_type', 2)->with(['usermetas','classrooms'])->orderBy('name')->get();
-    return view('admin.students', [
-      'alumnos'=>$students
-    ]);
+    $search = $request->get('searchfor');
+    $students = User::where('user_type', 2)->where('name','like','%'.$search.'%')->with(['usermetas','classrooms'])->orderBy('name')->get();
+
+
+    return view('admin.students', compact('students','search'));
   }
 
   /**
