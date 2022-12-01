@@ -13,6 +13,7 @@ mix.disableNotifications();
  */
 
 mix.js('resources/js/app.js', 'public/js')
+    //.js('resources/js/fontawesome.js','public/js')
     .css('resources/css/app.css', 'public/css')
     .options({
       processCssUrls: false,

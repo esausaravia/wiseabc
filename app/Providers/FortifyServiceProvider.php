@@ -29,7 +29,7 @@ class FortifyServiceProvider extends ServiceProvider
     //
     $this->app->instance(LoginResponse::class, new class implements LoginResponse{
       public function toResponse($request) {
-        $user = Auth::user();
+        $user = $request->user();
 
         if ($user->user_type===1) {
           return $request->wantsJson()
@@ -37,10 +37,10 @@ class FortifyServiceProvider extends ServiceProvider
             : redirect()->route('admin.home');
         }
 
-        if ($user->user_type===2 && $user->status===1) {
+        if ($user->user_type===2 && $user->suscripcion===null) {
           return $request->wantsJson()
-            ? response()->json(['redirect' => route('elegir-suscripcion') ])
-            : redirect()->route('elegir-suscripcion');
+            ? response()->json(['redirect' => route('student.elegir-suscripcion') ])
+            : redirect()->route('student.elegir-suscripcion');
         }
 
         return $request->wantsJson()

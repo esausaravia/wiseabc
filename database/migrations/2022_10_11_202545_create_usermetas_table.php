@@ -2,6 +2,7 @@
 
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
+use Illuminate\Support\Facades\Schema;
 
 class CreateUsermetasTable extends Migration
 {
@@ -16,7 +17,7 @@ class CreateUsermetasTable extends Migration
             $table->bigIncrements('id');
             $table->unsignedBigInteger('user_id');
             $table->foreign('user_id')->references('id')->on('users');
-            $table->string('metakey');
+            $table->string('metakey')->index();
             $table->string('metaval');
         });
     }

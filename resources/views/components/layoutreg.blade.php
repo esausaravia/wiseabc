@@ -13,6 +13,7 @@
 
   <link rel="stylesheet" href="{{ mix('css/app.css') }}">
   <script src="{{ mix('js/app.js') }}" defer></script>
+  <script src="https://kit.fontawesome.com/161bce774c.js" crossorigin="anonymous" defer></script>
   <script>
     window.app = window.app || {};
     window.app.home = '{{ route('home') }}';
@@ -27,7 +28,7 @@
         <img src="{{asset('img/wiseabc-logo-white.svg')}}" alt="" class="hidden dark:block w-auto h-[52px] md:h-[120px]" />
       </a>
 
-      <button class="btn btn-toggle-mobilemenu md:hidden w-12 text-azul dark:text-gray-200 text-center text-[22px] leading-none"><i class="fa-regular fa-bars"></i></button>
+      <button class="btn btn-toggle-mobilemenu md:hidden w-12 text-azul dark:text-gray-200 text-center text-[22px] leading-none"><i class="fa-light fa-bars"></i></button>
 
       <section id="MobileMenu" class="hidden bg-black/30 fixed top-0 right-0 z-20 flex h-[100vh] w-full">
         <div class="backdrop btn-toggle-mobilemenu flex-grow"></div>
@@ -47,7 +48,7 @@
               </span>
             </label>
 
-            <button class="btn btn-toggle-mobilemenu md:hidden w-12 text-azul dark:text-gray-200 text-center text-[22px] leading-12"><i class="fa-regular fa-times"></i></button>
+            <button class="btn btn-toggle-mobilemenu md:hidden w-12 text-azul dark:text-gray-200 text-center text-[22px] leading-12"><i class="fa-light fa-times"></i></button>
           </div>
           <nav class="flex-grow flex flex-col font-accent font-medium text-lg">
 
@@ -72,7 +73,7 @@
             <a href="{{ route('login') }}" class="p-2">Acceso</a>
             <a href="{{ route('register') }}" class="p-2">Registro</a>
           @else
-            <span class="p-2">Hola {{ $user->fname }}</span>
+            <span class="p-2">Hola {{ !empty($user->fname) ? $user->fname : $user->name }}</span>
             <a href="{{ route('logout') }}" class="p-2">Salir</a>
           @endguest
           <label for="darkmode-toggler1" class="inline-flex relative items-center cursor-pointer ml-2">

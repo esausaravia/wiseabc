@@ -20,7 +20,7 @@ class CreateNewUser implements CreatesNewUsers
      */
     public function create(array $input)
     {
-        Validator::make($input, [
+        $valid = Validator::make($input, [
             'fname' => ['required', 'string', 'max:255'],
             'lname' => ['required', 'string', 'max:255'],
             'email' => [
@@ -31,48 +31,21 @@ class CreateNewUser implements CreatesNewUsers
                 Rule::unique(User::class),
             ],
             'password' => $this->passwordRules(),
+            'tel' => ['required', 'regex:/[0-9()#&+*-=.]+/i' ],
+            'edad' => ['required', 'integer'],
+            'nivel' => ['required', 'integer'],
         ])->validate();
 
-        $input['name'] = $input['fname'].' '.$input['lname'];
-
-        $metasrc = $input;
-        unset($metasrc['_token'],$metasrc['name'],$metasrc['email'],$metasrc['password'],$metasrc['password_confirmation']);
-
-        foreach ( $metasrc AS $mk=>$mv)
-        {
-            if (is_array($mv) || is_object($mv) )
-            {
-                $mv = json_encode($mv, JSON_UNESCAPED_UNICODE);
-                $metasrc[$mk] = $mv;
-            }
-        }
-
         $user = User::create([
-            'name' => $input['name'],
+            'name' => ucwords($input['fname'].' '.$input['lname']),
             'email' => $input['email'],
             'password' => Hash::make($input['password']),
         ]);
 
-        foreach ( $metasrc AS $mk=>$mv)
-        {
-            if (is_array($mv) || is_object($mv) )
-            {
-                $mv = json_encode($mv, JSON_UNESCAPED_UNICODE);
-            }
-            if ( strlen($mv)>250 )
-            {
-                $mv_arr = str_split($mv, 250);
-                foreach($mv_arr AS $_mv) {
-                    echo "{$mk} : {$_mv} \n";
-                    $user->usermetas()->create(['metakey'=>$mk,'metaval'=>$_mv]);
-                }
-            }
-            else
-            {
-                echo "{$mk} : {$mv} \n";
-                $user->usermetas()->create(['metakey'=>$mk, 'metaval'=>$mv]);
-            }
-        }
+        $temp = array(1=>$input['horarios']);
+
+        $user->saveHorarios($temp);
+        $user->saveMetas($input);
 
         return $user;
     }

@@ -11,6 +11,7 @@ class img extends Component
     public $src_url = "";
     public $width = 0;
     public $height = 0;
+    public $srcset = "";
 
     protected $except = ['_src'];
     /**
@@ -18,11 +19,12 @@ class img extends Component
      *
      * @return void
      */
-    public function __construct($src="", $width=1, $height=1)
+    public function __construct($src="", $width=1, $height=1, $srcset="")
     {
         $this->_src = $src;
         $this->width = $width;
         $this->height = $height;
+        $this->srcset = $srcset;
 
         if ( filter_var($src, FILTER_VALIDATE_URL)!==FALSE ) {
 

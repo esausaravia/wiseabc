@@ -25,7 +25,7 @@
               <li>40 min.</li>
               <li>1 clase por semana</li>
             </ul>
-            <form action="{{ route('elegir-suscripcion') }}" method="post" class="mt-7">
+            <form action="{{ route('student.elegir-suscripcion') }}" method="post" class="mt-7">
               @csrf <input type="hidden" name="suscripcion" value="1" />
               <button type="submit" class="rounded-lg px-4 py-3 bg-rojo text-white font-accent font-medium ">Continuar</button>
             </form>
@@ -46,7 +46,7 @@
               <li>40 min.</li>
               <li>2 clases por semana</li>
             </ul>
-            <form action="{{ route('elegir-suscripcion') }}" method="post" class="mt-7">
+            <form action="{{ route('student.elegir-suscripcion') }}" method="post" class="mt-7">
               @csrf <input type="hidden" name="suscripcion" value="2" />
               <button type="submit" class="rounded-lg px-4 py-3 bg-rojo text-white font-accent font-medium ">Continuar</button>
             </form>
@@ -67,7 +67,7 @@
               <li>40 min.</li>
               <li>3 clases por semana</li>
             </ul>
-            <form action="{{ route('elegir-suscripcion') }}" method="post" class="mt-7">
+            <form action="{{ route('student.elegir-suscripcion') }}" method="post" class="mt-7">
               @csrf <input type="hidden" name="suscripcion" value="3" />
               <button type="submit" class="rounded-lg px-4 py-3 bg-rojo text-white font-accent font-medium ">Continuar</button>
             </form>
@@ -88,7 +88,7 @@
               <li>40 min.</li>
               <li>4 clases por semana</li>
             </ul>
-            <form action="{{ route('elegir-suscripcion') }}" method="post" class="mt-7">
+            <form action="{{ route('student.elegir-suscripcion') }}" method="post" class="mt-7">
               @csrf <input type="hidden" name="suscripcion" value="4" />
               <button type="submit" class="rounded-lg px-4 py-3 bg-azul text-white font-accent font-medium ">Continuar</button>
             </form>
@@ -116,7 +116,7 @@
               <li>40 min.</li>
               <li>1 clase por semana</li>
             </ul>
-            <form action="{{ route('elegir-suscripcion') }}" method="post" class="mt-7">
+            <form action="{{ route('student.elegir-suscripcion') }}" method="post" class="mt-7">
               @csrf <input type="hidden" name="suscripcion" value="5" />
               <button type="submit" class="rounded-lg px-4 py-3 bg-rojo text-white font-accent font-medium ">Continuar</button>
             </form>
@@ -137,7 +137,7 @@
               <li>40 min.</li>
               <li>2 clases por semana</li>
             </ul>
-            <form action="{{ route('elegir-suscripcion') }}" method="post" class="mt-7">
+            <form action="{{ route('student.elegir-suscripcion') }}" method="post" class="mt-7">
               @csrf <input type="hidden" name="suscripcion" value="6" />
               <button type="submit" class="rounded-lg px-4 py-3 bg-rojo text-white font-accent font-medium ">Continuar</button>
             </form>
@@ -158,7 +158,7 @@
               <li>40 min.</li>
               <li>3 clases por semana</li>
             </ul>
-            <form action="{{ route('elegir-suscripcion') }}" method="post" class="mt-7">
+            <form action="{{ route('student.elegir-suscripcion') }}" method="post" class="mt-7">
               @csrf <input type="hidden" name="suscripcion" value="7" />
               <button type="submit" class="rounded-lg px-4 py-3 bg-rojo text-white font-accent font-medium ">Continuar</button>
             </form>
@@ -179,7 +179,7 @@
               <li>40 min.</li>
               <li>4 clases por semana</li>
             </ul>
-            <form action="{{ route('elegir-suscripcion') }}" method="post" class="mt-7">
+            <form action="{{ route('student.elegir-suscripcion') }}" method="post" class="mt-7">
               @csrf <input type="hidden" name="suscripcion" value="8" />
               <button type="submit" class="rounded-lg px-4 py-3 bg-azul text-white font-accent font-medium ">Continuar</button>
             </form>

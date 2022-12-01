@@ -9,7 +9,8 @@ module.exports = {
   theme: {
     fontFamily:{
       'sans': ['"Open Sans"', defaultTheme.fontFamily.sans],
-      'accent': ['Montserrat', defaultTheme.fontFamily.sans]
+      'accent': ['Montserrat', defaultTheme.fontFamily.sans],
+      'mono': ['monospace']
     },
     extend: {
       blur: {
@@ -29,11 +30,15 @@ module.exports = {
         '40': '2.5rem'
       },
       lineHeight: {
-        '12': '3rem'
+        '12': '3rem',
+        '22px': '1.375rem'
       },
       spacing: {
         '10px': '0.625rem'
-      }
+      }/*,
+      screens: {
+        xl: '1200px'
+      }*/
     },
     container: {
       center: true
