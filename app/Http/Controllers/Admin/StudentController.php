@@ -19,11 +19,12 @@ class StudentController extends Controller
   {
     //
     $search = $request->get('searchfor');
-    if (str_contains($search, '@')) {
-      $students = User::where('user_type', 2)->where('email', 'like', '%'.$search.'%')->with(['usermetas','classrooms'])->orderBy('name')->get();
-    } else {
-      $students = User::where('user_type', 2)->where('name', 'like', '%'.$search.'%')->with(['usermetas','classrooms'])->orderBy('name')->get();
-    }
+    $students = User::where('user_type', 2)->where(function($query) use ($search) {
+      $query->where('name', 'like', '%'.$search.'%')
+        ->orWhere('email', 'like', '%'.$search.'%');
+    })->with(['usermetas','classrooms'])->orderBy('name')->get();
+
+
 
     return view('admin.students', compact('students','search'));
   }

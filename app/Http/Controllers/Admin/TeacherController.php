@@ -17,12 +17,15 @@ class TeacherController extends Controller
      */
     public function index(Request $request)
     {
+
+
       $search = $request->get('searchfor');
-      if (str_contains($search, '@')) {
-        $profes = User::where('user_type', 3)->where('email', 'like', '%'.$search.'%')->with(['usermetas','classrooms'])->orderBy('name')->get();
-      } else {
-        $profes = User::where('user_type', 3)->where('name', 'like', '%'.$search.'%')->with(['usermetas','classrooms'])->orderBy('name')->get();
-      }
+      //create query get user_type 2  and search for name or email
+      $profes = User::where('user_type', 3)->where(function($query) use ($search) {
+        $query->where('name', 'like', '%'.$search.'%')
+          ->orWhere('email', 'like', '%'.$search.'%');
+      })->with(['usermetas','classrooms'])->orderBy('name')->get();
+
         return view('admin.profes', compact('profes','search'));
     }
 
