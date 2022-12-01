@@ -8,7 +8,10 @@
       <span>Agregar</span>
     </a>
   </div>
-
+  <form>
+    <input type="search" name="searchfor" value="{{$search}}">
+    <button type="submit">Buscar</button>
+  </form>
   <table class="border border-black/5 dark:border-white/5">
     <thead class="text-left">
       <tr class="bg-black/5 dark:bg-white/5">

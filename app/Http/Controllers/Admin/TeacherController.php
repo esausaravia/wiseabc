@@ -15,12 +15,11 @@ class TeacherController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
-        $profes = User::where('user_type',3)->orderBy('name')->get();
-        return view('admin.profes', [
-            'profes'=>$profes
-        ]);
+      $search = $request->get('searchfor');
+      $profes = User::where('user_type',3)->where('name', 'like','%'.$search.'%')->orderBy('name')->get();
+        return view('admin.profes', compact('profes','search'));
     }
 
     /**
