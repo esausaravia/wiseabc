@@ -10,28 +10,33 @@
     </a>
   </div>--}}
 
-  <form>
+
     <div class="flex items-center my-3">
-
-    <div class="mr-2 mb-5">
-      <label for="searchfor">Buscar:</label>
-      <x-forms.input name="searchfor" id="searchfor" value="{{$search}}" type="search"/>
+      <form class="inline-flex">
+        <div class="mr-2 mb-5">
+          <label for="searchfor">Buscar:</label>
+          <x-forms.input name="searchfor" id="searchfor" value="{{$search}}" type="search"/>
+        </div>
+        <div class="mr-3 mb-5">
+          <x-forms.select label="Nivel" name="nivel" :options="config('wiseabc.nivel_labels')" ></x-forms.select>
+        </div>
+        <div class="mr-3 mb-5">
+          <x-forms.select label="Edad" name="edad" :options="config('wiseabc.edad_labels')" ></x-forms.select>
+        </div>
+        <div class="mr-3 mb-5">
+          <x-forms.select label="Estatus" name="estatus" :options="config('wiseabc.estatus')" ></x-forms.select>
+        </div>
+        <div class="mr-3 mt-5">
+          <button class="h-12 xl:h-8 shadow-md rounded-2xl px-3 bg-rojo text-white text-center flex items-center" type="submit">Buscar</button>
+        </div>
+      </form>
+      <form class="inline-flex">
+        <div class="mr-3 mb-1">
+          <x-forms.input name="searchfor" id="searchfor" value="" type="hidden"></x-forms.input>
+          <button class="h-12 xl:h-8 shadow-md rounded-2xl px-3 bg-blue-700 text-white text-center flex items-center" type="submit">Limpiar</button>
+        </div>
+      </form>
     </div>
-    <div class="mr-3 mb-5">
-      <x-forms.select label="Nivel" name="nivel" :options="config('wiseabc.nivel_labels')" ></x-forms.select>
-    </div>
-    <div class="mr-3 mb-5">
-      <x-forms.select label="Edad" name="edad" :options="config('wiseabc.edad_labels')" ></x-forms.select>
-    </div>
-    <div class="mr-3 mb-5">
-      <x-forms.select label="Estatus" name="estatus" :options="config('wiseabc.estatus')" ></x-forms.select>
-    </div>
-    <div class="mr-3">
-      <button class="h-12 xl:h-8 shadow-md rounded-2xl px-3 bg-rojo text-white text-center flex items-center" type="submit">Buscar</button>
-    </div>
-
-    </div>
-  </form>
 
   <table class="border border-black/5 dark:border-white/5">
     <thead class="text-left">
