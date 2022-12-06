@@ -20,13 +20,14 @@ class TeacherController extends Controller
 
 
       $search = $request->get('searchfor');
-      //create query get user_type 2  and search for name or email
-      $profes = User::where('user_type', 3)->where(function($query) use ($search) {
+      $nivel = $request->get('nivel');
+      $profes = User::where('user_type', 3)->when($search, function($query) use ($search) {
         $query->where('name', 'like', '%'.$search.'%')
           ->orWhere('email', 'like', '%'.$search.'%');
       })->with(['usermetas','classrooms'])->orderBy('name')->get();
 
-        return view('admin.profes', compact('profes','search'));
+
+      return view('admin.profes', compact('profes','search'));
     }
 
     /**

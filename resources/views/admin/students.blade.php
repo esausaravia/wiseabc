@@ -9,10 +9,30 @@
       <span>Agregar</span>
     </a>
   </div>--}}
+
   <form>
-    <input type="search" name="searchfor" value="{{$search}}">
-    <button type="submit">Buscar</button>
+    <div class="flex items-center my-3">
+
+    <div class="mr-2 mb-5">
+      <label for="searchfor">Buscar:</label>
+      <x-forms.input name="searchfor" id="searchfor" value="{{$search}}" type="search"/>
+    </div>
+    <div class="mr-3 mb-5">
+      <x-forms.select label="Nivel" name="nivel" :options="config('wiseabc.nivel_labels')" ></x-forms.select>
+    </div>
+    <div class="mr-3 mb-5">
+      <x-forms.select label="Edad" name="edad" :options="config('wiseabc.edad_labels')" ></x-forms.select>
+    </div>
+    <div class="mr-3 mb-5">
+      <x-forms.select label="Estatus" name="estatus" :options="config('wiseabc.estatus')" ></x-forms.select>
+    </div>
+    <div class="mr-3">
+      <button class="h-12 xl:h-8 shadow-md rounded-2xl px-3 bg-rojo text-white text-center flex items-center" type="submit">Buscar</button>
+    </div>
+
+    </div>
   </form>
+
   <table class="border border-black/5 dark:border-white/5">
     <thead class="text-left">
       <tr class="bg-black/5 dark:bg-white/5">

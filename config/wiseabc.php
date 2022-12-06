@@ -1,6 +1,7 @@
 <?php
 return [
   'edad_labels' => [
+    0=>'',
     3 => '3-5',
     6 => '6-11',
     12 => '12-17',
@@ -15,6 +16,7 @@ return [
   ],
 
   'nivel_labels' => [
+    0=>'',
     1=>'A1',
     2=>'A2',
     3=>'B1',
@@ -117,5 +119,12 @@ return [
     19=>'19:00',
     20=>'20:00',
     21=>'21:00'
+  ],
+
+  'estatus' =>[
+    ''=>'',
+    'disabled'=>'Desactivado',
+    'active'=>'Activo',
+    'suscribed'=>'Suscrito',
   ]
 ];

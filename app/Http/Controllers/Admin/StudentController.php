@@ -19,14 +19,19 @@ class StudentController extends Controller
   {
     //
     $search = $request->get('searchfor');
-    $students = User::where('user_type', 2)->where(function($query) use ($search) {
+    $nivel = $request->get('nivel');
+    $edad = $request->get('edad');
+    $estatus = $request->get('estatus');
+
+    $students = User::where('user_type', 2)->when($search, function($query) use ($search) {
       $query->where('name', 'like', '%'.$search.'%')
         ->orWhere('email', 'like', '%'.$search.'%');
+    })->when($estatus, function($query) use ($estatus) {
+      $query->where('status', $estatus);
     })->with(['usermetas','classrooms'])->orderBy('name')->get();
 
-
-
-    return view('admin.students', compact('students','search'));
+    $nivel = DB::table('cursos')->get();
+    return view('admin.students', compact('students','search', 'nivel'));
   }
 
   /**

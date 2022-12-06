@@ -1,16 +1,26 @@
 <x-admin.layout>
   <h1 class="text-3xl font-accent font-bold">Profesores</h1>
 
-  <div class="flex justify-between items-center my-3">
 
-    <a href="{{ route('admin.teacher.create') }}" class="h-12 xl:h-8 shadow-md rounded-2xl px-3 bg-rojo text-white text-center flex items-center">
-      <i class="fa-light fa-plus mr-2"></i>
-      <span>Agregar</span>
-    </a>
-  </div>
+
   <form>
-    <input type="search" name="searchfor" value="{{$search}}">
-    <button type="submit">Buscar</button>
+
+    <div class="flex items-center my-3">
+      <div class="mr-2 mb-5">
+        <label for="searchfor">Buscar:</label>
+        <x-forms.input name="searchfor" id="searchfor" value="{{$search}}" type="search"/>
+      </div>
+      <div class="mr-3">
+        <button class="h-12 xl:h-8 shadow-md rounded-2xl px-3 bg-rojo text-white text-center flex items-center" type="submit">Buscar</button>
+      </div>
+      <div class="flex justify-between items-center my-3">
+
+        <a href="{{ route('admin.teacher.create') }}" class="h-12 xl:h-8 shadow-md rounded-2xl px-3 bg-blue-700 text-white text-center flex items-center">
+          <i class="fa-light fa-plus mr-2"></i>
+          <span>Agregar</span>
+        </a>
+      </div>
+    </div>
   </form>
   <table class="border border-black/5 dark:border-white/5">
     <thead class="text-left">
