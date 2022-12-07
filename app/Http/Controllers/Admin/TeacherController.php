@@ -45,7 +45,7 @@ class TeacherController extends Controller
           });
         }
       })->with(['classrooms'])->orderBy('name')->get();
-    return view('admin.profes', compact('profes', 'search'));
+    return view('admin.profes', compact('profes', 'search', 'request'));
   }
 
 

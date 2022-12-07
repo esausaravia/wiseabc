@@ -41,7 +41,7 @@ class StudentController extends Controller
     })->with(['usermetas','classrooms'])->orderBy('name')->get();
 
     $nivel = DB::table('cursos')->get();
-    return view('admin.students', compact('students','search', 'nivel'));
+    return view('admin.students', compact('students','search', 'nivel', 'request'));
   }
 
   /**
