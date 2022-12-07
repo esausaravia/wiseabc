@@ -126,5 +126,10 @@ return [
     'disabled'=>'Desactivado',
     'active'=>'Activo',
     'suscribed'=>'Suscrito',
+  ],
+  'classrooms_exist' => [
+    ''=>'',
+    '2' => 'Sin clases',
+    '1' => 'Con clases',
   ]
 ];
