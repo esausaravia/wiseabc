@@ -45,7 +45,6 @@ class ClassroomController extends Controller
 
         })->with(['curso','teacher','horarios'])->withCount('students')->orderBy('tipo')->orderBy('ritmo')->orderBy('start')->get();
         $getCursos = Curso::all();
-        //get value cursos id and name and save into array
         $cursos = ["",""];
         foreach ($getCursos as $curso) {
           $cursos[$curso->id] = $curso->name;
