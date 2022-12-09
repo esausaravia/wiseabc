@@ -23,7 +23,8 @@
   @endif
 
   <select name="{{$name}}" id="{{$id}}" class="block rounded-md shadow-sm h-12 xl:h-8 px-2 border border-black/10 bg-white text-gray-600" value="{{ old($name, $value) }}" >
-    @foreach ( $options as $_key=>$_val)
+    <option value="">--</option>
+  @foreach ( $options as $_key=>$_val)
       <option value="{{ $_key }}">{{ $_val }}</option>
     @endforeach
   </select>

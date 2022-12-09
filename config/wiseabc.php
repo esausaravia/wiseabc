@@ -1,7 +1,6 @@
 <?php
 return [
   'edad_labels' => [
-    0=>'',
     3 => '3-5',
     6 => '6-11',
     12 => '12-17',
@@ -16,7 +15,6 @@ return [
   ],
 
   'nivel_labels' => [
-    0=>'',
     1=>'A1',
     2=>'A2',
     3=>'B1',
@@ -122,14 +120,23 @@ return [
   ],
 
   'estatus' =>[
-    ''=>'',
     'disabled'=>'Desactivado',
     'active'=>'Activo',
     'suscribed'=>'Suscrito',
   ],
   'classrooms_exist' => [
-    ''=>'',
     '2' => 'Sin clases',
     '1' => 'Con clases',
-  ]
+  ],
+  'type_classroom' => [
+    '1' => 'Grupal',
+    '2' => 'Individual',
+  ],
+  'rhythm' => [
+    '1' => 'Relax',
+    '2' => 'Medio',
+    '3' => 'Intenso',
+    '4' => 'Intenso+',
+  ],
+
 ];

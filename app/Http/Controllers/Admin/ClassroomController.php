@@ -25,12 +25,11 @@ class ClassroomController extends Controller
       $getRitmo = $request->input('ritmo');
       $getCursos = $request->input('cursos');
       $getSeachFor = $request->input('searchfor');
-        $clases = Classroom::query()->when( $getEdad, function($query, $getEdad) {
-          $query->join('cursos', 'cursos.id', '=', 'classrooms.curso_id')
-            ->where('cursos.edad', $getEdad);
+        $clases = Classroom::query()->join('cursos', 'cursos.id', '=', 'classrooms.curso_id')
+          ->when( $getEdad, function($query, $getEdad) {
+          $query->where('cursos.edad', $getEdad);
         })->when( $getNivel, function($query, $getNivel) {
-          $query->join('cursos', 'cursos.id', '=', 'classrooms.curso_id')
-            ->where('cursos.nivel', $getNivel);
+          $query->where('cursos.nivel', $getNivel);
         })->when( $getTipo, function($query, $getTipo) {
           $query->where('classrooms.tipo', $getTipo);
         })->when( $getRitmo, function($query, $getRitmo) {
@@ -39,13 +38,13 @@ class ClassroomController extends Controller
           $query->where('classrooms.curso_id', $getCursos);
         })->when($getSeachFor, function($query, $getSeachFor) {
           $query->join('users', 'users.id', '=', 'classrooms.teacher_id')
-            ->where('users.user_type', 3)
-            ->where('users.name', 'like', '%'.$getSeachFor.'%')
-            ->orWhere('users.email', 'like', '%'.$getSeachFor.'%');
+          ->where('users.user_type', 3)
+          ->where('users.name', 'like', '%'.$getSeachFor.'%')
+          ->orWhere('users.email', 'like', '%'.$getSeachFor.'%');
 
         })->with(['curso','teacher','horarios'])->withCount('students')->orderBy('tipo')->orderBy('ritmo')->orderBy('start')->get();
         $getCursos = Curso::all();
-        $cursos = ["",""];
+        $cursos = [];
         foreach ($getCursos as $curso) {
           $cursos[$curso->id] = $curso->name;
         }

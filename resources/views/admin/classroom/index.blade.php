@@ -15,7 +15,7 @@
           <x-forms.select label="Nivel" name="nivel"  :value="$request->input('nivel')"  :options="config('wiseabc.nivel_labels')" ></x-forms.select>
         </div>
         <div class="mr-3 mb-5">
-          <x-forms.select label="Tipo" name="tipo"  :value="$request->input('tipo')"  :options="config('wiseabc.type_classroom')" ></x-forms.select>
+          <x-forms.select label="Tipo" name="tipo"  :value="$request->input('tipo')"  :options="\App\Models\Classroom::$arrTipo" ></x-forms.select>
         </div>
         <div class="mr-3 mb-5">
           <x-forms.select label="Ritmo" name="ritmo"  :value="$request->input('ritmo')"  :options="config('wiseabc.rhythm')" ></x-forms.select>

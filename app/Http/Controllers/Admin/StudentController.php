@@ -29,17 +29,14 @@ class StudentController extends Controller
     })->when($estatus, function($query) use ($estatus) {
       $query->where('status', $estatus);
     })->when($edad, function($query) use ($edad) {
-      $query->join('usermetas', 'usermetas.user_id', '=', 'users.id')
-        ->where('usermetas.metakey', 'edad')
-        ->where('usermetas.metaval', $edad)
-        ->select('users.*');
+      $query->distinct()->join('usermetas as sm', 'sm.user_id', '=', 'users.id')
+        ->where('sm.metakey', 'edad')
+        ->where('sm.metaval', $edad);
     })->when($nivel, function($query) use ($nivel) {
-      $query->join('usermetas', 'usermetas.user_id', '=', 'users.id')
+      $query->distinct()->join('usermetas', 'usermetas.user_id', '=', 'users.id')
         ->where('usermetas.metakey', 'nivel')
-        ->where('usermetas.metaval', $nivel)
-        ->select('users.*');
-    })->with(['usermetas','classrooms'])->orderBy('name')->get();
-
+        ->where('usermetas.metaval', $nivel);
+    })->select('users.*')->with(['usermetas','classrooms'])->orderBy('name')->get();
     $nivel = DB::table('cursos')->get();
     return view('admin.students', compact('students','search', 'nivel', 'request'));
   }
