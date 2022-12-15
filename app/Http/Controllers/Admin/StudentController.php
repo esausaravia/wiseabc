@@ -15,13 +15,30 @@ class StudentController extends Controller
    *
    * @return \Illuminate\Http\Response
    */
-  public function index()
+  public function index(Request $request)
   {
     //
-    $students = User::where('user_type', 2)->with(['usermetas','classrooms'])->orderBy('name')->get();
-    return view('admin.students', [
-      'alumnos'=>$students
-    ]);
+    $search = $request->get('searchfor');
+    $nivel = $request->get('nivel');
+    $edad = $request->get('edad');
+    $estatus = $request->get('estatus');
+
+    $students = User::where('user_type', 2)->when($search, function($query) use ($search) {
+      $query->where('name', 'like', '%'.$search.'%')
+        ->orWhere('email', 'like', '%'.$search.'%');
+    })->when($estatus, function($query) use ($estatus) {
+      $query->where('status', $estatus);
+    })->when($edad, function($query) use ($edad) {
+      $query->distinct()->join('usermetas as sm', 'sm.user_id', '=', 'users.id')
+        ->where('sm.metakey', 'edad')
+        ->where('sm.metaval', $edad);
+    })->when($nivel, function($query) use ($nivel) {
+      $query->distinct()->join('usermetas', 'usermetas.user_id', '=', 'users.id')
+        ->where('usermetas.metakey', 'nivel')
+        ->where('usermetas.metaval', $nivel);
+    })->select('users.*')->with(['usermetas','classrooms'])->orderBy('name')->get();
+    $nivel = DB::table('cursos')->get();
+    return view('admin.students', compact('students','search', 'nivel', 'request'));
   }
 
   /**

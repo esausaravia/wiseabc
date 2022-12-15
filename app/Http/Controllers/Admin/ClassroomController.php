@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use App\Models\Curso;
 use App\Models\User;
 use App\Models\Classroom;
+use Illuminate\Support\Facades\DB;
 
 class ClassroomController extends Controller
 {
@@ -15,14 +16,42 @@ class ClassroomController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
-        $clases = Classroom::with(['curso','teacher','horarios'])->withCount('students')->orderBy('tipo')->orderBy('ritmo')->orderBy('start')->get();
 
-        return view('admin.classroom.index', [
-            'clases'=>$clases,
-            'weekdays'=>config('wiseabc.weekdays')
-        ]);
+      $getEdad = $request->input('edad');
+      $getNivel = $request->input('nivel');
+      $getTipo = $request->input('tipo');
+      $getRitmo = $request->input('ritmo');
+      $getCursos = $request->input('cursos');
+      $getSeachFor = $request->input('searchfor');
+        $clases = Classroom::query()->join('cursos', 'cursos.id', '=', 'classrooms.curso_id')
+          ->when( $getEdad, function($query, $getEdad) {
+          $query->where('cursos.edad', $getEdad);
+        })->when( $getNivel, function($query, $getNivel) {
+          $query->where('cursos.nivel', $getNivel);
+        })->when( $getTipo, function($query, $getTipo) {
+          $query->where('classrooms.tipo', $getTipo);
+        })->when( $getRitmo, function($query, $getRitmo) {
+          $query->where('classrooms.ritmo', $getRitmo);
+        })->when( $getCursos, function($query, $getCursos) {
+          $query->where('classrooms.curso_id', $getCursos);
+        })->when($getSeachFor, function($query, $getSeachFor) {
+          $query->join('users', 'users.id', '=', 'classrooms.teacher_id')
+          ->where('users.user_type', 3)
+          ->where('users.name', 'like', '%'.$getSeachFor.'%')
+          ->orWhere('users.email', 'like', '%'.$getSeachFor.'%');
+
+        })->with(['curso','teacher','horarios'])->withCount('students')->orderBy('tipo')->orderBy('ritmo')->orderBy('start')->get();
+        $getCursos = Curso::all();
+        $cursos = [];
+        foreach ($getCursos as $curso) {
+          $cursos[$curso->id] = $curso->name;
+        }
+
+
+      $weekdays[] = config('wiseabc.weekdays');
+        return view('admin.classroom.index', compact('clases', 'weekdays','request' ,'cursos'));
     }
 
     /**

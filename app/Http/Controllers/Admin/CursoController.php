@@ -13,12 +13,24 @@ class CursoController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
         //
-        return view('admin.cursos', [
-			'cursos' => Curso::orderBy('status')->orderBy('edad')->orderBy('nivel')->get()
-		]);
+        $nivel = $request->get('nivel');
+        $edad = $request->get('edad');
+        $cursos = Curso::query()
+            ->when($nivel, function ($query) use ($nivel) {
+                $query->where('nivel', $nivel);
+            })
+            ->when($edad, function ($query) use ($edad) {
+                $query->where('edad', $edad);
+            })
+            ->orderBy('nivel')
+            ->orderBy('edad')
+            ->get();
+
+
+        return view('admin.cursos', compact('cursos', 'request'));
     }
 
     /**

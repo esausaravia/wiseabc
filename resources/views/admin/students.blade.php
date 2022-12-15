@@ -10,6 +10,33 @@
     </a>
   </div>--}}
 
+
+    <div class="flex items-center my-3">
+      <form class="inline-flex">
+        <div class="mr-2 mb-5">
+          <x-forms.input label="Buscar:" name="searchfor" id="searchfor" value="{{$search}}" type="search"/>
+        </div>
+        <div class="mr-3 mb-5">
+          <x-forms.select label="Nivel" name="nivel" :value="$request->input('nivel')" :options="config('wiseabc.nivel_labels')" ></x-forms.select>
+        </div>
+        <div class="mr-3 mb-5">
+          <x-forms.select label="Edad" name="edad" :value="$request->input('edad')" :options="config('wiseabc.edad_labels')" ></x-forms.select>
+        </div>
+        <div class="mr-3 mb-5">
+          <x-forms.select label="Estatus" name="estatus" :value="$request->input('estatus')" :options="config('wiseabc.estatus')" ></x-forms.select>
+        </div>
+        <div class="mr-3 mt-5">
+          <button class="h-12 xl:h-8 shadow-md rounded-2xl px-3 bg-rojo text-white text-center flex items-center" type="submit">Buscar</button>
+        </div>
+      </form>
+      <form class="inline-flex">
+        <div class="mr-3 mb-1">
+          <x-forms.input name="searchfor" id="searchfor" value="" type="hidden"></x-forms.input>
+          <button class="h-12 xl:h-8 shadow-md rounded-2xl px-3 bg-blue-700 text-white text-center flex items-center" type="submit">Limpiar</button>
+        </div>
+      </form>
+    </div>
+
   <table class="border border-black/5 dark:border-white/5">
     <thead class="text-left">
       <tr class="bg-black/5 dark:bg-white/5">
@@ -23,7 +50,7 @@
       </tr>
     </thead>
     <tbody>
-      @foreach ($alumnos as $alumno)
+      @foreach ($students as $alumno)
         <tr class="even:bg-black/5 dark:even:bg-white/5">
           <td class="p-2">{{ $alumno->id }}</td>
           <td class="p-2">

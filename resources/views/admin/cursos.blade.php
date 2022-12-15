@@ -3,12 +3,34 @@
 
   <div class="flex justify-between items-center my-3">
 
-    <a href="{{ route('admin.cursos.create') }}" class="h-12 xl:h-8 shadow-md rounded-2xl px-3 bg-rojo text-white text-center flex items-center">
+    <a href="{{ route('admin.cursos.create') }}" class="h-12 xl:h-8 shadow-md rounded-2xl px-3 bg-blue-700 text-white text-center flex items-center">
       <i class="fa-light fa-plus mr-2"></i>
       <span>Agregar</span>
     </a>
   </div>
+  <form>
+    <div class="flex items-center my-3">
+      <form class="inline-flex">
+        <div class="mr-3 mb-5">
+          <x-forms.select label="Edad" name="edad"  :value="$request->input('edad')" :options="config('wiseabc.edad_labels')" ></x-forms.select>
+        </div>
+        <div class="mr-3 mb-5">
+          <x-forms.select label="Nivel" name="nivel"  :value="$request->input('nivel')" :options="config('wiseabc.nivel_labels')" ></x-forms.select>
+        </div>
+        <div class="mr-3 ">
+          <button class="h-12 xl:h-8 shadow-md rounded-2xl px-3 bg-rojo text-white text-center flex items-center" type="submit">Buscar</button>
+        </div>
 
+      </form>
+      <form class="inline-flex">
+        <div class="mr-3 mb-1">
+          <x-forms.input name="searchfor" id="searchfor" value="" type="hidden"></x-forms.input>
+          <button class="h-12 xl:h-8 shadow-md rounded-2xl px-3 bg-blue-700 text-white text-center flex items-center" type="submit">Limpiar</button>
+        </div>
+      </form>
+    </div>
+
+  </form>
   <table class="border border-black/5 dark:border-white/5">
     <thead class="text-left">
       <tr class="bg-black/5 dark:bg-white/5">

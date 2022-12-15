@@ -117,5 +117,26 @@ return [
     19=>'19:00',
     20=>'20:00',
     21=>'21:00'
-  ]
+  ],
+
+  'estatus' =>[
+    'disabled'=>'Desactivado',
+    'active'=>'Activo',
+    'suscribed'=>'Suscrito',
+  ],
+  'classrooms_exist' => [
+    '2' => 'Sin clases',
+    '1' => 'Con clases',
+  ],
+  'type_classroom' => [
+    '1' => 'Grupal',
+    '2' => 'Individual',
+  ],
+  'rhythm' => [
+    '1' => 'Relax',
+    '2' => 'Medio',
+    '3' => 'Intenso',
+    '4' => 'Intenso+',
+  ],
+
 ];
