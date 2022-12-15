@@ -22,7 +22,8 @@ return new class extends Migration
             $table->unsignedBigInteger('teams_id')->nullable();
             $table->foreign('teams_id')->nullable()->references('id')->on('teams_infos')->onUpdate('cascade')->onDelete('set null');
             $table->dateTimeTz('fechahora')->index();
-            $table->unsignedInteger('duracion')->default(0);
+            $table->unsignedInteger('duracion')->default(0);//40 mins * 60 seg = 2400 seg
+            $table->boolean('puntual')->default(false);
             $table->timestamps();
             $table->softDeletes();
         });
