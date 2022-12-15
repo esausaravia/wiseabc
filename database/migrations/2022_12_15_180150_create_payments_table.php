@@ -15,9 +15,7 @@ return new class extends Migration
     {
         Schema::create('payments', function (Blueprint $table) {
             $table->bigIncrements('id');
-            //user id foreign key
             $table->unsignedBigInteger('user_id')->unsigned();
-
             $table->string('reference')->unique();
             $table->string('amount');
             $table->foreign('user_id')->references('id')->on('users');
