@@ -15,12 +15,12 @@ return new class extends Migration
     {
         Schema::create('receipts', function (Blueprint $table) {
             //id autoincremental
-            $table->bigIncrements('id');
-            $table->unsignedBigInteger('class_attendances_id')->unsigned();
-            $table->unsignedBigInteger('payment_id')->unsigned();
-            $table->string('estatus');
-            $table->string('amount');
-            $table->foreign('class_attendances_id')->references('id')->on('class_attendances');
+            $table->id();
+            $table->unsignedBigInteger('attendance_id');
+            $table->unsignedBigInteger('payment_id')->nullable();
+            $table->string('status');
+            $table->unsignedInteger('amount');
+            $table->foreign('attendance_id')->references('id')->on('attendances');
             $table->foreign('payment_id')->references('id')->on('payments');
         });
     }
@@ -33,7 +33,7 @@ return new class extends Migration
     public function down()
     {
         Schema::dropIfExists('receipts', function (Blueprint $table) {
-            $table->dropForeign('class_attendances_id');
+            $table->dropForeign('attendance_id');
             $table->dropForeign('payment_id');
         });
 

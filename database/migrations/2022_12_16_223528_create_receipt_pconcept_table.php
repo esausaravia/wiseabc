@@ -13,12 +13,12 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('payment_concepts', function (Blueprint $table) {
-            $table->id();
-            $table->string('concept');
+        Schema::create('receipt_pconcept', function (Blueprint $table) {
+            $table->unsignedBigInteger('receipt_id');
+            $table->unsignedBigInteger('pconcept_id');
+            $table->foreign('receipt_id')->references('id')->on('receipts');
+            $table->foreign('pconcept_id')->references('id')->on('payment_concepts');
             $table->unsignedInteger('amount');
-            $table->timestamps();
-            $table->softDeletes();
         });
     }
 
@@ -29,6 +29,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('payment_concepts');
+        Schema::dropIfExists('receipt_pconcept');
     }
 };
