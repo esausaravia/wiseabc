@@ -4,6 +4,7 @@ namespace Database\Seeders;
 
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
+use DB;
 
 class PaymentConceptsSeeder extends Seeder
 {
@@ -16,18 +17,19 @@ class PaymentConceptsSeeder extends Seeder
     {
         //
         //create payment concepts 5
-        $paymentConcept = PaymentConcept::create([
-            'concept' => 'Puntualidad',
-            'monto' => 10,
+        DB::table('payment_concepts')->insert([
+            'concept' => 'Base',
+            'amount' => 5,
 
         ],[
             'concept' => 'Asistencia',
-            'monto' => 10,
+            'amount' => 6,
 
         ],[
-            'concept' => 'Participación',
-            'monto' => 10,
+            'concept' => 'Lealtad',
+            'amount' => 3,
 
         ]);
+
     }
 }

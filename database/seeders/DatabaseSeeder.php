@@ -3,6 +3,7 @@
 namespace Database\Seeders;
 
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
+use App\Models\Classroom;
 use Illuminate\Database\Seeder;
 use App\Models\Curso;
 
@@ -21,41 +22,14 @@ class DatabaseSeeder extends Seeder
     //     'name' => 'Test User',
     //     'email' => 'test@example.com',
     // ]);
+    $this->call(Curso::class);
+    $this->call(Classrooms::class);
+    $this->call(Attendances::class);
+    $this->call(ReceiptsSeeder::class);
+    $this->call(PaymentsSeeder::class);
+    $this->call(PaymentConceptsSeeder::class);
 
-    $curso = Curso::create([
-      'edad'=>6,
-      'nivel'=>1,
-      'name'=>'Básico para juniors (RH1)'
-    ]);
 
-    $curso = Curso::create([
-      'edad'=>6,
-      'nivel'=>2,
-      'name'=>'Básico para juniors (RH2)'
-    ]);
 
-    $curso = Curso::create([
-      'edad'=>6,
-      'nivel'=>3,
-      'name'=>'Intermedio para juniors (RH3)'
-    ]);
-
-    $curso = Curso::create([
-      'edad'=>6,
-      'nivel'=>4,
-      'name'=>'Intermedio para juniors (RH4)'
-    ]);
-
-    $curso = Curso::create([
-      'edad'=>6,
-      'nivel'=>5,
-      'name'=>'Avanzado para juniors (RH5)'
-    ]);
-
-    $curso = Curso::create([
-      'edad'=>6,
-      'nivel'=>6,
-      'name'=>'Avanzado para juniors (RH6)'
-    ]);
   }
 }
