@@ -6,7 +6,7 @@ use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
 
-class Curso extends Seeder
+class CursoSeeder extends Seeder
 {
     /**
      * Run the database seeds.
@@ -17,7 +17,7 @@ class Curso extends Seeder
     {
         //
       //create seed for courses table
-      DB::table('cursos')->insert(
+      DB::table('cursos')->insert(array(
         [
           'edad'=>6,
           'nivel'=>1,
@@ -42,7 +42,7 @@ class Curso extends Seeder
           'nivel'=>6,
           'name'=>'Avanzado para juniors (RH6)'
         ]
-      );
+      ));
 
 
     }

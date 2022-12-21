@@ -5,7 +5,7 @@ namespace Database\Seeders;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 use DB;
-class Classrooms extends Seeder
+class ClassroomsSeeder extends Seeder
 {
     /**
      * Run the database seeds.
@@ -15,7 +15,7 @@ class Classrooms extends Seeder
     public function run()
     {
         //generate seeder relate table cursos and users
-        DB::table('classrooms')->insert(
+        DB::table('classrooms')->insert(array(
             [
                 'teacher_id'=>2,
                 'curso_id'=>1,
@@ -35,6 +35,6 @@ class Classrooms extends Seeder
                 'ends_at' => '2022-12-15 22:00:00',
 
             ],
-        );
+        ));
     }
 }

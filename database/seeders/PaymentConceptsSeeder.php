@@ -17,7 +17,7 @@ class PaymentConceptsSeeder extends Seeder
     {
         //
         //create payment concepts 5
-        DB::table('payment_concepts')->insert([
+        DB::table('payment_concepts')->insert(array([
             'concept' => 'Base',
             'amount' => 5,
 
@@ -29,7 +29,7 @@ class PaymentConceptsSeeder extends Seeder
             'concept' => 'Lealtad',
             'amount' => 3,
 
-        ]);
+        ]));
 
     }
 }

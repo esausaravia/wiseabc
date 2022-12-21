@@ -16,7 +16,7 @@ class ReceiptsSeeder extends Seeder
     {
         //
         //create seed for receipts related to attendances
-        DB::table('receipts')->insert(
+        DB::table('receipts')->insert(array(
             [
                 'attendance_id'=>2,
                 'payment_id'=>2,
@@ -29,6 +29,6 @@ class ReceiptsSeeder extends Seeder
                 'status'=>'pagado',
                 'amount'=>1000
             ],
-        );
+        ));
     }
 }

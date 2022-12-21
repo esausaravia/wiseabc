@@ -16,13 +16,13 @@ class PaymentsSeeder extends Seeder
     {
         //
       //create seed for payments related to receipts, and users
-      DB::table('payments')->insert(
+      DB::table('payments')->insert(array(
         [
           'user_id'=>2,
           'amount'=>1000,
           'reference'=>'1234567890'
         ],
-      );
+      ));
 
 
     }

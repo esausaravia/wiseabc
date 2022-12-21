@@ -6,7 +6,7 @@ use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 use DB;
 
-class Attendances extends Seeder
+class AttendancesSeeder extends Seeder
 {
     /**
      * Run the database seeds.
@@ -16,7 +16,7 @@ class Attendances extends Seeder
     public function run()
     {
         //
-      DB::table('attendances')->insert(
+      DB::table('attendances')->insert(array(
         [
           'user_id'=>3,
           'class_id'=>9,
@@ -31,6 +31,6 @@ class Attendances extends Seeder
           'duracion'=>2400,
           'puntual'=>true
         ],
-      );
+      ));
     }
 }

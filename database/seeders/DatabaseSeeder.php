@@ -6,6 +6,7 @@ namespace Database\Seeders;
 use App\Models\Classroom;
 use Illuminate\Database\Seeder;
 use App\Models\Curso;
+use Illuminate\Support\Facades\DB;
 
 class DatabaseSeeder extends Seeder
 {
@@ -22,11 +23,18 @@ class DatabaseSeeder extends Seeder
     //     'name' => 'Test User',
     //     'email' => 'test@example.com',
     // ]);
-    $this->call(Curso::class);
-    $this->call(Classrooms::class);
-    $this->call(Attendances::class);
+    DB::statement('SET FOREIGN_KEY_CHECKS = 0;'); // Desactivamos la revisión de claves foráneas
+    DB::table('cursos')->truncate();
+    $this->call(CursoSeeder::class);
+    DB::table('classrooms')->truncate();
+    $this->call(ClassroomsSeeder::class);
+    DB::table('attendances')->truncate();
+    $this->call(AttendancesSeeder::class);
+    DB::table('receipts')->truncate();
     $this->call(ReceiptsSeeder::class);
+    DB::table('payments')->truncate();
     $this->call(PaymentsSeeder::class);
+    DB::table('payment_concepts')->truncate();
     $this->call(PaymentConceptsSeeder::class);
 
 
