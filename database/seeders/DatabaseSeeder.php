@@ -33,7 +33,9 @@ class DatabaseSeeder extends Seeder
     DB::table('payment_concepts')->truncate();
 
 
-    $cursos = [  [    'edad' => 6,    'nivel' => 1,    'name' => 'Básico para juniors (RH1)',  ],
+    $cursos = [
+      ['edad' => 6, 'nivel' => 1, 'name' => 'Básico para juniors (RH1)'],
+      ['edad' => 6, 'nivel' => 1, 'name' => 'Básico para juniors (RH2)'],
       [    'edad' => 6,    'nivel' => 3,    'name' => 'Intermedio para juniors (RH3)',  ],
       [    'edad' => 6,    'nivel' => 4,    'name' => 'Intermedio para juniors (RH4)',  ],
       [    'edad' => 6,    'nivel' => 5,    'name' => 'Avanzado para juniors (RH5)',  ],
