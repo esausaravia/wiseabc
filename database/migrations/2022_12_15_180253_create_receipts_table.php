@@ -18,8 +18,9 @@ return new class extends Migration
             $table->id();
             $table->unsignedBigInteger('attendance_id');
             $table->unsignedBigInteger('payment_id')->nullable();
-            $table->string('status');
-            $table->unsignedInteger('amount');
+            $table->string('status')->default('pendiente');
+            $table->unsignedInteger('amount')->default(0);
+
             $table->foreign('attendance_id')->references('id')->on('attendances');
             $table->foreign('payment_id')->references('id')->on('payments');
         });

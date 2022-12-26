@@ -59,6 +59,12 @@ class DatabaseSeeder extends Seeder
       [    'concept' => 'Asistencia',    'amount' => 6,  ],
       [    'concept' => 'Lealtad',    'amount' => 3,  ],
     ];
+    foreach ($paymentConcepts as $paymentConcept) {
+      DB::table('payment_concepts')->insert([
+        'concept' => $paymentConcept['concept'],
+        'amount' => $paymentConcept['amount'],
+      ]);
+    }
     foreach ($cursos as $curso) {
       // Inserta el curso y obtiene el ID
       $cursoId = DB::table('cursos')->insertGetId($curso);
@@ -105,12 +111,6 @@ class DatabaseSeeder extends Seeder
           'user_id' => $payment['user_id'],
           'reference' => $reference,
           'amount' => $payment['amount'],
-        ]);
-      }
-      foreach ($paymentConcepts as $paymentConcept) {
-        DB::table('payment_concepts')->insert([
-          'concept' => $paymentConcept['concept'],
-          'amount' => $paymentConcept['amount'],
         ]);
       }
       // Inserta los pagos utilizando los IDs de las facturas
