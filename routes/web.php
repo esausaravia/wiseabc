@@ -88,6 +88,10 @@ Route::group(['prefix'=>'admin','as'=>'admin.','middleware' => ['auth','admin']]
 		return view('admin.dashboard');
 	})->name('home');
 
+	Route::get('pago/profesor/{profeid}', function(){
+		return view('admin.payments.paraprofe');
+	})->name('pagoparaprofe');
+
 	Route::get('classroom/createforcurso/{curso}', [\App\Http\Controllers\Admin\ClassroomController::class, 'createForCurso'])->name('classroom.createforcurso');
 
 	Route::get('classroom/createforteacher/{teacher}', [\App\Http\Controllers\Admin\ClassroomController::class, 'createForTeacher'])->name('classroom.createforteacher');
