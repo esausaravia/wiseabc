@@ -93,16 +93,16 @@
       <div class="modal-body py-2 px-3">
 
         <div class="grid grid-cols-2 gap-3 lg:gap-4 xl:gap-5 mb-3">
-          <x-forms.input label="Fecha" name="fecha" type="date" />
+          <x-forms.input label="Fecha" name="fecha" type="date" :value="date('Y-m-d')" />
 
-          <x-forms.input label="Hora" name="hora" type="time" />
+          <x-forms.input label="Hora" name="hora" type="time" :value="date('H:i')" />
         </div>
 
-        <x-forms.input label="Método de pago" name="metodopago" />
+        <x-forms.input label="Método de pago" name="metodopago" class="mb-3" />
 
-        <x-forms.input label="Monto" name="monto" />
+        <x-forms.input label="Monto" name="monto" class="mb-3" value="99999.99" />
 
-        <x-forms.input label="Referencia" name="referencia" />
+        <x-forms.input label="Referencia" name="referencia" class="mb-3" />
       </div>
       <div class="modal-footer border-t border-t-gray-300 py-2 px-3 flex justify-between font-accent font-medium text-sm leading-8">
         <span>
