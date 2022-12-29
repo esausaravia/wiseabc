@@ -41,6 +41,7 @@
   </header>
   <aside id="AdminAside" class="fixed top-0 left-0 h-full bg-gray-300 dark:bg-slate-900 shadow-md z-10 pt-[68px] px-5 pb-6 font-accent">
     <ul class="font-accent">
+      <li><a href="{{ route('admin.home') }}" class="block p-2">Inicio</a></li>
       <li><a href="{{ route('admin.cursos.index') }}" class="block p-2">Cursos</a></li>
       <li><a href="{{ route('admin.classroom.index') }}" class="block p-2">Clases</a></li>
       <li><a href="{{ route('admin.teacher.index') }}" class="block p-2">Profesores</a></li>
@@ -51,5 +52,6 @@
     {{ $slot }}
     <x-alert-incontent></x-alert-incontent>
   </div>
+
 </body>
 </html>

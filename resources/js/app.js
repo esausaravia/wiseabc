@@ -1,4 +1,5 @@
 import './bootstrap';
+import './modal';
 import 'lazysizes';
 
 window.app = window.app || {};
@@ -37,8 +38,6 @@ window.addEventListener('DOMContentLoaded',function(){
       });
     });
   })( document.querySelectorAll('.darkmode-toggler') );
-
-
 
   (function(btns){
     if (!btns || !btns.forEach) return false;
@@ -136,7 +135,6 @@ window.addEventListener('DOMContentLoaded',function(){
 
     });
   })(document.querySelectorAll('.tabs-widget'));
-
 
   document.querySelectorAll('.display-timezone').forEach(function(el){
     el.innerText = strTimeZone

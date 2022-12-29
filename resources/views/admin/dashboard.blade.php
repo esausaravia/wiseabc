@@ -32,13 +32,13 @@
         </tr>
       </thead>
       <tbody class=" grid grid-cols-1 gap-4 md:table-row-group">
-        @for ($loop=0; $loop<12; $loop++)
+        @for ($loop=0; $loop<6; $loop++)
         <tr class="block md:table-row odd:bg-white even:bg-white/50 dark:odd:bg-white/10 dark:even:bg-white/5 text-center">
           <td class="px-2 py-2 w-6/12 text-left">Prof. Mario Jimenez</td>
           <td class="px-2 py-2 w-2/12">$999.99</td>
           <td class="px-2 py-2 w-2/12 text-sm">
             <p class="">
-              @if ( $loop<6 )
+              @if ( $loop<3 )
               <span class="inline-block rounded-2xl px-3 leading-6 bg-orange-100 text-orange-400">
                 <span class="ico"><i class="fa-light fa-hourglass-clock"></i></span>
                 Pendiente
@@ -54,7 +54,7 @@
           </td>
           <td class="w-2/12">
             <div class="flex justify-center">
-              <a href="{{ route('admin.pagoparaprofe', 1) }}" class="btn rounded-3xl bg-white px-3 py-1 shadow-md">detalle</a>
+              <a href="{{ route('admin.pagoparaprofe', 1) }}" class="btn rounded-3xl px-3 py-1 bg-white text-gray-600 text-sm font-accent font-medium shadow-md">detalle</a>
             </div>
           </td>
         </tr>

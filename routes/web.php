@@ -84,6 +84,10 @@ Route::group(['prefix'=>'teacher','as'=>'teacher.','middleware' => ['auth','teac
  */
 Route::group(['prefix'=>'admin','as'=>'admin.','middleware' => ['auth','admin']], function(){
 
+	Route::get('/', function(){
+		return redirect()->route('admin.home');
+	});
+
 	Route::get('dashboard', function(){
 		return view('admin.dashboard');
 	})->name('home');
