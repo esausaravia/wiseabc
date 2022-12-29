@@ -59,6 +59,17 @@ class DatabaseSeeder extends Seeder
       [    'concept' => 'Asistencia',    'amount' => 6,  ],
       [    'concept' => 'Lealtad',    'amount' => 3,  ],
     ];
+
+    for ($i = 0; $i < 3; $i++) {
+      DB::table('users')->insert([
+        'status' => 'active',
+        'user_type' => 3,
+        'name' => "User $i",
+        'email' => "user$i@example.com",
+        'password' => bcrypt('password'),
+      ]);
+    }
+
     foreach ($paymentConcepts as $paymentConcept) {
       DB::table('payment_concepts')->insert([
         'concept' => $paymentConcept['concept'],
