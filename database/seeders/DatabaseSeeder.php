@@ -4,8 +4,8 @@ namespace Database\Seeders;
 
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use App\Models\Classroom;
-use Illuminate\Database\Seeder;
 use App\Models\Curso;
+use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
 
 class DatabaseSeeder extends Seeder
@@ -20,7 +20,7 @@ class DatabaseSeeder extends Seeder
     // \App\Models\User::factory(10)->create();
 
     // \App\Models\User::factory()->create([
-    //     'name' => 'Test User',
+    //  'name' => 'Test User',
     //     'email' => 'test@example.com',
     // ]);
     DB::statement('SET FOREIGN_KEY_CHECKS = 0;'); // Desactivamos la revisión de claves foráneas
@@ -34,16 +34,21 @@ class DatabaseSeeder extends Seeder
 
 
     $cursos = [
-      ['edad' => 6, 'nivel' => 1, 'name' => 'Básico para juniors (RH1)'],
-      ['edad' => 6, 'nivel' => 1, 'name' => 'Básico para juniors (RH2)'],
-      [    'edad' => 6,    'nivel' => 3,    'name' => 'Intermedio para juniors (RH3)',  ],
-      [    'edad' => 6,    'nivel' => 4,    'name' => 'Intermedio para juniors (RH4)',  ],
-      [    'edad' => 6,    'nivel' => 5,    'name' => 'Avanzado para juniors (RH5)',  ],
-      [    'edad' => 6,    'nivel' => 6,    'name' => 'Avanzado para juniors (RH6)',  ],
+      [ 'edad' => 6, 'nivel' => 1, 'name' => 'Básico para juniors (RH1)'],
+      [ 'edad' => 6, 'nivel' => 2, 'name' => 'Básico para juniors (RH2)'],
+      [ 'edad' => 6, 'nivel' => 3, 'name' => 'Intermedio para juniors (RH3)',  ],
+      [ 'edad' => 6, 'nivel' => 4, 'name' => 'Intermedio para juniors (RH4)',  ],
+      [ 'edad' => 6, 'nivel' => 5, 'name' => 'Avanzado para juniors (RH5)',  ],
+      [ 'edad' => 6, 'nivel' => 6, 'name' => 'Avanzado para juniors (RH6)',  ],
     ];
 
     $attendances = [  [    'user_id' => 3,    'class_id' => 9,    'fechahora' => '2022-12-15 22:00:00',    'duracion' => 2400,    'puntual' => true,  ],
       [    'user_id' => 3,    'class_id' => 9,    'fechahora' => '2022-12-13 22:00:00',    'duracion' => 2400,    'puntual' => true,  ],
+    ];
+
+    $paymentConcepts = [  [    'concept' => 'Base',    'amount' => 5,  ],
+      [    'concept' => 'Asistencia',    'amount' => 6,  ],
+      [    'concept' => 'Lealtad',    'amount' => 3,  ],
     ];
 
     $receipts = [  [    'attendance_id' => 2,    'payment_id' => 1,    'status' => 'pagado',    'amount' => 1000,  ],
@@ -55,20 +60,20 @@ class DatabaseSeeder extends Seeder
 
     ];
 
-    $paymentConcepts = [  [    'concept' => 'Base',    'amount' => 5,  ],
-      [    'concept' => 'Asistencia',    'amount' => 6,  ],
-      [    'concept' => 'Lealtad',    'amount' => 3,  ],
-    ];
-
     for ($i = 0; $i < 3; $i++) {
-      DB::table('users')->insert([
+      $profe = \App\Models\User::create([
         'status' => 'active',
         'user_type' => 3,
-        'name' => "User $i",
-        'email' => "user$i@example.com",
-        'password' => bcrypt('password'),
+        'name' => "Profe{$i}",
+        'email' => "profe{$i}@wiseabc.net",
+        'password' => bcrypt('password')
       ]);
+      /**
+       * FALTA ASIGNAR HORARIO PARA PROFESOR
+       * $profe->saveHorarios([1=>[13,14]])
+       */
     }
+    $profesores = \App\Models\User::where('user_type',3)->get();
 
     foreach ($paymentConcepts as $paymentConcept) {
       DB::table('payment_concepts')->insert([
@@ -76,12 +81,14 @@ class DatabaseSeeder extends Seeder
         'amount' => $paymentConcept['amount'],
       ]);
     }
+
+
     foreach ($cursos as $curso) {
       // Inserta el curso y obtiene el ID
       $cursoId = DB::table('cursos')->insertGetId($curso);
 
       // Inserta el classroom utilizando el ID obtenido
-      $classroomId = DB::table('classrooms')->insertGetId([
+      $classroom = Classroom::create([
         'teacher_id' => 2,
         'curso_id' => $cursoId,
         'status' => 'activo',
@@ -90,13 +97,28 @@ class DatabaseSeeder extends Seeder
         'start' => '2022-12-15 22:00:00',
         'ends_at' => '2022-12-15 22:00:00'
       ]);
+      $classroomId = $classroom->id;
+      /**
+       * FALTA ASIGNAR HORAIRO A CLASSROOM
+       * $classroom->saveHorarios([1=>[13,14]])
+       */
+
+      /**
+       * CREAR AL MENOS 1 ROW DE TEAMSINFO
+       */
+
+      /**
+       * CREAR SCHEDULE CON HORARIO DE CLASE
+       * $fechahora = $classroom->nextSchedule()
+       *
+       */
 
       // Inserta las asistencias utilizando el ID del classroom
       $attendanceIds = [];
       foreach ($attendances as $attendance) {
         $attendanceIds[] = DB::table('attendances')->insertGetId([
           'user_id' => $attendance['user_id'],
-          'class_id' => $classroomId,
+          'class_id' => $classroom->id,
           'fechahora' => $attendance['fechahora'],
           'duracion' => $attendance['duracion'],
           'puntual' => $attendance['puntual'],

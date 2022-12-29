@@ -107,10 +107,11 @@ class Classroom extends Model
 
     /**
      * Actualiza los horarios eliminando todos los anteriores
-     * @param array horarios
+     * @param array horarios [1=>[13,14], 3=>[13,14], 5=>[13,14] ]
      * @return array
      */
     public function saveHorarios($horarios) {
+
         if (empty($horarios) || !is_array($horarios) ){
             return false;
         }
