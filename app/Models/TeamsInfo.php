@@ -9,6 +9,6 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 class TeamsInfo extends Model
 {
     use HasFactory, SoftDeletes;
-    protected $fillable = ['id','msid','link','info','report'];
+    protected $fillable = ['msid','link','info','report'];
 
 }
