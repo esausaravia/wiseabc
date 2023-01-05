@@ -1,20 +1,25 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Admin;
 
-use App\Models\Schedule;
+use App\Http\Controllers\Controller;
+use Database\Seeders\AttendancesSeeder;
 use Illuminate\Http\Request;
 
-class ClassScheduleController extends Controller
+class ReceiptController extends Controller
 {
     /**
      * Display a listing of the resource.
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index($id)
     {
         //
+        $receipts = AttendancesSeeder::where('user_id', $id)->get();
+
+        $paymentsConcepts = PaymentConcept::all();
+        return view('admin.receipts.index', compact('receipts', 'paymentsConcepts'));
     }
 
     /**
@@ -41,10 +46,10 @@ class ClassScheduleController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  \App\Models\Schedule  $classSchedule
+     * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show(Schedule $classSchedule)
+    public function show($id)
     {
         //
     }
@@ -52,10 +57,10 @@ class ClassScheduleController extends Controller
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  \App\Models\Schedule  $classSchedule
+     * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function edit(Schedule $classSchedule)
+    public function edit($id)
     {
         //
     }
@@ -64,10 +69,10 @@ class ClassScheduleController extends Controller
      * Update the specified resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Models\Schedule  $classSchedule
+     * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Schedule $classSchedule)
+    public function update(Request $request, $id)
     {
         //
     }
@@ -75,10 +80,10 @@ class ClassScheduleController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\Models\Schedule  $classSchedule
+     * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Schedule $classSchedule)
+    public function destroy($id)
     {
         //
     }
