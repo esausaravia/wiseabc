@@ -6,9 +6,9 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
-class TeamsInfo extends Model
+class PaymentConcept extends Model
 {
     use HasFactory, SoftDeletes;
-    protected $fillable = ['msid','link','info','report'];
 
+    protected $fillable = ['concept','amount'];
 }
