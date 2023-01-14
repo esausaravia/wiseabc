@@ -61,7 +61,7 @@ class MySchedulesToAttendances extends Command
           // Actualizar registro de asistencia con datos del informe
           $attendance->duracion = $meeting->getDuration();
           $attendance->puntual = $meeting->getPunctuality();
-          $attendance->save();
+            $attendance->save();
 
           // Obtener datos del informe de asistencia
           $attendance_data = json_decode($meeting->getAttendanceRecords()[0]->getAttendanceIntervals()[0]->getAttendanceData(), true);
