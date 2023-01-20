@@ -32,7 +32,10 @@ class MySchedules extends Command
      */
     public function handle()
     {
-       $json = '{
+      /**
+       * Mover a Controllers\MsApiController::createEvent()
+       */
+      $json = '{
     "@odata.context": "https://graph.microsoft.com/v1.0/$metadata#users(\'5d8d505c-864f-4804-88c7-4583c966cde8\')/calendars(\'AAMkAGViNDU9zAAAAAGtlAAA%3D\')/events/$entity",
     "@odata.etag": "W/\"/IUUrIl3PkG1JCSsPfU+8wAAGXjGjw==\"",
     "id": "AAMkAGViNDU7zAAAAA7zAAAZe6CkAAA=",
@@ -119,7 +122,6 @@ class MySchedules extends Command
         "tollNumber": "+1 425 555 0123"
     }
 }';
-
       $data = json_decode($json, true);
 
       $classes = Classroom::all();
@@ -129,22 +131,27 @@ class MySchedules extends Command
         $schedules = Schedule::whereBetween('fechahora', [$startDate, $endDate])->where('class_id', $class->id)->get();
         $count = $schedules->count();
         $classesPerWeek = $class->ritmo;
-        if($count >= $classesPerWeek*4){
+
+        if($count >= $classesPerWeek*4 ){
           continue;
-        }else{
-          $nextClass = $class->nextSchedule();
-          $teamsInfo = new TeamsInfo();
-          $teamsInfo->msid = $data['onlineMeeting']['conferenceId'];
-          $teamsInfo->link = $data['onlineMeeting']['joinUrl'];
-          $teamsInfo->info = $json;
-          $teamsInfo->report = "No hay reporte";
-          $teamsInfo->save();
-          $schedule = new Schedule();
-          $schedule->class_id = $class->id;
-          $schedule->teams_id = $teamsInfo->id;
-          $schedule->fechahora = $nextClass;
-          $schedule->save();
         }
+
+        //$data = Controllers\MsApiController::createEvent()
+
+        $nextClass = $class->nextSchedule();
+        $teamsInfo = new TeamsInfo();
+        $teamsInfo->msid = $data['onlineMeeting']['conferenceId'];
+        $teamsInfo->link = $data['onlineMeeting']['joinUrl'];
+        $teamsInfo->info = $json;
+        $teamsInfo->report = "";
+        $teamsInfo->save();
+
+        $schedule = new Schedule();
+        $schedule->class_id = $class->id;
+        $schedule->teams_id = $teamsInfo->id;
+        $schedule->fechahora = $nextClass;
+        $schedule->save();
+
       }
       return "Cron job is working fine!";
 
