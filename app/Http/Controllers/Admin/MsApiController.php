@@ -13,7 +13,10 @@ use Illuminate\Support\Facades\DB;
 
 class MsApiController extends Controller
 {
-  //
+  /**
+   * @param $subject string Titulo del evento
+   * @param $fecha datetime Fecha
+   */
   public function createOnlineMeeting()
   {
     $json = $json = '{
@@ -106,8 +109,33 @@ class MsApiController extends Controller
     return json_decode($json, true);
   }
 
+
+  /**
+   * Get meetingAttendanceReport
+   *
+   * @param $userId
+   * @param $meetingId
+   */
   public function createReport()
   {
+    /**
+     * Primero debemos obtener listado
+     * List meetingAttendanceReports
+     * https://learn.microsoft.com/en-us/graph/api/meetingattendancereport-list?view=graph-rest-1.0&tabs=http
+     */
+
+
+    /**
+     * Foreach response.value => record
+     *   record.id
+     *
+     *   Get meetingAttendanceReport
+     *   GET /users/{userId}/onlineMeetings/{meetingId}/attendanceReports/{reportId}
+     *
+     */
+
+
+
     /*$graph = new Graph();
     $graph->setAccessToken($access_token);
     $meeting = $graph->createRequest("GET", "/meetingAttendanceReport?startDateTime=".$fechahora."&endDateTime=".$fechahora)
