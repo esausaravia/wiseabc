@@ -14,10 +14,12 @@ use Illuminate\Support\Facades\DB;
 class MsApiController extends Controller
 {
   /**
-   * @param $subject string Titulo del evento
-   * @param $fecha datetime Fecha
+   *  Titulo del evento
+   * @param $subject
+   * Fecha  del evento
+   * @param $fecha
    */
-  public function createOnlineMeeting()
+  public function createOnlineMeeting( $subject,  $fecha)
   {
     $json = $json = '{
     "@odata.context": "https://graph.microsoft.com/v1.0/$metadata#users(\'5d8d505c-864f-4804-88c7-4583c966cde8\')/calendars(\'AAMkAGViNDU9zAAAAAGtlAAA%3D\')/events/$entity",
@@ -116,7 +118,7 @@ class MsApiController extends Controller
    * @param $userId
    * @param $meetingId
    */
-  public function createReport()
+  public function getReport($userId, $meetingId)
   {
     /**
      * Primero debemos obtener listado
