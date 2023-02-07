@@ -44,7 +44,7 @@ class MySchedulesToAttendances extends Command
     foreach ($schedules as $schedule) {
       $classroom = Classroom::find($schedule->class_id);
       $msApi = new MsApiController();
-      $meeting = $msApi->createReport();
+      $meeting = $msApi->getReport($classroom->teacher_id, $schedule['teams_id']);
       //dd($meeting);
       $total_attendance_in_seconds = $meeting['attendanceRecords'][0]['totalAttendanceInSeconds'];
       $join_time = $meeting['attendanceRecords'][0]['attendanceIntervals'][0]['joinDateTime'];

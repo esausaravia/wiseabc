@@ -53,7 +53,9 @@ class MySchedules extends Command
         $nextClass = $class->nextSchedule();
         //nextClass es null cuando no hay clases
         $msApi = new MsApiController();
-        $data = $msApi->createOnlineMeeting();
+        //obtener el nombre de la clase
+        $curso = $class->curso->nombre;
+        $data = $msApi->createOnlineMeeting($curso,$nextClass);
 
         $teamsInfo = new TeamsInfo();
         $teamsInfo->msid = $data['onlineMeeting']['conferenceId'];

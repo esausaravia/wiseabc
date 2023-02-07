@@ -59,6 +59,7 @@ class DatabaseSeeder extends Seeder
     $paymentConcepts = [['concept' => 'Base', 'amount' => 5,],
       ['concept' => 'Asistencia', 'amount' => 6,],
       ['concept' => 'Lealtad', 'amount' => 3,],
+      ['concept' => 'Grupal', 'amount' => 3,],
     ];
 
     $receipts = [['attendance_id' => 2, 'payment_id' => 1, 'status' => 'pagado', 'amount' => 1000,],
