@@ -13,6 +13,10 @@ use Illuminate\Support\Facades\DB;
 
 class MsApiController extends Controller
 {
+
+  public static $secret_id = 'MICROSOFTAPISECRETID';
+  public static $secret_value = 'MICROSOFTAPISECRET';
+
   /**
    *  Titulo del evento
    * @param $subject
