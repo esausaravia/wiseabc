@@ -3,9 +3,12 @@
 namespace App\Console\Commands;
 
 use App\Models\Attendance;
+use App\Models\Classroom;
 use App\Models\Payment;
 use App\Models\PaymentConcept;
 use App\Models\Receipt;
+use App\Models\User;
+use Carbon\Carbon;
 use Illuminate\Console\Command;
 
 class MyReceipts extends Command
@@ -31,35 +34,25 @@ class MyReceipts extends Command
      */
     public function handle()
     {
-      $attendances = Attendance::whereDoesntHave('receipt')->get();
+      $attendances = Attendance::whereDoesntHave('receipt')
+        ->where('duracion', '>=', 1800)
+        ->get();
+
+      $base = PaymentConcept::where('concept', 'LIKE', 'base')->first();
+      $asistencia = PaymentConcept::where('concept', 'LIKE', 'Asistencia')->first();
+      $grupal = PaymentConcept::where('concept', 'LIKE', 'Grupal')->first();
+      $lealtad = PaymentConcept::where('concept', 'LIKE', 'Lealtad')->first();
 
       foreach ($attendances as $attendance) {
-        if ($attendance->duracion < 1800) {
-          continue;
-        }
-        $base = PaymentConcept::where('concept', 'LIKE', 'base')->first();
-        $asistencia = PaymentConcept::where('concept', 'LIKE', 'Asistencia')->first();
-        //FALTA Lealtad
-        //FALTA Grupal
+        $hasGroup = $attendance->class->students()->count() > 1;
+        $profeCreacion = User::find($attendance->class->teacher_id);
+
+        $hasLoyalty = $profeCreacion->created_at->diffInMonths(now()) <= 3;
 
         $amount = $base->amount;
-
-        if ($attendance->puntual) {
-          //se multiplica por 0.1 para convertir de minutos a horas
-          $amount += $asistencia->amount;//?????????
-        }
-        /*
-        Falta obtener fecha de registro de profe y comparar contra fecha actual, si es mayor a 3 meses, se da el bono de lealtad
-        if ($profe->created_at < $hoy->menos('3 meses') ) {
-          $tiene_lealtad = true;
-        }
-        */
-
-        /* FALTA sumar cantidad grupal
-        if ( $clase->students->count() > 1 ) {
-          $tiene_grupal = true;
-        }
-        */
+        $amount += $attendance->puntual ? $asistencia->amount : 0;
+        $amount += $hasGroup ? $grupal->amount : 0;
+        $amount += $hasLoyalty ? $lealtad->amount : 0;
 
         $receipt = Receipt::create([
           'attendance_id' => $attendance->id,
@@ -69,17 +62,17 @@ class MyReceipts extends Command
 
         $receipt->conceptos()->attach($base->id, ['amount' => $base->amount]);
 
-        //Asistencia = Puntualidad
         if ($attendance->puntual) {
           $receipt->conceptos()->attach($asistencia->id, ['amount' => $asistencia->amount]);
         }
-        if ( $tiene_lealtad) {
-          //$receipt->conceptos()->attach($asistencia->id, ['amount' => $asistencia->amount]);
-        }
-        if ( $tiene_grupal ) {
-          //$receipt->conceptos()->attach($asistencia->id, ['amount' => $asistencia->amount]);
+
+        if ($hasLoyalty) {
+          $receipt->conceptos()->attach($lealtad->id, ['amount' => $lealtad->amount]);
         }
 
-      }//END foreach
+        if ($hasGroup) {
+          $receipt->conceptos()->attach($grupal->id, ['amount' => $grupal->amount]);
+        }
+      }
     }
 }
