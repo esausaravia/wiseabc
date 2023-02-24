@@ -10,6 +10,8 @@ use App\Models\TeamsInfo;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Microsoft\Graph\Graph;
+use Microsoft\Graph\Core\GraphConstants;
 
 class MsApiController extends Controller
 {
@@ -17,12 +19,52 @@ class MsApiController extends Controller
   public static $secret_id = '549d37e4-7e77-4301-8bc7-d31b117cb75c';
   public static $secret_value = '8L-8Q~8ya3hGzw_.th2ZzHZ.oEeQVWBi_mYkva7r';
 
+  public static $tendand_id = 'd2636ec3-22a2-4eaa-8e2a-72f28bfe0fef';
   /**
    *  Titulo del evento
    * @param $subject
    * Fecha  del evento
    * @param $fecha
    */
+  private $provider;
+  //create provider
+
+  public function __construct()
+  {
+    $this->provider = new \League\OAuth2\Client\Provider\GenericProvider([
+      'clientId'                => env('OAUTH_APP_ID'),
+      'clientSecret'            => env('OAUTH_APP_SECRET'),
+      'redirectUri'             => env('OAUTH_APP_REDIRECT_URI'),
+      'urlAuthorize'            => env('OAUTH_APP_AUTHORIZE_ENDPOINT'),
+      'urlAccessToken'          => env('OAUTH_APP_TOKEN_ENDPOINT'),
+      'urlResourceOwnerDetails' => '',
+      'scopes'                  => ['User.Read'],
+      'responseType'            => 'code',
+      'responseMode'            => 'query',
+      'codeChallengeMethod'     => 'S256',
+      'usePkceWithAuthorizationCodeGrant' => true,
+
+    ]);
+  }
+
+  public function getAccessToken(Request $request){
+    $authorizationUrl = $this->provider->getAuthorizationUrl();
+   //dd($authorizationUrl);
+    return redirect($authorizationUrl);
+// Configura los valores de ID de aplicación y secreto de cliente
+  }
+
+  public function getTokenAccess(Request $request){
+    $accessToken = $this->provider->getAccessToken('authorization_code', [
+      'code' => $_GET['code']
+    ]);
+    dd($accessToken);
+
+
+    //request to get access token from microsoft
+
+  }
+
   public function createOnlineMeeting( $subject,  $fecha)
   {
     $json = $json = '{
