@@ -12,19 +12,6 @@ use Microsoft\Graph\Graph;
 class MsApiController extends Controller
 {
 
-  public static $secret_id = 'MICROSOFTAPISECRETID';
-  public static $secret_value = 'MICROSOFTAPISECRET';
-
-  public static $tendand_id = 'd2636ec3-22a2-4eaa-8e2a-72f28bfe0fef';
-  /**
-   *  Titulo del evento
-   * @param $subject
-   * Fecha  del evento
-   * @param $fecha
-   */
-  //create provider
-
-
 
   public function getAccessToken(){
     $guzzle = new \GuzzleHttp\Client();
@@ -38,16 +25,12 @@ class MsApiController extends Controller
       ],
     ])->getBody()->getContents());
 
-  //dd($token->access_token);
-
     return $token->access_token;
   }
 
 
   public function createOnlineMeeting( $subject,  $fecha , $token)
   {
-
-
     $client = new \GuzzleHttp\Client([
       'base_uri' => 'https://graph.microsoft.com/v1.0/',
       'headers' => [
@@ -55,15 +38,9 @@ class MsApiController extends Controller
         'Content-Type' => 'application/json'
       ]
     ]);
-
     $date = new DateTime($fecha);
-
-// Sumar 40 minutos
     $date->add(new DateInterval('PT40M'));
-
-// Convertir la fecha de regreso a una cadena en el formato deseado
     $fecha_con_minutos_agregados = $date->format('Y-m-d H:i:s.u');
-
     $body = [
       'subject' => $subject,
       'body' => [
@@ -84,9 +61,6 @@ class MsApiController extends Controller
       'isOnlineMeeting' => true,
       'onlineMeetingProvider' => 'teamsForBusiness'
     ];
-
-
-    //dd(json_encode($body));
     $response = $client->post('users/esau@wiseabcenglish.com/calendar/events', [
       'body' => json_encode($body)
     ]);
