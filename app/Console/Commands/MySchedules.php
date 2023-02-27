@@ -33,16 +33,13 @@ class MySchedules extends Command
      */
     public function handle()
     {
-      /**
-       * Mover a Controllers\MsApiController::createEvent()
-       */
+
 
       $msApi = new MsApiController();
       $token = $msApi->getAccessToken();
       $classes = Classroom::all();
       foreach($classes as $class) {
         $startDate = Carbon::now();
-        //validar qeu la clase tenga horarios
         $endDate = Carbon::now()->addWeeks(4);
         $schedules = Schedule::whereBetween('fechahora', [$startDate, $endDate])->where('class_id', $class->id)->get();
         $count = $schedules->count();
