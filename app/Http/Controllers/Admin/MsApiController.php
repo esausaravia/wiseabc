@@ -3,15 +3,11 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
-use App\Models\Attendance;
-use App\Models\Classroom;
-use App\Models\Schedule;
-use App\Models\TeamsInfo;
-use Carbon\Carbon;
+
+use DateInterval;
+use DateTime;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
 use Microsoft\Graph\Graph;
-use Microsoft\Graph\Core\GraphConstants;
 
 class MsApiController extends Controller
 {
@@ -26,135 +22,75 @@ class MsApiController extends Controller
    * Fecha  del evento
    * @param $fecha
    */
-  private $provider;
   //create provider
 
-  public function __construct()
+
+
+  public function getAccessToken(){
+    $guzzle = new \GuzzleHttp\Client();
+    $url = env('OAUTH_APP_TOKEN_ENDPOINT');
+    $token = json_decode($guzzle->post($url, [
+      'form_params' => [
+        'client_id' => env('OAUTH_APP_ID'),
+        'client_secret' => env('OAUTH_CLIENT_ID'),
+        'scope' => env('OAUTH_SCOPES'),
+        'grant_type' => 'client_credentials',
+      ],
+    ])->getBody()->getContents());
+
+  //dd($token->access_token);
+
+    return $token->access_token;
+  }
+
+
+  public function createOnlineMeeting( $subject,  $fecha , $token)
   {
-    $this->provider = new \League\OAuth2\Client\Provider\GenericProvider([
-      'clientId'                => env('OAUTH_APP_ID'),
-      'clientSecret'            => env('OAUTH_APP_SECRET'),
-      'redirectUri'             => env('OAUTH_APP_REDIRECT_URI'),
-      'urlAuthorize'            => env('OAUTH_APP_AUTHORIZE_ENDPOINT'),
-      'urlAccessToken'          => env('OAUTH_APP_TOKEN_ENDPOINT'),
-      'urlResourceOwnerDetails' => '',
-      'scopes'                  => ['User.Read'],
-      'responseType'            => 'code',
-      'responseMode'            => 'query',
-      'codeChallengeMethod'     => 'S256',
-      'usePkceWithAuthorizationCodeGrant' => true,
 
+
+    $client = new \GuzzleHttp\Client([
+      'base_uri' => 'https://graph.microsoft.com/v1.0/',
+      'headers' => [
+        'Authorization' => 'Bearer ' . $token,
+        'Content-Type' => 'application/json'
+      ]
     ]);
-  }
 
-  public function getAccessToken(Request $request){
-    $authorizationUrl = $this->provider->getAuthorizationUrl();
-   //dd($authorizationUrl);
-    return redirect($authorizationUrl);
-// Configura los valores de ID de aplicación y secreto de cliente
-  }
+    $date = new DateTime($fecha);
 
-  public function getTokenAccess(Request $request){
-    $accessToken = $this->provider->getAccessToken('authorization_code', [
-      'code' => $_GET['code']
+// Sumar 40 minutos
+    $date->add(new DateInterval('PT40M'));
+
+// Convertir la fecha de regreso a una cadena en el formato deseado
+    $fecha_con_minutos_agregados = $date->format('Y-m-d H:i:s.u');
+
+    $body = [
+      'subject' => $subject,
+      'body' => [
+        'contentType' => 'HTML',
+        'content' => $subject
+      ],
+      'start' => [
+        'dateTime' => $fecha,
+        'timeZone' => 'Pacific Standard Time',
+      ],
+      'end' => [
+        'dateTime' => $fecha_con_minutos_agregados,
+        'timeZone' => 'Pacific Standard Time',
+      ],
+      'location' => [
+        'displayName' => 'Sala de conferencias',
+      ],
+      'isOnlineMeeting' => true,
+      'onlineMeetingProvider' => 'teamsForBusiness'
+    ];
+
+
+    //dd(json_encode($body));
+    $response = $client->post('users/esau@wiseabcenglish.com/calendar/events', [
+      'body' => json_encode($body)
     ]);
-    dd($accessToken);
-
-
-    //request to get access token from microsoft
-
-  }
-
-  public function createOnlineMeeting( $subject,  $fecha)
-  {
-    $json = $json = '{
-    "@odata.context": "https://graph.microsoft.com/v1.0/$metadata#users(\'5d8d505c-864f-4804-88c7-4583c966cde8\')/calendars(\'AAMkAGViNDU9zAAAAAGtlAAA%3D\')/events/$entity",
-    "@odata.etag": "W/\"/IUUrIl3PkG1JCSsPfU+8wAAGXjGjw==\"",
-    "id": "AAMkAGViNDU7zAAAAA7zAAAZe6CkAAA=",
-    "createdDateTime": "2019-02-28T21:36:26.7105485Z",
-    "lastModifiedDateTime": "2019-02-28T21:36:26.9577227Z",
-    "changeKey": "/IUUrIl3PkG1JCSsPfU+8wAAGXjGjw==",
-    "categories": [],
-    "originalStartTimeZone": "Pacific Standard Time",
-    "originalEndTimeZone": "Pacific Standard Time",
-    "iCalUId": "040000008200C780DAE",
-    "reminderMinutesBeforeStart": 15,
-    "isReminderOn": true,
-    "hasAttachments": false,
-    "hideAttendees": false,
-    "subject": "Lets go for lunch",
-    "bodyPreview": "Does next month work for you?",
-    "importance": "normal",
-    "sensitivity": "normal",
-    "isAllDay": false,
-    "isCancelled": false,
-    "isDraft": false,
-    "isOrganizer": true,
-    "responseRequested": true,
-    "seriesMasterId": null,
-    "showAs": "busy",
-    "type": "singleInstance",
-    "webLink": "https://outlook.office365.com/owa/?itemid=AAMkAGViNDU7zAAAAA7zAAAZe6CkAAA%3D&exvsurl=1&path=/calendar/item",
-    "onlineMeetingUrl": null,
-    "isOnlineMeeting": true,
-    "onlineMeetingProvider": "teamsForBusiness",
-    "recurrence": null,
-    "responseStatus": {
-      "response": "organizer",
-        "time": "0001-01-01T00:00:00Z"
-    },
-    "body": {
-      "contentType": "html",
-        "content": "Does next month work for you?"
-    },
-    "start": {
-      "dateTime": "2019-03-10T12:00:00.0000000",
-        "timeZone": "Pacific Standard Time"
-    },
-    "end": {
-      "dateTime": "2019-03-10T14:00:00.0000000",
-        "timeZone": "Pacific Standard Time"
-    },
-    "location": {
-      "displayName": "Harrys Bar",
-        "locationType": "default",
-        "uniqueId": "Harrys Bar",
-        "uniqueIdType": "private"
-    },
-    "locations": [
-        {
-          "displayName": "Harrys Bar",
-            "locationType": "default",
-            "uniqueId": "Harrys Bar",
-            "uniqueIdType": "private"
-        }
-    ],
-    "attendees": [
-        {
-          "type": "required",
-            "status": {
-          "response": "none",
-                "time": "0001-01-01T00:00:00Z"
-            },
-            "emailAddress": {
-          "name": "Adele Vance",
-                "address": "AdeleV@contoso.OnMicrosoft.com"
-            }
-        }
-    ],
-    "organizer": {
-      "emailAddress": {
-        "name": "Megan Bowen",
-            "address": "MeganB@contoso.OnMicrosoft.com"
-        }
-    },
-    "onlineMeeting": {
-      "joinUrl": "https://teams.microsoft.com/l/meetup-join/19%3ameeting_NzIyNzhlMGEtM2YyZC00ZmY0LTlhNzUtZmZjNWFmZGNlNzE2%40thread.v2/0?context=%7b%22Tid%22%3a%2272f988bf-86f1-41af-91ab-2d7cd011db47%22%2c%22Oid%22%3a%22bc55b173-cff6-457d-b7a1-64bda7d7581a%22%7d",
-        "conferenceId": "177513992",
-        "tollNumber": "+1 425 555 0123"
-    }
-}';
-    return json_decode($json, true);
+    return json_decode($response->getBody()->getContents(), true);
   }
 
 

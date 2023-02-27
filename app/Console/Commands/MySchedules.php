@@ -37,7 +37,8 @@ class MySchedules extends Command
        * Mover a Controllers\MsApiController::createEvent()
        */
 
-
+      $msApi = new MsApiController();
+      $token = $msApi->getAccessToken();
       $classes = Classroom::all();
       foreach($classes as $class) {
         $startDate = Carbon::now();
@@ -51,15 +52,13 @@ class MySchedules extends Command
           continue;
         }
         $nextClass = $class->nextSchedule();
-        //nextClass es null cuando no hay clases
-        $msApi = new MsApiController();
-        //obtener el nombre de la clase
+
         $curso = $class->curso->nombre;
-        $data = $msApi->createOnlineMeeting($curso,$nextClass);
+        $data = $msApi->createOnlineMeeting($curso,$nextClass, $token);
 
         $teamsInfo = new TeamsInfo();
-        $teamsInfo->msid = $data['onlineMeeting']['conferenceId'];
-        $teamsInfo->link = $data['onlineMeeting']['joinUrl'];
+        $teamsInfo->msid = $data['id'];
+        $teamsInfo->link = $data['onlineMeeting']['joinUrl'] ;
         $teamsInfo->info = json_encode($data);
         $teamsInfo->report = "";
         $teamsInfo->save();
