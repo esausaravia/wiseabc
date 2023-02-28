@@ -129,7 +129,7 @@ class StudentController extends Controller
     }
 
     if ( !empty($input['fname']) && !empty($input['lname']) ) {
-      $student->name = ucwords($valid['fname'].' '.$valid['lname']);
+      $student->name = ucwords($input['fname'].' '.$input['lname']);
     }
 
     if ( !empty($input['password']) ) {
