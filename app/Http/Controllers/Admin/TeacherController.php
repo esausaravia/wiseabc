@@ -150,15 +150,18 @@ class TeacherController extends Controller
 
     $teacher->saveMetas($input);
 
-    $arrOcupados = $teacher->horariosOcupados();
-    foreach ($arrOcupados as $_dia => $_arrHr) {
-      if (!is_array($input['horarios'][($_dia)])) {
-        $input['horarios'][($_dia)] = array();
+    if(isset($input['horarios'])){
+      $arrOcupados = $teacher->horariosOcupados();
+      foreach ($arrOcupados as $_dia => $_arrHr) {
+        if (!isset($input['horarios'][$_dia]) || !is_array($input['horarios'][$_dia])) {
+          $input['horarios'][$_dia] = array();
+        }
+        $input['horarios'][($_dia)] = array_merge($input['horarios'][($_dia)], $_arrHr);
+        sort($input['horarios'][($_dia)]);
       }
-      $input['horarios'][($_dia)] = array_merge($input['horarios'][($_dia)], $_arrHr);
-      sort($input['horarios'][($_dia)]);
+      $teacher->saveHorarios($input['horarios']);
     }
-    $teacher->saveHorarios($input['horarios']);
+
 
     return redirect()->route('admin.teacher.index')->with('success', 'Guardado con éxito');
   }//END update()

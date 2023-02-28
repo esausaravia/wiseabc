@@ -50,7 +50,7 @@ class MySchedules extends Command
         }
         $nextClass = $class->nextSchedule();
 
-        $curso = $class->curso->nombre;
+        $curso = $class->curso->name;
         $data = $msApi->createOnlineMeeting($curso,$nextClass, $token);
 
         $teamsInfo = new TeamsInfo();
