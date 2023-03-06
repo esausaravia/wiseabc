@@ -11,36 +11,22 @@
           <span class="inline-block">({{$curso->duracion}} hrs)</span>
         </div>
       </div>
+
     </section>{{--/curso--}}
 
     <form action="{{ route('admin.classroom.create') }}" method="POST">
       @csrf
       <input type="hidden" name="curso_id" value="{{$curso->id}}" />
-      <div class="fieldset mb-5">
-        <label for="" class="block after:content-['*'] after:text-rose-700 after:pl-1">Tipo</label>
 
-          <div class="flex">
-            <div class="flex rounded-lg shadow-md bg-white text-gray-500">
+      <section class="lg:grid lg:grid-cols-3 mb-5">
 
-              <div class="border-r border-black/5">
-                <input type="radio" name="tipo" id="itipo1" value="5" required class="peer sr-only" @checked( old('tipo')==1 ) />
-                <label for="itipo1" class="block cursor-pointer px-3 leading-12 xl:leading-8 font-normal peer-checked:font-bold peer-checked:text-rojo">
-                  <i class="fa-light fa-users"></i>
-                  Grupal
-                </label>
-              </div>
+        <x-forms.option-group name="tipo" label="Tipo" required :options="\App\Models\Classroom::$arrTipo" class="mb-5"></x-forms.option-group>
 
-              <div class="border-r border-black/5">
-                <input type="radio" name="tipo" id="itipo2" value="11" required class="peer sr-only" @checked( old('tipo')==2 ) />
-                <label for="itipo2" class="block cursor-pointer px-3 leading-12 xl:leading-8 font-normal peer-checked:font-bold peer-checked:text-rojo">
-                  <i class="fa-light fa-user"></i>
-                  Individual
-                </label>
-              </div>
+        <x-forms.option-group name="ritmo" label="Intensidad" required :options="config('wiseabc.ritmo_labels')" class="mb-5"></x-forms.option-group>
 
-            </div>
-          </div>
-      </div>{{--/tipo--}}
+        <x-forms.input class="mb-5" type="date" name="start" label="Fecha de inicio" :value="old('start', date('Y-m-d'))" required></x-forms.input>
+
+      </section>
 
       <section class="fieldset mb-5">
         <label for="" class="block after:content-['*'] after:text-rose-700 after:pl-1">Elegir profesor</label>
@@ -60,6 +46,40 @@
           @endforeach
         </div>
       </section>{{--/teacher_id--}}
+
+      <section class="mb-5">
+        <h3 class="font-accent font-medium text-lg mb-5">Seleccionar horario:</h3>
+        <div class="grid grid-cols-4 md:grid-cols-7 gap-4 my-5 text-center">
+          @php
+            $oldHorarios = old('horarios');
+            $arrHorariosDias = array(1,2,3,4,5);
+            $arrHorarios = array(
+              1=>[9,10,11,12,13],
+              2=>[9,10,11,12,13],
+              3=>[9,10,11,12,13],
+              4=>[9,10,11,12,13],
+              5=>[9,10,11,12,13]
+            );
+          @endphp
+          @foreach ( $arrHorariosDias as $dia )
+          <div class="bg-white text-gray-600 rounded-lg overflow-hidden">
+            <p class="px-2 font-accent font-bold text-md pt-1">{{ $weekdays[( $dia )] }}.</p>
+
+            @foreach ($arrHorarios[($dia)] as $hr)
+            <label for="idia{{$dia}}hr{{$hr}}" class="cursor-pointer block border-b border-gray-400 last:border-b-0">
+              <input type="checkbox" id="idia{{$dia}}hr{{$hr}}" name="horarios[{{$dia}}][]" value="{{$hr}}" class="sr-only peer" @checked( !empty($oldHorarios[( $dia )]) && in_array($hr, $oldHorarios[( $dia )] ) ) />
+              <div class="px-2 peer-checked:bg-azul peer-checked:text-white leading-12 xl:leading-8">{{$hr}}:00</div>
+            </label>
+            @endforeach
+          </div>
+          @endforeach
+        </div>
+      </section>
+      <section class="flex justify-around">
+        <a href="{{ route('admin.teacher.index')}}" class="btn inline-block rounded-full px-4 shadow-md bg-white text-gray-500 leading-12 font-accent font-medium text-sm">Regresar</a>
+
+        <button type="submit" class="btn rounded-full px-4 bg-rojo text-white leading-12 font-accent font-medium text-sm">Guardar</button>
+      </section>
     </form>
   </div>
 </x-admin.layout>

@@ -166,7 +166,7 @@
         <div class="md:flex justify-between font-medium font-accent text-sm">
           <button type="button" class="btn-back shadow-md rounded-full px-5 py-3 bg-white text-gray-600">Regresar</button>
           <button id="btn-disponibilidad" type="button" class=" shadow-md rounded-full px-5 py-3 bg-azul text-white">Validar disponibilidad</button>
-          <button type="Submit" class="hidden shadow-md rounded-full px-5 py-3 bg-rojo text-white">Continuar</button>
+          <button type="submit" class="shadow-md rounded-full px-5 py-3 bg-rojo text-white">Continuar</button>
         </div>
       </section>
     </form>
