@@ -329,13 +329,18 @@ window.addEventListener('DOMContentLoaded',function(){
     });//END foreach
   })(document.querySelectorAll('.form-stepped') );
 
+  /**
+   * Registro estudiante
+   */
   (function(form){
-    if (!form || !form.tagName) return false;
+    if (!form || !form.tagName)  return false;
+
+    //form.querySelector('[type="submit"]').classList.add('hidden');//reactiva registro
 
     form.querySelectorAll('[name="horarios[]"]').forEach(function(_input){
       console.log('_input',_input);
       _input.addEventListener('change',function(){
-        form.querySelector('[type="submit"]').classList.add('hidden');
+        //form.querySelector('[type="submit"]').classList.add('hidden');//reactiva registro
       });
     });
 
