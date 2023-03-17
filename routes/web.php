@@ -107,4 +107,8 @@ Route::group(['prefix'=>'admin','as'=>'admin.','middleware' => ['auth','admin']]
 
 	Route::resource('student', \App\Http\Controllers\Admin\StudentController::class);
 
+  Route::get('token', [\App\Http\Controllers\Admin\MsApiController::class, 'getAccessToken'])->name('token');
+  Route::get('access', [\App\Http\Controllers\Admin\MsApiController::class, 'getTokenAccess'])->name('access');
+
+
 });
