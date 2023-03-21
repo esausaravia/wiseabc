@@ -7,9 +7,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>WiseABC</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;700&family=Open+Sans:wght@400;500;700&display=swap" rel="stylesheet">
+  <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@300;400;500;700&family=Montserrat:wght@300;400;500;700&family=Roboto+Slab:wght@300;400;500;700&display=swap" rel="stylesheet">
 
   <link rel="stylesheet" href="{{ mix('css/app.css') }}">
   <script src="{{ mix('js/app.js') }}" defer></script>
@@ -41,17 +39,19 @@
       </label>
     </div>
   </header>
-  <aside id="AdminAside" class="fixed top-0 left-0 h-full bg-gray-300 dark:bg-slate-900 shadow-md z-10 pt-[68px] px-5 pb-6 font-accent">
+  <aside id="AdminAside" class="fixed top-0 left-0 h-full -translate-x-full xl:translate-x-0 bg-gray-300 dark:bg-slate-900 shadow-md z-10 pt-[68px] px-5 pb-6 font-accent">
     <ul class="font-accent">
+      <li><a href="{{ route('admin.home') }}" class="block p-2">Inicio</a></li>
       <li><a href="{{ route('admin.cursos.index') }}" class="block p-2">Cursos</a></li>
       <li><a href="{{ route('admin.classroom.index') }}" class="block p-2">Clases</a></li>
       <li><a href="{{ route('admin.teacher.index') }}" class="block p-2">Profesores</a></li>
       <li><a href="{{ route('admin.student.index') }}" class="block p-2">Alumnos</a></li>
     </ul>
   </aside>
-  <div id="AdminMainContainer" class="pt-20 pl-[170px] pr-5 pb-5">
+  <div id="AdminMainContainer" class="pt-16 px-3 pb-5 lg:pt-20 xl:pl-[170px]">
     {{ $slot }}
     <x-alert-incontent></x-alert-incontent>
   </div>
+
 </body>
 </html>

@@ -34,6 +34,7 @@ return [
   ],
 
   'suscripcion_labels' => [
+    0 => 'Prueba',
     1 => 'Grupal Relax',
     2 => 'Grupal Medio',
     3 => 'Grupal Intenso',

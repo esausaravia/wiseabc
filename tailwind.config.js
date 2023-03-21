@@ -9,6 +9,7 @@ module.exports = {
   theme: {
     fontFamily:{
       'sans': ['"Open Sans"', defaultTheme.fontFamily.sans],
+      'serif': ['"Roboto Slab"', defaultTheme.fontFamily.serif],
       'accent': ['Montserrat', defaultTheme.fontFamily.sans],
       'mono': ['monospace']
     },
