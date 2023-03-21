@@ -34,31 +34,120 @@
   </section>
 
   <section class="my-5 ">
-    <table class="rounded-xl bg-white dark:bg-white/10">
-      <thead class="text-sm">
-        <tr>
-          <th class="p-2">fecha</th>
-          <th class="p-2 text-left">clase</th>
-          <th class="p-2 text-right">monto</th>
-        </tr>
-      </thead>
-      <tbody>
-        @for ($_loop=1; $_loop<5; $_loop++)
-        <tr class="border-b last:border-b-0 border-gray-200 dark:border-gray-600">
-          <td class="p-2 text-center align-top">{{$_loop}} nov</td>
-          <td class="p-2">
-            <p>Básico para niños, grupal, relax, #123</p>
-            <ul class="pl-4 mb-3">
-              <li>– Base: $5</li>
-              <li>– Asistencia: $6</li>
-              <li>– Lealtad: $3</li>
-            </ul>
-          </td>
-          <td class="p-2 text-right align-top">$14</td>
-        </tr>
+    <h2 class="text-2xl font-medium mt-10 mb-5">Clases del periodo</h2>
+
+    @for( $_dia=1; $_dia<23; $_dia++ )
+    <section class="mb-10">
+      <h3 class="text-lg font-medium">{{$_dia}} feb.</h3>
+      <div class="md:grid md:grid-cols-2 xl:grid-cols-3 md:gap-4 lg:gap-5">
+        @for ($_loop=8; $_loop<11; $_loop++)
+        <div class="classroom bg-white shadow rounded-xl p-3">
+          <p class=" mb-2">#123 Básico para niños, grupal, relax, {{$_loop}}:00</p>
+
+          <table class="text-sm leading-8 mx-auto">
+            <tr>
+              <td>
+                <label class="-ml-[18px]">
+                  <input type="checkbox" name="" checked >
+                  <span> Base: </span>
+                </label>
+              </td>
+              <td>$5</td>
+            </tr>
+            <tr>
+              <td>
+                <label class="-ml-[18px]">
+                  <input type="checkbox" name="" checked >
+                  <span> Puntualidad: </span>
+                </label>
+              </td>
+              <td>$6</td>
+            </tr>
+            <tr class="leading-normal">
+              <td>Lealtad</td>
+              <td>$3</td>
+            </tr>
+            <tr class="leading-normal">
+              <td>Grupal</td>
+              <td>$3</td>
+            </tr>
+            <tr class="leading-normal font-medium text-base">
+              <td>Subtotal</td>
+              <td>$17</td>
+            </tr>
+
+          </table>
+        </div>
         @endfor
-      </tbody>
-    </table>
+
+        @for ($_loop=11; $_loop<14; $_loop++)
+        <div class="classroom bg-white shadow rounded-xl p-3">
+          <p class=" mb-2">#123 Básico para niños, grupal, relax, {{$_loop}}:00</p>
+
+          <table class="text-sm mx-auto">
+            <tr class=" leading-8">
+              <td>
+                <label class="-ml-[18px]">
+                  <input type="checkbox" name="" checked >
+                  <span> Base: </span>
+                </label>
+              </td>
+              <td>$5</td>
+            </tr>
+            <tr class=" leading-8">
+              <td>
+                <label class="-ml-[18px]">
+                  <input type="checkbox" name="" >
+                  <span> Puntualidad: </span>
+                </label>
+              </td>
+              <td>$6</td>
+            </tr>
+            <tr>
+              <td>Grupal</td>
+              <td>$3</td>
+            </tr>
+            <tr class="font-medium text-base">
+              <td>Subtotal</td>
+              <td>$8</td>
+            </tr>
+          </table>
+        </div>
+        @endfor
+
+        @for ($_loop=15; $_loop<18; $_loop++)
+        <div class="classroom bg-red-100 shadow rounded-xl p-3">
+          <p class=" mb-2">#123 Básico para niños, individual, relax, {{$_loop}}:00</p>
+
+          <table class="text-sm mx-auto">
+            <tr class=" leading-8">
+              <td>
+                <label class="-ml-[18px]">
+                  <input type="checkbox" name="" >
+                  <span> Base: </span>
+                </label>
+              </td>
+              <td>$5</td>
+            </tr>
+            <tr class=" leading-8">
+              <td>
+                <label class="-ml-[18px]">
+                  <input type="checkbox" name="" >
+                  <span> Puntualidad: </span>
+                </label>
+              </td>
+              <td>$6</td>
+            </tr>
+            <tr class="font-medium text-base">
+              <td>Subtotal</td>
+              <td>$0</td>
+            </tr>
+          </table>
+        </div>
+        @endfor
+      </div>
+    </section>@endfor
+
   </section>
 
   <section class="flex justify-around font-accent font-medium text-sm leading-8">
