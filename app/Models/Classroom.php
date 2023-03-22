@@ -135,26 +135,29 @@ class Classroom extends Model
     }
 
     public function nextSchedule() {
+        $enWeekdays = config('wiseabc.en_weekdays');
 
-        $today = now('America/Mexico_City')->locale('es');
+        $hoy = now('America/Mexico_City')->locale('es');
+        $hoy_diasem = $hoy->isoFormat('d');
+        $hoy_hr = $hoy->isoFormat('H');
+        $hoy_min = $hoy->isoFormat('H');
 
         foreach($this->horarios AS $horario) {
 
-            if ( $horario->dia===(int)$today->isoFormat('d') ) {
+            if ( $horario->dia===(int)$hoy_diasem ) {
 
-                if ( $horario->hr>(int)$today->isoFormat('H') ) {
-                    $horario->next = $today->copy()->hour($horario->hr)->minute(0);
+                if ( $horario->hr>(int)$hoy_hr ) {
+                    $horario->next = $hoy->copy()->hour($horario->hr)->minute(0);
                     continue;
                 }
-                else if ( $horario->hr===(int)$today->isoFormat('H') && (int)$today->isoFormat('m')<41 ) {
-                    $horario->next = $today->copy()->hour($horario->hr)->minute(0);
+                else if ( $horario->hr===(int)$hoy_hr && (int)$hoy_min<41 ) {
+                    $horario->next = $hoy->copy()->hour($horario->hr)->minute(0);
                     continue;
                 }
             }
 
-            $enWeekdays = config('wiseabc.en_weekdays');
-            $horario->next = $today->copy()->next( $enWeekdays[($horario->dia)] );
-            $horario->next->hour = $horario->hr;
+
+            $horario->next = $hoy->copy()->next( $enWeekdays[($horario->dia)] )->hour($horario->hr)->minute(0);
             //echo print_r($horario->next, true).PHP_EOL;
         }
         return $this->horarios->sortBy('next')->first()->next;

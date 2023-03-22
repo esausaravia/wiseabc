@@ -208,6 +208,9 @@ class User extends Authenticatable
     public function getHorarioArray($dia=0){
         $arrHorarios = array();
         foreach($this->horarios AS $horario) {
+            if (empty($arrHorarios[( $horario->dia )]) || !is_array($arrHorarios[( $horario->dia )])) {
+                $arrHorarios[( $horario->dia )] = array();
+            }
             $arrHorarios[( $horario->dia )][] = $horario->hr;
         }
         return empty($dia) ? $arrHorarios : ( !empty($arrHorarios[($dia)]) ? $arrHorarios[($dia)] : [] );
@@ -217,20 +220,18 @@ class User extends Authenticatable
         $arrOcupado = array();
 
         foreach( $this->teachclasses AS $clase ) {
+
             $arr2 = $clase->getHorarioArray();
             foreach( $arr2 AS $_dia=>$arrHr) {
-                if (empty($dia) && !isset($arrOcupado[$_dia])) {
-                    $arrOcupado[$_dia] = array();
-                }
-                if ( empty($dia) ) {
-                    $arrOcupado[$_dia] = array_merge( $arrOcupado[$_dia], $arrHr );
+                if ( empty($arrOcupado[$_dia]) || !is_array( $arrOcupado[$_dia]) ) {
+                    $arrOcupado[$_dia] = $arrHr;
                 }
                 else {
-                    $arrOcupado = array_merge( $arrOcupado, $arrHr );
+                    $arrOcupado[$_dia] = array_merge( $arrOcupado[$_dia], $arrHr );
                 }
             }
         }
-        return $arrOcupado;
+        return empty($dia) ? $arrOcupado : ( !empty($arrOcupado[$dia]) ? $arrOcupado[$dia] : [] );
     }
 
     public function horariosDisponibles($dia=false) {
@@ -244,7 +245,11 @@ class User extends Authenticatable
                     unset($arrHorarios[($_dia)][$rmvkey]);
                 }
             }
-
+        }
+        foreach($arrHorarios AS $_dia=>$arrHrs) {
+            if ( empty($arrHrs) ) {
+                unset($arrHorarios[$_dia]);
+            }
         }
         return empty($dia) ? $arrHorarios : ( !empty($arrHorarios[( $dia )]) ? $arrHorarios[( $dia )] : [] );
     }

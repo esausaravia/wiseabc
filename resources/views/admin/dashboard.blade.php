@@ -24,20 +24,43 @@
   <div class="lg:grid grid-cols-2 gap-6">
 
     <section class="my-10">
-      <h2 class="text-lg font-medium mb-5">Tenemos alumnos sin profesor</h2>
+      <h2 class="text-lg font-medium mb-5">Tenemos 99 estudiantes sin profesor</h2>
 
       @foreach( $arrCursos AS $curso )
       <div class=" rounded-xl bg-white shadow p-3 mb-3">
-        <h4 class="font-medium">{{$curso->name}}</h4>
+        <h4 class="mb-3">{{$curso->name}}
+          <span>[66 estudiantes]</span>
+        </h4>
 
-        <p>Grupales</p>
-        @foreach( config('wiseabc.ritmo_labels') AS $ritmo )
-        <ul>
-          <li>{{$ritmo}}</li>
-        </ul>
-        @endforeach
+        <div class="md:grid grid-cols-2 gap-5 text-sm my-4">
+          <div>
+            <p class="text-xs font-bold uppercase">Grupo [44]</p>
+            <ul class="flex -mx-2">
+              @foreach( config('wiseabc.ritmo_labels') AS $ritmo )
+              <li class="px-2">
+                <p>{{$ritmo}}</p>
+                <span class="text-base">{{ rand(1,20) }}</span>
+              </li>
+              @endforeach
+            </ul>
+          </div>
 
-        Individuales
+          <div>
+            <p class="text-xs font-bold uppercase">Individual [22]</p>
+            <ul class="flex -mx-2">
+              @foreach( config('wiseabc.ritmo_labels') AS $ritmo )
+              <li class="px-2">
+                <p>{{$ritmo}}</p>
+                <span class="text-base">{{ rand(1,10) }}</span>
+              </li>
+              @endforeach
+            </ul>
+          </div>
+        </div>
+
+        <div class="flex justify-center">
+          <a class="rounded-full border-gray-400 border-2 bg-white shadow-md px-4 font-medium text-sm leading-[44px]">ver horarios</a>
+        </div>
 
       </div>
       @endforeach
@@ -62,17 +85,10 @@
             <td class="px-2 py-2">$999.99</td>
             <td class="px-2 py-2 text-sm">
               <p class="">
-                @if ( $loop<3 )
                 <span class="inline-block rounded-2xl px-3 leading-6 bg-orange-100 text-orange-400">
                   <span class="ico"><i class="fa-light fa-hourglass-clock"></i></span>
                   Pendiente
                 </span>
-                @else
-                <span class="inline-block rounded-2xl px-3 leading-6 bg-green-100 text-green-600">
-                  <span class="ico"><i class="fa-regular fa-check"></i></span>
-                  Pagado
-                </span>
-                @endif
               </p>
               <p class="">30 dic</p>
             </td>

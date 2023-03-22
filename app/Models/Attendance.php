@@ -27,4 +27,7 @@ class Attendance extends Model
     public function receipt(){
         return $this->hasOne(Receipt::class);
     }
+    public function recibo() {
+        return $this->hasOne(Receipt::class);
+    }
 }
