@@ -17,6 +17,20 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
+Route::get('test', function(Request $request){
+
+	$horarios = [1 => [9, 11], 3 => [9, 11], 5 => [9, 11]];
+
+	ob_start();
+	$enWeekdays = config('wiseabc.en_weekdays');
+
+	$hoy = now('America/Mexico_City')->locale('es');
+	echo uuid_create();
+	$output = ob_get_clean();
+
+	dd($output);
+})->name('test');
+
 Route::get('/', function (Request $request) {
 	$user = $request->user();
 

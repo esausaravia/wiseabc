@@ -13,6 +13,14 @@ class Receipt extends Model
 
     public $timestamps = false;
 
+    public function attendance() {
+        return $this->belongsTo(Attendance::class);
+    }
+
+    public function asistencia() {
+        return $this->belongsTo(Attendance::class);
+    }
+
     //hasmany payments
     public function payment() {
         return $this->belongsTo(Payment::class); //(Payment::class, 'payment_id', 'id');

@@ -10,6 +10,7 @@ class Payment extends Model
 {
     use HasFactory, SoftDeletes;
 
+    protected $fillable = ['user_id','reference','amount'];
 
     public function users() {
         return $this->belongsToMany(User::class);
