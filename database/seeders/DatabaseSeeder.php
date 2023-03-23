@@ -33,14 +33,17 @@ class DatabaseSeeder extends Seeder
      * Truncar tablas de info demo.
      * NUNCA truncar users
      */
-    DB::table('cursos')->truncate();
-    DB::table('classrooms')->truncate();
-    DB::table('class_schedules')->truncate();
-    DB::table('teams_infos')->truncate();
     DB::table('attendances')->truncate();
-    DB::table('receipts')->truncate();
+    DB::table('classrooms')->truncate();
+    DB::table('class_horarios')->truncate();
+    DB::table('class_schedules')->truncate();
+    DB::table('class_student')->truncate();
+    DB::table('cursos')->truncate();
     DB::table('payments')->truncate();
     DB::table('payment_concepts')->truncate();
+    DB::table('receipts')->truncate();
+    DB::table('receipt_pconcept')->truncate();
+    DB::table('teams_infos')->truncate();
     DB::table('users')->truncate();
     DB::table('user_horarios')->truncate();
     DB::table('usermetas')->truncate();
@@ -72,7 +75,7 @@ class DatabaseSeeder extends Seeder
      * Profesores
      */
     //horarios lun mie vie 9-10 y 11-12
-    $horarios = [1 => [9, 11], 3 => [9, 11], 5 => [9, 11]];
+    $horarios = [1 => [9, 10, 11, 12], 3 => [9, 10, 11, 12], 5 => [9, 10, 11, 12]];
 
     for ($i = 0; $i < 6; $i++) {
       $profe = \App\Models\User::create([
@@ -106,6 +109,9 @@ class DatabaseSeeder extends Seeder
     ]);
 
 
+    /**
+     * Crear classrooms, schedules y attendances
+     */
     $enWeekdays = config('wiseabc.en_weekdays');
     $hoy = now('America/Mexico_City')->locale('es');
     $cursoStart = now('America/Mexico_City')->locale('es')->subMonth();
@@ -144,6 +150,20 @@ class DatabaseSeeder extends Seeder
          * lunes 9am
          */
         $classroom->saveHorarios([$dia=>[$hr]]);
+
+        /**
+         * Crear 2 estudiantes para cada clase
+         */
+        $students = \App\Models\User::factory()->count(2)->create(['user_type'=>2]);
+        foreach($students AS $student) {
+          $student->saveMetas([
+            'edad'=>$curso->edad,
+            'nivel'=>$curso->nivel
+          ]);
+
+          $student->saveHorarios([$dia=>[$hr]]);
+          $classroom->students()->attach($student->id);
+        }
 
         /**
          * CREAR SCHEDULE del mes pasado
