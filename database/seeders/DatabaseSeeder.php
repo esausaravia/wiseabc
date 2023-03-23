@@ -202,7 +202,6 @@ class DatabaseSeeder extends Seeder
      */
     $finmes = $cursoStart->copy()->endOfMonth()->isoFormat('YYYY-MM-DD HH:mm:ss');
     foreach( $profesores AS $profe ) {
-      $finmes = $cursoStart->copy()->endOfMonth()->isoFormat('YYYY-MM-DD HH:mm:ss');
       $asistencias = Attendance::where('user_id', $profe->id)->where('fechahora','<',$finmes)->get();
 
       $pago_amount = 0;
@@ -224,7 +223,6 @@ class DatabaseSeeder extends Seeder
       }
 
     }//endforeach profe
-
 
   }//END run method
 }

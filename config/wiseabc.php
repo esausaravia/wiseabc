@@ -27,10 +27,10 @@ return [
   ],
 
   'ritmo_labels' => [
-    1 => 'Relax',
-    2 => 'Medio',
-    3 => 'Intenso',
-    4 => 'Intenso+'
+    '1' => 'Relax',
+    '2' => 'Medio',
+    '3' => 'Intenso',
+    '4' => 'Intenso+'
   ],
 
   'suscripcion_labels' => [
@@ -132,12 +132,6 @@ return [
   'type_classroom' => [
     '1' => 'Grupal',
     '2' => 'Individual',
-  ],
-  'rhythm' => [
-    '1' => 'Relax',
-    '2' => 'Medio',
-    '3' => 'Intenso',
-    '4' => 'Intenso+',
   ],
 
 ];
