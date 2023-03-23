@@ -1,13 +1,27 @@
 <x-layoutreg container-class="py-12 lg:flex">
   <section class="lg:w-2/3 xl:w-3/4 mb-12 lg:mb-0">
-    <h2 class="text-2xl md:text-3xl font-bold font-accent">Registro de profesor</h2>
+    <h2 class="text-xl md:text-2xl font-medium font-accent">Teacher sign-up</h2>
+
+    <div class="my-5">
+      <h3 class="text-lg md:text-xl mb-2">Requirements to get hired at Wise ABC </h3>
+
+      <ol class="list-decimal pl-5">
+        <li>Must be a Native Speaker.</li>
+        <li>Must have a bachelor's degree and TEFL certificate.</li>
+        <li>Must have 2 years of experience teaching E.S.L.</li>
+        <li>Must be energetic and enthusiastic while teaching.</li>
+        <li>Must have a reliable server and good equipment to teach online. Must have a reliable server and good equipment to teach online.</li>
+        <li>Must use teachers' props during the lesson.</li>
+      </ol>
+    </div>
+
     <form id="frmRegProf" name="frmRegProf" class="form-stepped" action="{{ route('regprof') }}" method="post" >
       @csrf
       <input type="hidden" name="jstimezone" value="" />
       <input type="hidden" name="jsTimezoneOffset" value="" />
       <input type="hidden" name="date_toTimeString" value="" />
 
-      <div class="form-indicators flex my-12">
+      <div class="form-indicators flex my-10">
         <div class="form-indicator ">
           <span class="form-indicator-num">1</span>
           <span>Acceso</span>
@@ -498,17 +512,20 @@
     </form>
   </section>
 
-  <section class="md:w-1/2 lg:ml-5 lg:w-1/3 xl:w-1/4 grid grid-cols-1 gap-5">
-    <h2 class="text-2xl font-bold font-accent mb-"><a href="{{ route('register') }}">Registro de estudiante</a></h2>
-    <a href="{{ route('register') }}">
+  <section class="md:w-1/2 lg:ml-5 lg:w-1/3 xl:w-1/4">
+    <div class="grid grid-cols-1 gap-5">
+      <h2 class="text-lg md:text-xl font-medium font-accent"><a href="{{ route('register') }}">Student sign-up</a></h2>
+      <a href="{{ route('register') }}">
 
-      <img width="2048" height="2048"  class="lazyload w-full h-auto" alt="" srcset="data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw=="  data-src="https://mezcalent.com/wiseabc/wp-content/uploads/2022/09/estudiante-digital-1x1-1.jpg" decoding="async" data-srcset="https://mezcalent.com/wiseabc/wp-content/uploads/2022/09/estudiante-digital-1x1-1.jpg 2048w, https://mezcalent.com/wiseabc/wp-content/uploads/2022/09/estudiante-digital-1x1-1-420x420.jpg 420w, https://mezcalent.com/wiseabc/wp-content/uploads/2022/09/estudiante-digital-1x1-1-1024x1024.jpg 1024w, https://mezcalent.com/wiseabc/wp-content/uploads/2022/09/estudiante-digital-1x1-1-210x210.jpg 210w, https://mezcalent.com/wiseabc/wp-content/uploads/2022/09/estudiante-digital-1x1-1-768x768.jpg 768w, https://mezcalent.com/wiseabc/wp-content/uploads/2022/09/estudiante-digital-1x1-1-1536x1536.jpg 1536w" data-sizes="auto" />
-    </a>
+        <img width="2048" height="2048"  class="lazyload w-full h-auto" alt="" srcset="data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw=="  data-src="https://mezcalent.com/wiseabc/wp-content/uploads/2022/09/estudiante-digital-1x1-1.jpg" decoding="async" data-srcset="https://mezcalent.com/wiseabc/wp-content/uploads/2022/09/estudiante-digital-1x1-1.jpg 2048w, https://mezcalent.com/wiseabc/wp-content/uploads/2022/09/estudiante-digital-1x1-1-420x420.jpg 420w, https://mezcalent.com/wiseabc/wp-content/uploads/2022/09/estudiante-digital-1x1-1-1024x1024.jpg 1024w, https://mezcalent.com/wiseabc/wp-content/uploads/2022/09/estudiante-digital-1x1-1-210x210.jpg 210w, https://mezcalent.com/wiseabc/wp-content/uploads/2022/09/estudiante-digital-1x1-1-768x768.jpg 768w, https://mezcalent.com/wiseabc/wp-content/uploads/2022/09/estudiante-digital-1x1-1-1536x1536.jpg 1536w" data-sizes="auto" />
+      </a>
 
-    </a>
-    <p class="text-sm text-right">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut elit tellus, luctus nec ullamcorper mattis, pulvinar dapibus.</p>
-    <p class="text-right">
-      <a href="{{ route('register') }}" class="inline-block rounded-lg bg-azul p-3 font-accent text-sm text-gray-100">Estudiante</a>
-    </p>
+      </a>
+      <p class="text-sm text-right">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut elit tellus, luctus nec ullamcorper mattis, pulvinar dapibus.</p>
+      <p class="text-right">
+        <a href="{{ route('register') }}" class="inline-block rounded-lg bg-azul p-3 font-accent text-sm text-gray-100">Estudiante</a>
+      </p>
+    </div>
+
   </section>
 </x-layoutreg>

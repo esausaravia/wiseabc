@@ -6,7 +6,9 @@
   'value'=>null,
   'options'=>array(),
   'id',
-  'optcont'
+  'optcont',
+  'helper'=>'',
+  'fullwidth'=>false
 ])
 @php
   $id = !empty($id) ? $id : 'i'.(preg_replace('/\[.*\]/i', '', $name) );
@@ -23,7 +25,9 @@
   <label class="block @if ($required) after:content-['*'] after:text-rose-700 after:pl-1 @endif">{{ $label }}</label>
   @endif
 
+  @unless($fullwidth)
   <div class="flex">
+  @endunless
 
     @if ( !empty($optcont) && is_object($optcont) )
     <div  {{$optcont->attributes->class(['rounded-lg shadow-md bg-white text-gray-500 leading-12 xl:leading-8'])}} >
@@ -41,7 +45,15 @@
       @endforeach
 
     </div>{{--/options-cont--}}
+
+  @unless($fullwidth)
   </div>{{--/width--}}
+  @endunless
+
+  @if( !empty($helper) )
+  <small class="text-xs">{{$helper}}</small>
+  @endif
+
   @error($name)
   <span class="error-msg block text-sm text-rose-700">{{$message}}</span>
   @enderror
