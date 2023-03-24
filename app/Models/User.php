@@ -90,6 +90,10 @@ class User extends Authenticatable
         return $this->belongsToMany(Classroom::class, 'class_student', 'user_id', 'class_id')->withTimestamps()->orderByPivot('created_at', 'desc');
     }
 
+    public function currentClassroom() {
+        return $this->classrooms()->where('status','activo')->first();
+    }
+
     /**
      * Accessors
      */

@@ -1,17 +1,10 @@
 <?php
 return [
   'edad_labels' => [
-    3 => '3-5',
-    6 => '6-11',
-    12 => '12-17',
-    18 => '18+'
-  ],
-
-  'edad_cats' => [
-    5 => 'Niños',
-    11 => 'Niños2',
-    15 => 'Adolecentes',
-    18 => 'Adultos'
+    3 => '3-5 años',
+    6 => '6-11 años',
+    12 => '12-17 años',
+    18 => '18+ años'
   ],
 
   'nivel_labels' => [

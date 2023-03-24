@@ -41,7 +41,7 @@
               <div class="border-r border-black/5">
                 <input type="radio" name="edad" id="iedad-{{$_key}}" value="{{$_key}}" required class="peer sr-only" @checked( old('edad', $curso->edad)==$_key ) />
                 <label for="iedad-{{$_key}}" class="block cursor-pointer px-3 leading-12 xl:leading-8 font-normal peer-checked:font-bold peer-checked:text-rojo">
-                  {{$_label}} años
+                  {{$_label}}
                 </label>
               </div>
               @endforeach

@@ -57,13 +57,7 @@
       <section class="form-step hidden">
 
         <div class="lg:w-2/3 xl:w-1/2 mb-5">
-          @php
-            $arrEdades = config('wiseabc.edad_labels');
-            foreach($arrEdades AS $_k=>$_v) {
-              $arrEdades[$_k] = $_v.' años';
-            }
-          @endphp
-          <x-forms.option-group label="Edad" name="edad" :options="$arrEdades" required helper="Marque su edad dando clic."></x-option-group>
+          <x-forms.option-group label="Edad" name="edad" :options="config('wiseabc.edad_labels')" required helper="Marque su edad dando clic."></x-option-group>
         </div>
 
         <h4 class="md:col-span-3 text-left text-lg after:content-['*'] after:text-rose-700 after:pl-1 ">Nivel de Ingles</h4>
