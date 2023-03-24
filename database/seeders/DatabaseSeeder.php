@@ -161,7 +161,7 @@ class DatabaseSeeder extends Seeder
             'nivel'=>$curso->nivel
           ]);
 
-          $student->saveHorarios([$dia=>[$hr]]);
+          $student->saveHorarios([1=>[$hr]]);
           $classroom->students()->attach($student->id);
         }
 
@@ -243,6 +243,10 @@ class DatabaseSeeder extends Seeder
       }
 
     }//endforeach profe
+
+    $this->call([
+      StudentSeeder::class
+    ]);
 
   }//END run method
 }

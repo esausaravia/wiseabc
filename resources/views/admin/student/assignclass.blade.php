@@ -15,7 +15,7 @@
             <div class="text-sm my-2 flex">
               <p class="mr-2"><strong>Email</strong>: <a href="mailto:{{ $student->email }}">{{ $student->email }}</a></p>
               <p class="mr-2"><strong>Tel</strong>: {{$student->tel }}</p>
-              <p class="mr-2"><strong>Edad</strong>: {{$student->edadLabel }} años</p>
+              <p class="mr-2"><strong>Edad</strong>: {{$student->edadLabel }} </p>
               <p class="mr-2"><strong>Nivel</strong>: {{$student->nivelLabel }}</p>
             </div>
             <x-user-card-horarios :horarios="$student->getHorarioArray()" :user_type="2"></x-user-card-horarios>

@@ -50,10 +50,8 @@
           <td class="px-2">{{ $curso->clases()->count() }}</td>
           <td class="px-2 text-sm ">
             <div class="flex">
-              {{--
-              <a href="{{ route('admin.classroom.createforcurso', ['curso'=>$curso]) }}" class="px-2">
-                <i class="fa-light fa-plus"></i> Classroom
-              </a>--}}
+              <a href="{{ route('admin.classroom.createforcurso', $curso) }}" class="px-2">
+                <i class="fa-light fa-plus"></i>classroom</a>
               <a href="{{ route('admin.cursos.edit',['curso'=>$curso]) }}" class="px-2"><i class="fa-light fa-pen-to-square"></i> Editar</a>
               <a href="{{ route('admin.cursos.destroy', ['curso'=>$curso]) }}" class="px-2">
                 <i class="fa-light fa-trash"></i> Eliminar</a>

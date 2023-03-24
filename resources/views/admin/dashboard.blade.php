@@ -59,7 +59,7 @@
         </div>
 
         <div class="flex justify-center">
-          <a class="rounded-full border-gray-400 border-2 bg-white shadow-md px-4 font-medium text-sm leading-[44px]">ver horarios</a>
+          <a href="{{ route('admin.classroom.createforcurso', 1) }}" class="rounded-full border-gray-400 border-2 bg-white shadow-md px-4 font-medium text-sm leading-[44px]">ver horarios</a>
         </div>
 
       </div>
