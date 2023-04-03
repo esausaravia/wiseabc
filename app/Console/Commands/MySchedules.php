@@ -22,7 +22,7 @@ class MySchedules extends Command
      *
      * @var string
      */
-    protected $description = 'Command description';
+    protected $description = 'Agenda las siguientes clases';
 
     /**
      * Execute the console command.
