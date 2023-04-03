@@ -18,3 +18,4 @@ yarn-error.log
 /.vscode
 notes.txt
 /resources/css/tailwind.css
+public/js/admin.classroom.cforcurso.js

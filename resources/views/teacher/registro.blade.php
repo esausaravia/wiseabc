@@ -17,9 +17,6 @@
 
     <form id="frmRegProf" name="frmRegProf" class="form-stepped" action="{{ route('regprof') }}" method="post" >
       @csrf
-      <input type="hidden" name="jstimezone" value="" />
-      <input type="hidden" name="jsTimezoneOffset" value="" />
-      <input type="hidden" name="date_toTimeString" value="" />
 
       <div class="form-indicators flex my-10">
         <div class="form-indicator ">

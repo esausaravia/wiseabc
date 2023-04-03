@@ -4,7 +4,6 @@
 
   <form id="frmProfileCard" action="{{ route('teacher.update') }}" method="POST" enctype="multipart/form-data" class="my-5">
     @csrf
-    <input type="hidden" name="jstimezone" value="" />
     <div class="grid gap-5 grid-cols-1 xl:grid-cols-2 my-5">
 
       <section class="rounded-xl py-3 px-4 bg-white text-gray-600">

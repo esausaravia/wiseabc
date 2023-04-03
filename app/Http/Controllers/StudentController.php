@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Carbon;
 
 class StudentController extends Controller
 {
@@ -12,37 +13,30 @@ class StudentController extends Controller
     if ( $user->suscripcion===null ) {
       return redirect()->route('student.elegir-suscripcion');
     }
+    $clase = null;
+    $sigClase = null;
+    $sigClaseFin = null;
+    $activarSigClaseBtn = false;
+    $hoy = now('America/Mexico_City')->locale('es');
 
-    $enWeekdays = config('wiseabc.en_weekdays');
-    $today = \Illuminate\Support\Carbon::now('America/Mexico_City')->locale('es');
+    $clase = $user->currentClassroom();
 
-    $clase = $user->classrooms()->with(['horarios'])->withCount('students')->where('ends_at','>=', $today->format('Y-m-d') )->get()->first();
+    if ($clase && is_object($clase) ) {
+      $sigClase = $clase->sigFechaHora();
+      $sigClaseFin = $sigClase->copy()->addMinutes(40);
 
-    if ( !empty($clase) ) {
-      $next_hr = $clase->horarios()->first();
-      foreach( $clase->horarios AS $horario ) {
-        if ( $horario->dia > (int)$today->format('N') ) {
-          $next_hr = $horario;
-        }
-        else if ( $horario->dia==(int)$today->format('N') && $horario->hr >= (int)$today->format('G') ) {
-          $next_hr = $horario;
-        }
-      }
-
-      if ( $next_hr->dia==(int)$today->isoFormat('d') ) {
-        $carbon_next = \Illuminate\Support\Carbon::createFromTime($next_hr->hr,0,0,'America/Mexico_City')->locale('es');
-      }
-      else {
-        $carbon_next = \Illuminate\Support\Carbon::create('next '.$enWeekdays[($next_hr->dia)] )->locale('es');
-        $carbon_next->addHours($next_hr->hr);
+      if ( $hoy->lessThan( $sigClaseFin ) ) {
+        $activarSigClaseBtn = true;
       }
     }
 
     return view('student.home', [
       'user'=>$user,
       'clase'=>$clase,
-      'next'=> !empty($carbon_next) ? $carbon_next : null ,
-      'today'=>$today,
+      'hoy'=>$hoy,
+      'sigClase'=>$sigClase,
+      'sigClaseFin'=>$sigClaseFin,
+      'activarSigClaseBtn'=>$activarSigClaseBtn,
       'weekdays'=>config('wiseabc.weekdays')
     ]);
   }
@@ -52,14 +46,24 @@ class StudentController extends Controller
   }
 
   public function suscribe(Request $request) {
+    if ( empty($request->suscripcion) ) {
+      return redirect()->route('student.elegir-suscripcion');
+    }
+
+    $arrSuscripciones = config('wiseabc.suscripciones');
+    $susc = $arrSuscripciones[( $request->suscripcion )];
+    if ( empty($susc) ) {
+      return redirect()->route('student.elegir-suscripcion');
+    }
+
     $user = $request->user();
 
     $user->status = 'suscribed';
-    $user->usermetas()->create([
-      'metakey' => 'suscripcion',
-      'metaval' => $request->suscripcion
+    $user->saveMetas([
+      'suscripcion'=>$request->suscripcion,
+      'clase_tipo'=>$susc['tipo'],
+      'ritmo'=>$susc['ritmo']
     ]);
-    $user->save();
 
     return redirect()->route('home');
   }

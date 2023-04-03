@@ -74,7 +74,7 @@
             <a href="{{ route('register') }}" class="p-2">Registro</a>
           @else
             <span class="p-2">Hola {{ !empty($user->fname) ? $user->fname : $user->name }}</span>
-            <a href="{{ route('logout') }}" class="p-2">Salir</a>
+            <a href="{{ route('salir') }}" class="p-2">Salir</a>
           @endguest
           <label for="darkmode-toggler1" class="inline-flex relative items-center cursor-pointer ml-2">
             <span class="mr-2">

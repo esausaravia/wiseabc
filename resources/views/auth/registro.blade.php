@@ -3,9 +3,6 @@
     <h2 class="text-xl md:text-2xl font-medium font-accent">Registro de estudiante</h2>
     <form id="frmRegStudent" name="frmRegStudent" class="form-stepped" action="{{ route('register') }}" method="post" >
       @csrf
-      <input type="hidden" name="jstimezone" value="" />
-      <input type="hidden" name="jsTimezoneOffset" value="" />
-      <input type="hidden" name="date_toTimeString" value="" />
 
       @if ( $errors->any() )
         <div class="rounded-lg border-1 border-rose-600 bg-rose-200 text-rose-600 p-3">

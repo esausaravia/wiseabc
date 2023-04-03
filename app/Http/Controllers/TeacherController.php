@@ -51,24 +51,32 @@ class TeacherController extends Controller
   public function home(Request $request) {
     $user = $request->user();
 
-    $today = now('America/Mexico_City')->locale('es');
+    $hoy = now('America/Mexico_City')->locale('es');
 
-    $clases = $user->teachclasses()->with(['horarios','students'])->withCount('students')->where('ends_at','>=', $today->format('Y-m-d') )->get();
+    $clases = $user->teachclasses()->withCount('students')->where('status','active')->where('ends_at','>=', $hoy->isoFormat('YYYY-MM-DD') )->get();
 
     $clases_para_hoy = 0;
 
     foreach($clases AS $clase) {
-      $clase->next = $clase->nextSchedule();
+      $clase->next = $clase->sigFechaHora();
 
-      if ( $clase->next->greaterThanOrEqualTo( $today ) && $clase->next->lessThan( $today->tomorrow('America/Mexico_City') ) ) {
+      if ( $clase->next->greaterThanOrEqualTo( $hoy ) && $clase->next->lessThan( $hoy->tomorrow() ) ) {
         $clases_para_hoy++;
       }
     }
     $clases = $clases->sortBy('next');
 
     $clase = null;
-    if ($clases->first()->next->isoFormat('d') === $today->isoFormat('d') ) {
+    if ($clases->first()->next->isoFormat('d') === $hoy->isoFormat('d') ) {
       $clase = $clases->shift();
+    }
+
+    $sigClase=null;
+    $sigClaseFin=null;
+    if ($clase!=null) {
+      $sigClase = $clase->sigFechaHora();
+
+      $sigClaseFin = $sigClase->copy()->addMinutes(40);
     }
 
     return view('teacher.home', [
@@ -76,7 +84,9 @@ class TeacherController extends Controller
       'clase'=>$clase,
       'clases'=>$clases,
       'clases_para_hoy'=>$clases_para_hoy,
-      'today'=>$today,
+      'hoy'=>$hoy,
+      'sigClase'=>$sigClase,
+      'sigClaseFin'=>$sigClaseFin,
       'weekdays'=>config('wiseabc.weekdays')
     ]);
   }
@@ -90,9 +100,11 @@ class TeacherController extends Controller
   }
 
   public function perfil(Request $request) {
+    $profe = $request->user();
 
     return view('teacher.perfil',[
-      'profe'=>$request->user()
+      'profe'=>$profe,
+
     ]);
   }
 

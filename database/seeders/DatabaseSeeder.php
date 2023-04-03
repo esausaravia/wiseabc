@@ -77,17 +77,25 @@ class DatabaseSeeder extends Seeder
     //horarios lun mie vie 9-10 y 11-12
     $horarios = [1 => [9, 10, 11, 12], 3 => [9, 10, 11, 12], 5 => [9, 10, 11, 12]];
 
-    for ($i = 0; $i < 6; $i++) {
-      $profe = \App\Models\User::create([
-        'status' => 'active',
-        'user_type' => 3,
-        'name' => "Profe{$i}",
-        'email' => "profe{$i}@wiseabcenglish.com",
-        'password' => bcrypt('password')
+
+    $profesores = \App\Models\User::factory()->count(4)->create(['user_type'=>3]);
+    foreach($profesores AS $teacher) {
+
+      $oldEmail = $teacher->email;
+      $teacher->email = 'profe'.$teacher->id.'@wiseabcenglish.com';
+      $teacher->save();
+
+      $arrName = explode(' ', $teacher->name);
+
+      $teacher->saveMetas([
+        'lname' => array_pop($arrName),
+        'fname' => implode(' ', $arrName),
+        'personal_email' => $oldEmail,
+        'timezone' => 'America/Mexico_City'
       ]);
-      $profe->saveHorarios($horarios);
+
+      $teacher->saveHorarios($horarios);
     }
-    $profesores = \App\Models\User::where('user_type',3)->get();
 
     /**
      * Conceptos de pago
@@ -137,7 +145,7 @@ class DatabaseSeeder extends Seeder
         $classroom = Classroom::create([
           'teacher_id' => $profe->id,
           'curso_id' => $curso->id,
-          'status' => 'activo',
+          'status' => 'active',
           'tipo' => 1,
           'ritmo' => 1,
           'start' => $cursoStart->isoFormat('YYYY-MM-DD'),
@@ -150,20 +158,6 @@ class DatabaseSeeder extends Seeder
          * lunes 9am
          */
         $classroom->saveHorarios([$dia=>[$hr]]);
-
-        /**
-         * Crear 2 estudiantes para cada clase
-         */
-        $students = \App\Models\User::factory()->count(2)->create(['user_type'=>2]);
-        foreach($students AS $student) {
-          $student->saveMetas([
-            'edad'=>$curso->edad,
-            'nivel'=>$curso->nivel
-          ]);
-
-          $student->saveHorarios([1=>[$hr]]);
-          $classroom->students()->attach($student->id);
-        }
 
         /**
          * CREAR SCHEDULE del mes pasado
@@ -184,7 +178,7 @@ class DatabaseSeeder extends Seeder
           'class_id' => $classroom->id,
           'teams_id' => $teamsInfo->id,
           'fechahora' => $schedule->fechahora,
-          'duracion' => 2400,
+          'duracion' => 2400, //40 mins
           'puntual' => true
         ]);
 
@@ -207,12 +201,35 @@ class DatabaseSeeder extends Seeder
 
         /**
          * CREAR SCHEDULE CON HORARIO DE CLASE
-         * $fechahora = $classroom->nextSchedule()
+         * $fechahora = $classroom->sigFechaHora()
          */
         $schedule = Schedule::create([
           'class_id' => $classroom->id,
-          'fechahora' => $classroom->nextSchedule(),
+          'fechahora' => $classroom->sigFechaHora(),
         ]);
+
+        /**
+         * Crear 2 estudiantes para cada clase
+         */
+        $students = \App\Models\User::factory()->count(2)->create(['user_type'=>2]);
+        foreach($students AS $student) {
+
+          $arrName = explode(' ', $student->name);
+
+          $student->saveMetas([
+            'lname' => array_pop($arrName),
+            'fname' => implode(' ', $arrName),
+            'edad'=>$curso->edad,
+            'nivel'=>$curso->nivel,
+            'clase_tipo' => 1,
+            'ritmo' => 1,
+            'suscripcion'=>1,
+            'timezone' => 'America/Mexico_City'
+          ]);
+
+          $student->saveHorarios([1=>[$hr]]);
+          $classroom->students()->attach($student->id);
+        }
 
       }//END por cada curso
     }//endforeach profe

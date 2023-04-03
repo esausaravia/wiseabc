@@ -25,7 +25,7 @@
 
     <div class="flex text-sm font-accent font-medium">
       <span class="p-2">Hola {{ !empty($user->fname) ? $user->fname : $user->name }}</span>
-      <a href="{{ route('logout') }}" class="p-2">Salir</a>
+      <a href="{{ route('salir') }}" class="p-2">Salir</a>
 
       <label for="darkmode-toggler1" class="inline-flex relative items-center cursor-pointer ml-2">
         <span class="mr-2">
@@ -64,7 +64,7 @@
         <span class="ico text-2xl"><i class="fa-light fa-user-gear"></i></span>
         <span class="">Perfil</span>
       </a>
-      <a href="{{ route('logout') }}" class="flex flex-col py-4">
+      <a href="{{ route('salir') }}" class="flex flex-col py-4">
         <span class="ico text-2xl"><i class="fa-light fa-arrow-right-from-arc"></i></span>
         <span class="">SALIR</span>
       </a>

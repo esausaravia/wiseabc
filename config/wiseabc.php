@@ -41,45 +41,53 @@ return [
   'suscripciones' => [
     0 => [
       'name'=>'Prueba',
-      'tipo'=>1,
-      'ritmo'=>1
+      'tipo'=>0,
+      'ritmo'=>0
     ],
     1 => [
+      'id'=>1,
       'name'=>'Grupal Relax',
       'tipo'=>1,
       'ritmo'=>1
     ],
     2 => [
+      'id'=>2,
       'name'=>'Grupal Medio',
       'tipo'=>1,
       'ritmo'=>2
     ],
     3 => [
+      'id'=>3,
       'name'=>'Grupal Intenso',
       'tipo'=>1,
       'ritmo'=>3
     ],
     4 => [
+      'id'=>4,
       'name'=>'Grupal Intenso+',
       'tipo'=>1,
       'ritmo'=>4
     ],
     5 => [
+      'id'=>5,
       'name'=>'Individual Relax',
       'tipo'=>2,
       'ritmo'=>1
     ],
     6 => [
+      'id'=>6,
       'name'=>'Individual Medio',
       'tipo'=>2,
       'ritmo'=>2
     ],
     7 => [
+      'id'=>7,
       'name'=>'Individual Intenso',
       'tipo'=>2,
       'ritmo'=>3
     ],
     8 => [
+      'id'=>8,
       'name'=>'Individual Intenso+',
       'tipo'=>2,
       'ritmo'=>4
@@ -113,10 +121,19 @@ return [
     21=>'21:00'
   ],
 
-  'estatus' =>[
+  'status_labels'=>[
+    'disabled'=>'Desactivado',
+    'active'=>'Activo',
+  ],
+  'user_status_labels' =>[
     'disabled'=>'Desactivado',
     'active'=>'Activo',
     'suscribed'=>'Suscrito',
+  ],
+  'pago_status_labels'=>[
+    'pending'=>'Pendiente',
+    'paid'=>'Pagado',
+    'failed'=>'Fallido'
   ],
   'classrooms_exist' => [
     '2' => 'Sin clases',

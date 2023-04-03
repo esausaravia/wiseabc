@@ -9,19 +9,24 @@ class Schedule extends Model
 {
     use HasFactory;
 
+    protected $table = 'class_schedules';
+
     protected $fillable = ['class_id','teams_id','fechahora'];
 
-    protected $table = 'class_schedules';
+    protected $casts = [
+        'fechahora'=>'datetime'
+    ];
 
     public $timestamps = false;
 
-
-
-  public function class(){
+    /**
+     * Relationships
+     */
+    public function classroom(){
         return $this->belongsTo(Classroom::class);
     }
 
     public function teamsInfo(){
-        return $this->belongsTo(Teamsinfo::class);
+        return $this->belongsTo(Teamsinfo::class, 'teams_id', 'id');
     }
 }

@@ -23,7 +23,7 @@
           <x-forms.select label="Edad" name="edad" :value="$request->input('edad')" :options="config('wiseabc.edad_labels')" ></x-forms.select>
         </div>
         <div class="mr-3 mb-5">
-          <x-forms.select label="Estatus" name="estatus" :value="$request->input('estatus')" :options="config('wiseabc.estatus')" ></x-forms.select>
+          <x-forms.select label="Estatus" name="estatus" :value="$request->input('estatus')" :options="config('wiseabc.user_status_abels')" ></x-forms.select>
         </div>
         <div class="mr-3 mt-5">
           <button class="h-12 xl:h-8 shadow-md rounded-2xl px-3 bg-rojo text-white text-center flex items-center" type="submit">Buscar</button>

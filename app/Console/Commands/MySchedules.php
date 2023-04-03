@@ -5,10 +5,8 @@ use App\Http\Controllers\Admin\MsApiController;
 use App\Models\Classroom;
 use App\Models\Schedule;
 use App\Models\TeamsInfo;
-use Carbon\Carbon;
 use Illuminate\Console\Command;
-use Illuminate\Support\Facades\Log;
-
+use Illuminate\Support\Carbon;
 
 class MySchedules extends Command
 {
@@ -33,40 +31,51 @@ class MySchedules extends Command
      */
     public function handle()
     {
-
+      $paraSemanas = 2; //cuantas semanas hacia adelante
+      $enWeekdays = config('wiseabc.en_weekdays');//monday,tuesday,etc.
+      $hoy = now('America/Mexico_City')->locale('es');
+      $hastaFecha = $hoy->copy()->addWeeks($paraSemanas);
 
       $msApi = new MsApiController();
       $token = $msApi->getAccessToken();
-      $classes = Classroom::all();
-      foreach($classes as $class) {
-        $startDate = Carbon::now();
-        $endDate = Carbon::now()->addWeeks(4);
-        $schedules = Schedule::whereBetween('fechahora', [$startDate, $endDate])->where('class_id', $class->id)->get();
-        $count = $schedules->count();
-        $classesPerWeek = $class->ritmo;
+      $Clases =  Classroom::where('status','active')
+                    ->where('ends_at','>=', $hoy->isoFormat('YYYY-MM-DD') )->get();
 
-        if($count >= $classesPerWeek*4 ){
-          continue;
+      foreach($Clases as $clase) {
+
+        $schedules = Schedule::whereBetween('fechahora', [$hoy, $hastaFecha])->where('class_id', $clase->id)->orderBy('fechahora')->get();
+        $schedules_count = $schedules->count();//cuantos hay registrados
+        $schedules_need = (int)$clase->ritmo * $paraSemanas;//cuantos necesitamos
+
+        $lastSchedule = $schedules->last();
+        if ( !empty($lastSchedule) ) {
+          $lastSchedule = new Carbon($lastSchedule->fechahora, 'America/Mexico_City');
         }
-        $nextClass = $class->nextSchedule();
 
-        $curso = $class->curso->name;
-        $data = $msApi->createOnlineMeeting($curso,$nextClass, $token);
+        while( $schedules_count < $schedules_need ) {
 
-        $teamsInfo = new TeamsInfo();
-        $teamsInfo->msid = $data['id'];
-        $teamsInfo->link = $data['onlineMeeting']['joinUrl'] ;
-        $teamsInfo->info = json_encode($data);
-        $teamsInfo->report = "";
-        $teamsInfo->save();
+          $nextClass = $clase->sigFechaHora( $lastSchedule->addHour() );
 
-        $schedule = new Schedule();
-        $schedule->class_id = $class->id;
-        $schedule->teams_id = $teamsInfo->id;
-        $schedule->fechahora = $nextClass;
-        $schedule->save();
+          $data = $msApi->createOnlineMeeting($clase->curso->name, $nextClass, $token);
 
-      }
+          $teamsInfo = new TeamsInfo();
+          $teamsInfo->msid = $data['id'];
+          $teamsInfo->link = $data['onlineMeeting']['joinUrl'] ;
+          $teamsInfo->info = json_encode($data);
+          $teamsInfo->report = "";
+          $teamsInfo->save();
+
+          $schedule = new Schedule();
+          $schedule->class_id = $clase->id;
+          $schedule->teams_id = $teamsInfo->id;
+          $schedule->fechahora = $nextClass;
+          $schedule->save();
+
+          $lastSchedule = $nextClass;
+          $schedules_count++;
+        }
+
+      }//END foreach classes
       return "Cron job is working fine!";
 
     }

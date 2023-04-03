@@ -17,8 +17,12 @@ class UserFactory extends Factory
      */
     public function definition()
     {
+        /**
+         * Faker documentation
+         * https://fakerphp.github.io/
+         */
         return [
-            'name' => fake()->name(),
+            'name' => fake()->firstName().' '.fake()->lastName(),
             'email' => fake()->unique()->safeEmail(),
             'email_verified_at' => now(),
             'password' => \Illuminate\Support\Facades\Hash::make('qwerasdf'), // password

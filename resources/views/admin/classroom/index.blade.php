@@ -15,7 +15,7 @@
           <x-forms.select label="Nivel" name="nivel"  :value="$request->input('nivel')"  :options="config('wiseabc.nivel_labels')" ></x-forms.select>
         </div>
         <div class="mr-3 mb-5">
-          <x-forms.select label="Tipo" name="tipo"  :value="$request->input('tipo')"  :options="\App\Models\Classroom::$arrTipo" ></x-forms.select>
+          <x-forms.select label="Tipo" name="tipo"  :value="$request->input('tipo')"  :options="\App\Models\Classroom::$arrTipos" ></x-forms.select>
         </div>
         <div class="mr-3 mb-5">
           <x-forms.select label="Ritmo" name="ritmo"  :value="$request->input('ritmo')"  :options="config('wiseabc.ritmo_labels')" ></x-forms.select>
@@ -42,28 +42,27 @@
           <li class="mr-2"><strong>Nivel</strong>: {{$clase->curso->nivelLabel}} </li>
           <li class="mr-2"><strong>Tipo</strong>: {{$clase->tipoLabel}} </li>
           <li class="mr-2"><strong>Ritmo</strong>: {{$clase->ritmoLabel}} </li>
-          @if( $clase->tipo===1 )
-          <li class="mr-2"><strong>Estudiantes</strong>: {{$clase->students_count}}/3</li>
-          @endif
         </ul>
+
         <ul class="flex flex-wrap">
           <li class="mr-2"><strong>Inició</strong>: {{ $clase->start }} </li>
           <li class="mr-2"><strong>Fin</strong>: {{ $clase->ends_at }} </li>
           <li class="mr-2">( {{ $clase->endsInWeeks() }}w )</li>
         </ul>
-        <ul class="flex flex-wrap">
-          @foreach ( $clase->getHorarioArray() as $dia=>$arrHr )
-          <li class="mr-2">
-            <strong>{{ !empty($weekdays[( $dia )]) ? $weekdays[( $dia )] : $dia }}</strong>
-            @foreach ($arrHr as $hr )
-              {{$hr}}:00,
-            @endforeach
-          </li>
+
+        <x-user-card-horarios class="flex flex-wrap" :horarios="$clase->getHorarioArray()"></x-user-card-horarios>
+
+        <ul>
+          <li><strong>Estudiantes</strong>: {{$clase->students_count}} {{ $clase->tipo==1 ? '/3' : '' }}</li>
+          @foreach ($clase->students as $student)
+            <li>{{$student->name}}</li>
           @endforeach
         </ul>
+
       </div>
-      <div class="leading-8">
-        <a href="{{ route('admin.classroom.edit', ['classroom'=>$clase->id]) }}" class="rounded-full px-3 shadow-md">Editar</a>
+      <div class="flex justify-between font-accent font-medium text-sm leading-7">
+        <a href="{{ route('admin.classroom.edit', ['classroom'=>$clase->id]) }}" class="rounded-full border-2 border-gray-100 py-2 xl:py-0 px-3 shadow-md">Editar</a>
+        <a href="{{ route('admin.classroom.assignStudents', $clase->id) }}" class="rounded-full border-2 border-gray-100 py-2 xl:py-0 px-3 shadow-md">Asignar estudiantes</a>
       </div>
     </article>
     @endforeach

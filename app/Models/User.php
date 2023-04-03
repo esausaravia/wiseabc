@@ -66,7 +66,7 @@ class User extends Authenticatable
      * @return Illuminate\Database\Eloquent\Collection
      */
 	public function usermetas() {
-		return $this->hasMany(\App\Models\Usermeta::class);
+		return $this->hasMany(Usermeta::class);
 	}
 
     /**
@@ -91,7 +91,11 @@ class User extends Authenticatable
     }
 
     public function currentClassroom() {
-        return $this->classrooms()->where('status','activo')->first();
+        return $this->classrooms()->where('status','active')->where('ends_at','>=', now('America/Mexico_City')->locale('es')->isoFormat('YYYY-MM-DD') )->first();
+    }
+
+    public function suscription() {
+        return $this->usermetas()->where('metakey','suscripcion')->get();
     }
 
     /**
@@ -141,15 +145,15 @@ class User extends Authenticatable
 	 */
 	public function getMeta($mkey="")
 	{
-		if ( empty($mkey) || empty($this->usermetas) || ! is_object($this->usermetas)
-			|| ! is_a($this->usermetas, "Illuminate\Database\Eloquent\Collection") )
-		{
+		if ( empty($mkey) )
+        {
 			return NULL;
 		}
 
+        $usermetas = $this->usermetas;
         $return = '';
 
-		foreach( $this->usermetas AS $meta )
+		foreach( $usermetas AS $meta )
 		{
 			if ($meta->metakey===$mkey || $meta->id===$mkey)
 			{
@@ -170,34 +174,31 @@ class User extends Authenticatable
         array_push($model_keys, '_token', '_method', 'password_confirmation', 'horario', 'horarios');
 
         $metasrc = array();
-        foreach($input AS $ik=>$ival)
+        foreach($input AS $_input_key=>$_input_val)
         {
-            if ($ival===false || $ival===null || in_array($ik, $model_keys) ) {
+            if ($_input_val===false || $_input_val===null || in_array($_input_key, $model_keys)!==false ) {
                 continue;
             }
-            if ( is_array($ival) || is_object($ival) ) {
-                $ival = json_encode($ival, JSON_UNESCAPED_UNICODE);
+            if ( is_array($_input_val) || is_object($_input_val) ) {
+                $_input_val = json_encode($_input_val, JSON_UNESCAPED_UNICODE);
             }
-            if ( $this->$ik!==$ival ) {
-                $metasrc[$ik] = $ival;
+            if ( $this->$_input_key!==$_input_val ) {
+                $metasrc[$_input_key] = $_input_val;
             }
         }
 
-        foreach ( $metasrc AS $mk=>$mv)
+        foreach ( $metasrc AS $_metakey=>$_metaval)
         {
-            if ( strlen($mv)>250 ) {
-                $this->usermetas()->where('metakey', $mk)->delete();
-                $mv_arr = str_split($mv, 250);
+            if ( strlen($_metaval)>250 ) {
+                $this->usermetas()->where('metakey', $_metakey)->delete();
+                $_metaval_arr = str_split($_metaval, 250);
 
-                foreach($mv_arr AS $__mv) {
-                    $this->usermetas()->create(['metakey'=>$mk,'metaval'=>$__mv]);
+                foreach($_metaval_arr AS $__mv) {
+                    $this->usermetas()->create(['metakey'=>$_metakey,'metaval'=>$__mv]);
                 }
             }
-            else if ( $this->$mk!==NULL ) {
-                $this->usermetas()->where('metakey', $mk)->update(['metaval'=>$mv]);
-            }
             else {
-                $this->usermetas()->create(['metakey'=>$mk, 'metaval'=>$mv]);
+                $this->usermetas()->updateOrCreate(['metakey'=>$_metakey],['metaval'=>$_metaval]);
             }
         }//endforeach
         $this->refresh();
@@ -218,6 +219,9 @@ class User extends Authenticatable
             $arrHorarios[( $horario->dia )][] = $horario->hr;
         }
         return empty($dia) ? $arrHorarios : ( !empty($arrHorarios[($dia)]) ? $arrHorarios[($dia)] : [] );
+    }
+    public function getHorariosArray($dia=0) {
+        $this->getHorarioArray($dia);
     }
 
     public function horariosOcupados($dia=0) {

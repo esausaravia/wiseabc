@@ -16,7 +16,7 @@
           <x-forms.input label="Buscar:"  name="searchfor" id="searchfor" value="{{$search}}" type="search"/>
         </div>
         <div class="mr-3 mb-5">
-          <x-forms.select label="Estatus" name="estatus" :value="$request->input('estatus')" :options="config('wiseabc.estatus')" ></x-forms.select>
+          <x-forms.select label="Estatus" name="estatus" :value="$request->input('estatus')" :options="config('wiseabc.user_status_abels')" ></x-forms.select>
         </div>
         <div class="mr-3 mb-5">
           <x-forms.select label="Clases" name="classroom" :value="$request->input('classroom')" :options="config('wiseabc.classrooms_exist')" ></x-forms.select>

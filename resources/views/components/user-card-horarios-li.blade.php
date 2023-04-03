@@ -6,7 +6,7 @@
 ])
 @if ( !empty($horarios) )
   <li class="mr-2">
-    @if($user_type==3)
+    @if($user_type==3 && !empty($dia))
     <strong>{{ $dia }}</strong>:
     @endif
     @foreach( $horarios AS $hr )

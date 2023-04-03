@@ -3,8 +3,10 @@ use App\Http\Controllers\ClassroomController;
 use App\Http\Controllers\StudentController;
 use App\Http\Controllers\TeacherController;
 use Illuminate\Http\Request;
+use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Facades\DB;
 
 /*
 |--------------------------------------------------------------------------
@@ -19,16 +21,22 @@ use Illuminate\Support\Facades\Route;
 
 Route::get('test', function(Request $request){
 
-	$horarios = [1 => [9, 11], 3 => [9, 11], 5 => [9, 11]];
-
 	ob_start();
-	$enWeekdays = config('wiseabc.en_weekdays');
+	$tz = \Carbon\CarbonTimeZone::create('PDT');
+	print_r($tz);
 
-	$hoy = now('America/Mexico_City')->locale('es');
-	echo uuid_create();
-	$output = ob_get_clean();
+	//$hoy = now('America/Mexico_City')->locale('es');
+	$hoy = new Carbon('2023-04-01 14:03:00', '-0600');
+	$hoy->locale('es');
+	echo $hoy->format('Y-m-d H:i:s O|T').PHP_EOL;
 
-	dd($output);
+	$fecha2 = $hoy->copy()->setTimezone('PST');//ajusta la hora
+	echo $fecha2->format('Y-m-d H:i:s O|T').PHP_EOL;
+
+	$fecha3 = $hoy->copy()->shiftTimezone('PST');//sin cambiar la hora
+	echo $fecha3->format('Y-m-d H:i:s O|T').PHP_EOL;
+
+	ddd( ob_get_clean() );
 })->name('test');
 
 Route::get('/', function (Request $request) {
@@ -42,11 +50,11 @@ Route::get('/', function (Request $request) {
 	}
 })->middleware('auth')->name('home');
 
-Route::get('/registro-profesor', function () {
+Route::get('registro-profesor', function () {
 	return view('teacher.registro');
 })->name('regprof');
 
-Route::post('/registro-profesor', [TeacherController::class, 'registro'])->name('regprof');
+Route::post('registro-profesor', [TeacherController::class, 'registro']);
 
 Route::get('/gracias-profesor', function(){
 	return view('teacher.gracias-registro');
@@ -55,7 +63,7 @@ Route::get('/gracias-profesor', function(){
 Route::get('salir', function(){
 	\Illuminate\Support\Facades\Auth::logout();
 	return redirect('login');
-})->name('logout');
+})->name('salir');
 
 Route::get('clases/disponibles', [ClassroomController::class, 'disponibles'])->name('clases.disponibles');
 
@@ -105,8 +113,28 @@ Route::group(['prefix'=>'admin','as'=>'admin.','middleware' => ['auth','admin']]
 	Route::get('dashboard', function(){
 		$cursos = App\Models\Curso::all();
 
+		$hoy = now('America/Mexico_City')->locale('es');
+		$finmes = $hoy->copy()->endOfMonth();
+		$cortePasado = $hoy->copy()->subMonth()->endOfMonth();
+
+		$sinClase = \App\Models\user::where('user_type','2')->doesntHave('classrooms')->count();
+
+		$builder = DB::table('attendances')
+		->join('receipts', function($join){
+			$join->on('attendances.id','=','receipts.attendance_id')
+					->whereNull('receipts.payment_id');
+		})
+		->selectRaw('user_id, SUM(receipts.`amount`) as amount')
+		->groupBy('user_id');
+		//$sql = vsprintf(str_replace(array('?'), array('\'%s\''), $builder->toSql()), $builder->getBindings()); dd($sql);
+		$RecibosPendientes = $builder->get();
+
 		return view('admin.dashboard',[
-			'arrCursos'=>$cursos
+			'arrCursos'=>$cursos,
+			'sinClase'=>$sinClase,
+			'finmes'=>$finmes->isoFormat('ddd DD MMMM'),
+			'RecibosPendientes'=>$RecibosPendientes,
+			'cortePasado'=>$cortePasado->isoFormat('DD MMMM')
 		]);
 	})->name('home');
 
@@ -122,11 +150,13 @@ Route::group(['prefix'=>'admin','as'=>'admin.','middleware' => ['auth','admin']]
 
 	Route::get('classroom/createforteacher/{teacher}', [\App\Http\Controllers\Admin\ClassroomController::class, 'createForTeacher'])->name('classroom.createforteacher');
 
-	Route::post('classroom/createforteacher/{teacher}', [\App\Http\Controllers\Admin\ClassroomController::class, 'createForTeacher2'])->name('classroom.createforteacher');
+	Route::get('classroom/{id}/assignStudents', [\App\Http\Controllers\Admin\ClassroomController::class, 'assignStudents'])->name('classroom.assignStudents');
+
+	Route::post('classroom/{id}/assignStudents', [\App\Http\Controllers\Admin\ClassroomController::class, 'assignStudents2']);
 
 	Route::get('student/{student}/assignclass', [\App\Http\Controllers\Admin\StudentController::class, 'assignClassroom'])->name('student.assignclass');
 
-	Route::post('student/{student}/assignclass', [\App\Http\Controllers\Admin\StudentController::class, 'assignClassroom2'])->name('student.assignclass');
+	Route::post('student/{student}/assignclass', [\App\Http\Controllers\Admin\StudentController::class, 'assignClassroom2']);
 
 
 	Route::resource('cursos', \App\Http\Controllers\Admin\CursoController::class);
