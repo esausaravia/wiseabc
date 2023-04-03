@@ -25,7 +25,7 @@ class MyReceipts extends Command
      *
      * @var string
      */
-    protected $description = 'Command description';
+    protected $description = 'Transicion de asistencia a recibo';
 
     /**
      * Execute the console command.
@@ -34,36 +34,38 @@ class MyReceipts extends Command
      */
     public function handle()
     {
-      $attendances = Attendance::whereDoesntHave('receipt')
-        ->where('duracion', '>=', 1800)
+      $hoy = now('America/Mexico_City')->locale('es');
+
+      $Attendances = Attendance::whereDoesntHave('receipt')
+        ->where('fechahora', '<', $hoy->copy()->subMinutes(45) )
         ->get();
 
       $base = PaymentConcept::where('concept', 'LIKE', 'base')->first();
-      $asistencia = PaymentConcept::where('concept', 'LIKE', 'Asistencia')->first();
+      $pasistencia = PaymentConcept::where('concept', 'LIKE', 'Asistencia')->first();
       $grupal = PaymentConcept::where('concept', 'LIKE', 'Grupal')->first();
       $lealtad = PaymentConcept::where('concept', 'LIKE', 'Lealtad')->first();
 
-      foreach ($attendances as $attendance) {
-        $hasGroup = $attendance->class->students()->count() > 1;
-        $profeCreacion = User::find($attendance->class->teacher_id);
+      foreach ($Attendances as $attendance) {
+        $hasGroup = $attendance->classroom->students()->count() > 1;
+        $profeCreacion = $attendance->classroom->teacher;
 
-        $hasLoyalty = $profeCreacion->created_at->diffInMonths(now()) <= 3;
+        $hasLoyalty = $profeCreacion->created_at->diffInMonths( $hoy ) > 3;
 
         $amount = $base->amount;
-        $amount += $attendance->puntual ? $asistencia->amount : 0;
-        $amount += $hasGroup ? $grupal->amount : 0;
+        $amount += $attendance->puntual ? $pasistencia->amount : 0;
+        $amount += $hasGroup ? ( $grupal->amount ) : 0;
         $amount += $hasLoyalty ? $lealtad->amount : 0;
 
         $receipt = Receipt::create([
           'attendance_id' => $attendance->id,
-          'status' => 'generated',
+          'status' => 'pending',
           'amount' => $amount,
         ]);
 
         $receipt->conceptos()->attach($base->id, ['amount' => $base->amount]);
 
         if ($attendance->puntual) {
-          $receipt->conceptos()->attach($asistencia->id, ['amount' => $asistencia->amount]);
+          $receipt->conceptos()->attach($pasistencia->id, ['amount' => $pasistencia->amount]);
         }
 
         if ($hasLoyalty) {
