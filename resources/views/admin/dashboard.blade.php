@@ -17,41 +17,44 @@
 
     <div class="rounded-2xl bg-black/10 dark:bg-white/10 py-4 px-5 text-center">
       <h3>Próximo corte</h3>
-      <p class="text-[2rem] font-medium">30 dic</p>
+      <p class="text-[2rem] font-medium">{{ $finmes }}</p>
     </div>
   </section>
 
   <div class="lg:grid grid-cols-2 gap-6">
 
     <section class="my-10">
-      <h2 class="text-lg font-medium mb-5">Tenemos 99 estudiantes sin profesor</h2>
+      <h2 class="text-lg font-medium mb-5">Tenemos {{$sinClase}} estudiantes sin profesor</h2>
 
       @foreach( $arrCursos AS $curso )
+      @php
+        $arrStudents = $curso->alumnosSinClaseNums();
+      @endphp
       <div class=" rounded-xl bg-white shadow p-3 mb-3">
         <h4 class="mb-3">{{$curso->name}}
-          <span>[66 estudiantes]</span>
+          <span>[{{ $curso->alumnos_sin_clase->count() }} estudiantes]</span>
         </h4>
 
         <div class="md:grid grid-cols-2 gap-5 text-sm my-4">
           <div>
-            <p class="text-xs font-bold uppercase">Grupo [44]</p>
+            <p class="text-xs font-bold uppercase">Grupo [{{ $arrStudents['grupal'] }}]</p>
             <ul class="flex -mx-2">
-              @foreach( config('wiseabc.ritmo_labels') AS $ritmo )
+              @foreach( config('wiseabc.ritmo_labels') AS $rk=>$ritmo )
               <li class="px-2">
                 <p>{{$ritmo}}</p>
-                <span class="text-base">{{ rand(1,20) }}</span>
+                <span class="text-base">{{ $arrStudents['suscripciones'][$rk] }}</span>
               </li>
               @endforeach
             </ul>
           </div>
 
           <div>
-            <p class="text-xs font-bold uppercase">Individual [22]</p>
+            <p class="text-xs font-bold uppercase">Particular [{{ $arrStudents['particular'] }}]</p>
             <ul class="flex -mx-2">
-              @foreach( config('wiseabc.ritmo_labels') AS $ritmo )
+              @foreach( config('wiseabc.ritmo_labels') AS $rk=>$ritmo )
               <li class="px-2">
                 <p>{{$ritmo}}</p>
-                <span class="text-base">{{ rand(1,10) }}</span>
+                <span class="text-base">{{ $arrStudents['suscripciones'][($rk+4)] }}</span>
               </li>
               @endforeach
             </ul>
@@ -59,7 +62,7 @@
         </div>
 
         <div class="flex justify-center">
-          <a href="{{ route('admin.classroom.createforcurso', 1) }}" class="rounded-full border-gray-400 border-2 bg-white shadow-md px-4 font-medium text-sm leading-[44px]">ver horarios</a>
+          <a href="{{ route('admin.classroom.createforcurso', $curso) }}" class="rounded-full border-gray-400 border-2 bg-white shadow-md px-4 font-medium text-sm leading-[44px]">ver horarios</a>
         </div>
 
       </div>
@@ -79,26 +82,29 @@
           </tr>
         </thead>
         <tbody class="">
-          @for ($loop=0; $loop<6; $loop++)
-          <tr class=" odd:bg-white even:bg-white/50 dark:odd:bg-white/10 dark:even:bg-white/5 text-center">
-            <td class="px-2 py-2 text-left">Prof. Mario Jimenez</td>
-            <td class="px-2 py-2">$999.99</td>
-            <td class="px-2 py-2 text-sm">
-              <p class="">
-                <span class="inline-block rounded-2xl px-3 leading-6 bg-orange-100 text-orange-400">
-                  <span class="ico"><i class="fa-light fa-hourglass-clock"></i></span>
-                  Pendiente
-                </span>
-              </p>
-              <p class="">30 dic</p>
-            </td>
-            <td class="">
-              <div class="flex justify-center">
-                <a href="{{ route('admin.pagoparaprofe', 1) }}" class="btn rounded-3xl px-3 py-1 bg-white text-gray-600 text-sm font-accent font-medium shadow-md">detalle</a>
-              </div>
-            </td>
-          </tr>
-          @endfor
+          @foreach($RecibosPendientes AS $pendiente)
+            @php
+            $profe = \App\Models\User::find($pendiente->user_id)
+            @endphp
+            <tr class=" odd:bg-white even:bg-white/50 dark:odd:bg-white/10 dark:even:bg-white/5 text-center">
+              <td class="px-2 py-2 text-left">{{ $profe->name }}</td>
+              <td class="px-2 py-2">${{$pendiente->amount}}</td>
+              <td class="px-2 py-2 text-sm">
+                <p class="">
+                  <span class="inline-block rounded-2xl px-3 leading-6 bg-orange-100 text-orange-400">
+                    <span class="ico"><i class="fa-light fa-hourglass-clock"></i></span>
+                    Pendiente
+                  </span>
+                </p>
+                <p class="">{{ $cortePasado }}</p>
+              </td>
+              <td class="">
+                <div class="flex justify-center">
+                  <a href="{{ route('admin.pagoparaprofe', 1) }}" class="btn rounded-3xl px-3 py-1 bg-white text-gray-600 text-sm font-accent font-medium shadow-md">detalle</a>
+                </div>
+              </td>
+            </tr>
+          @endforeach
         </tbody>
       </table>
       <div class="flex justify-center my-5">

@@ -89,6 +89,19 @@ class TeacherController extends Controller
    */
   public function edit(User $teacher)
   {
+    if ( $teacher->fname===null ) {
+      $arrName = explode(' ', $teacher->name);
+
+      if ( count($arrName)<2 ) {
+        $arrName = [$teacher->name,'WiseABC'];
+      }
+
+      $teacher->saveMetas([
+        'lname' => array_pop($arrName),
+        'fname' => implode(' ', $arrName)
+      ]);
+    }
+
     return view('admin.profe', [
       'profe' => $teacher,
       'form_action' => route('admin.teacher.edit', ['teacher' => $teacher])

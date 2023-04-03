@@ -14,6 +14,7 @@ window.app.toggleDarkTheme = function(){
 };
 
 window.addEventListener('DOMContentLoaded',function(){
+  console.log('app.js DOMContentLoaded');
   const strTimeZone = Intl.DateTimeFormat().resolvedOptions().timeZone;
 
   if (localStorage.theme === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
@@ -152,10 +153,6 @@ window.addEventListener('DOMContentLoaded',function(){
     }
   });
 
-  document.querySelectorAll('input[name="jstimezone"]').forEach(function(input){
-    input.value = strTimeZone
-  });
-
   document.querySelectorAll('input[name="password_confirmation"]').forEach(function(input){
 
     input.addEventListener('blur', function(){
@@ -186,6 +183,31 @@ window.addEventListener('DOMContentLoaded',function(){
    * FORMS
    */
   const evFormSuccess = new Event('formsuccess');
+
+  /**
+   * Append timezone input
+   */
+  (function(forms){
+    if (!forms || !forms.forEach)  return false;
+
+    forms.forEach(function(form){
+      let datesAndTimes = form.querySelectorAll('input[type="date"], input[type="time"], input[type="datetime"], input[name^="horario"]')
+
+      if (datesAndTimes.length<1){
+        return false
+      }
+
+      let timeZoneInput = form.querySelector('input[name="timezone"]')
+      if (!timeZoneInput || !timeZoneInput.value) {
+        timeZoneInput = document.createElement('input')
+        timeZoneInput.type="hidden"
+        timeZoneInput.name="timezone"
+        form.appendChild(timeZoneInput)
+      }
+
+      timeZoneInput.value = strTimeZone
+    });
+  })(document.querySelectorAll('form'));
 
   /**
    * disable submit btn
@@ -234,7 +256,10 @@ window.addEventListener('DOMContentLoaded',function(){
 
           rmsg ? ( alert(rmsg), console.log('response.data.message', rmsg) ) : console.log('response.data', resp.data );
 
-          if ( resp.data && resp.data.redirect ) location.href = resp.data.redirect;
+          if ( resp.data && resp.data.redirect && resp.data.redirect!=="" ){
+            location.href = resp.data.redirect
+          }
+
 
           form.dispatchEvent(evFormSuccess);
         })
@@ -378,12 +403,6 @@ window.addEventListener('DOMContentLoaded',function(){
       console.log('after try-catch');
     });
 
-    /*
-    form.addEventListener('submit',function(ev){
-      console.log('frmRegStudent submit');
-      if ( ev.preventDefault ) ev.preventDefault();
-      return false;
-    });*/
   })( document.getElementById('frmRegStudent') );
 });//DOMContentLoaded END
 

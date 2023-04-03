@@ -15,36 +15,51 @@ class StudentSeeder extends Seeder
     public function run()
     {
         //
-        $arrEdades = config('wiseabc.edad_labels');
+        $Edades = collect( config('wiseabc.edad_labels') );
+        $Edades = $Edades->slice(0,2);
+
+        $Suscripciones = collect( config('wiseabc.suscripciones') );
+        $arrSuscripciones = [1,2,5,6];
+
+        $arrHorarios = [10,12];
+
+        $students_count = 0;
 
         for( $nivel=1; $nivel<7; $nivel++ ) {
 
-            $edad = 6;
-            //foreach($arrEdades AS $edad=>$edad_label) {
+            foreach($Edades AS $edad=>$edad_label) {
 
-                $students = \App\Models\User::factory()->count(2)->create(['user_type'=>2]);
-                foreach($students AS $student) {
-                    $student->saveMetas([
-                      'edad'=>$edad,
-                      'nivel'=>$nivel
-                    ]);
+                foreach($arrSuscripciones AS $sid) {
+                    $Suscripcion = (object)$Suscripciones->first(function($value, $key) use ($sid){
+                        return $key===$sid;
+                    });
 
-                    //disponibilidad 10am
-                    $student->saveHorarios([1=>[10]]);
-                }
+                    foreach( $arrHorarios AS $___hr ) {
 
-                $students = \App\Models\User::factory()->count(2)->create(['user_type'=>2]);
-                foreach($students AS $student) {
-                    $student->saveMetas([
-                      'edad'=>$edad,
-                      'nivel'=>$nivel
-                    ]);
+                        $students = \App\Models\User::factory()->count(2)->create(['user_type'=>2]);
+                        foreach($students AS $student) {
 
-                    //disponibilidad 12 mediodia
-                    $student->saveHorarios([1=>[12]]);
-                }
+                            $arrName = explode(' ', $student->name);
 
-            //}//END edades
+                            $student->saveMetas([
+                                'lname' => array_pop($arrName),
+                                'fname' => implode(' ', $arrName),
+                                'nivel'=>$nivel,
+                                'edad'=>$edad,
+                                'suscripcion'=>$sid,
+                                'clase_tipo' => $Suscripcion->tipo,
+                                'ritmo' => $Suscripcion->ritmo,
+                                'timezone' => 'America/Mexico_City'
+                            ]);
+                            $student->saveHorarios([1=>[$___hr]]);
+                            $students_count++;
+
+                        }//END Students
+                    }//END arrHorarios
+                }//END arrSuscripciones
+            }//END Edades
         }//END nivel
+
+        echo "  Estudiantes creados: {$students_count}".PHP_EOL;
     }
 }

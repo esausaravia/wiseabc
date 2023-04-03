@@ -23,7 +23,7 @@
 
     <div class="flex text-sm font-accent font-medium">
       <span class="p-2">Hola {{ !empty($user->fname) ? $user->fname : $user->name }}</span>
-      <a href="{{ route('logout') }}" class="p-2">Salir</a>
+      <a href="{{ route('salir') }}" class="p-2">Salir</a>
 
       <label for="darkmode-toggler1" class="inline-flex relative items-center cursor-pointer ml-2">
         <span class="mr-2">
@@ -50,8 +50,9 @@
   </aside>
   <div id="AdminMainContainer" class="pt-16 px-3 pb-5 lg:pt-20 xl:pl-[170px]">
     {{ $slot }}
-    <x-alert-incontent></x-alert-incontent>
   </div>
 
+  <x-alert-incontent></x-alert-incontent>
+  @stack('scripts')
 </body>
 </html>

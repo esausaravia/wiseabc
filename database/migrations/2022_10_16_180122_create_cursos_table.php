@@ -15,7 +15,7 @@ class CreateCursosTable extends Migration
     {
         Schema::create('cursos', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->string('status')->default('active')->index(); //activo, inactivo
+            $table->string('status')->default('active')->index();
             $table->unsignedInteger('edad')->default(18)->index(); // 5, 11, 15, 18
             $table->unsignedInteger('nivel')->index(); //A1, A2, B1,
             $table->unsignedInteger('duracion')->default(48); //hrs

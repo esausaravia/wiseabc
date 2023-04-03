@@ -2,7 +2,7 @@
   <div class="max-w-[1200px]">
     <h1 class="text-2xl font-accent font-bold mb-5">Crear classroom para profesor</h1>
 
-    <form method="POST" class="grid grid-cols-1 lg:grid-cols-2 gap-5">
+    <form id="frm-classroom-cforteacher" action="{{ route('admin.classroom.store') }}" method="POST" class="grid grid-cols-1 lg:grid-cols-2 gap-5">
       @csrf
       <input type="hidden" name="teacher_id" value="{{$profe->id}}">
 
@@ -22,7 +22,7 @@
 
       <section>
 
-        <x-forms.option-group name="tipo" label="Tipo" required :options="\App\Models\Classroom::$arrTipo" class="mb-5"></x-forms.option-group>
+        <x-forms.option-group name="tipo" label="Tipo" required :options="\App\Models\Classroom::$arrTipos" class="mb-5"></x-forms.option-group>
 
         <x-forms.option-group name="ritmo" label="Intensidad" required :options="config('wiseabc.ritmo_labels')" class="mb-5"></x-forms.option-group>
 

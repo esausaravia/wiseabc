@@ -32,7 +32,7 @@
 
       <section>
         <div>
-          <x-forms.option-group name="tipo" label="Tipo" :options="\App\Models\Classroom::$arrTipo" :value="$clase->tipo" class="mb-5" required></x-forms.option-group>
+          <x-forms.option-group name="tipo" label="Tipo" :options="\App\Models\Classroom::$arrTipos" :value="$clase->tipo" class="mb-5" required></x-forms.option-group>
 
           <x-forms.option-group name="ritmo" label="Intensidad" :options="config('wiseabc.ritmo_labels')" :value="$clase->ritmo" class="mb-5" required></x-forms.option-group>
 

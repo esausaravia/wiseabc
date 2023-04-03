@@ -84,7 +84,20 @@ class StudentController extends Controller
    */
   public function edit($id)
   {
-    $student = User::with(['usermetas','classrooms','horarios'])->find($id);
+    $student = User::with(['usermetas'])->find($id);
+
+    if ( $student->fname===null ) {
+      $arrName = explode(' ', $student->name);
+
+      if ( count($arrName)<2 ) {
+        $arrName = [$student->name,'WiseABC'];
+      }
+
+      $student->saveMetas([
+        'lname' => array_pop($arrName),
+        'fname' => implode(' ', $arrName)
+      ]);
+    }
 
     return view('admin.student.form', [
       'student'=>$student
@@ -161,29 +174,18 @@ class StudentController extends Controller
 
   public function assignClassroom(Request $request, User $student) {
 
-    $suscr = $student->getMeta('suscripcion');
+    $sid = $student->getMeta('suscripcion');
 
-    if ( empty($suscr) ) {
-
-      dd([
-        'test_null' => $student->suscripcion===NULL,
-        'empty' => empty($student->suscripcion),
-        'type' => gettype( $student->suscripcion ),
-        'suscripcion'=> $student->suscripcion,
-        'empty2' => empty($suscr),
-        'type2' => gettype($suscr),
-        'val' => $suscr
-      ]);
-      return back()->withErrors(['message'=>'Estudiante sin suscripción']);
+    if ( empty($sid) ) {
+      return back()->withErrors(['alert'=>'Estudiante sin suscripción']);
     }
 
-    $sus_tipo = 1;
-    $sus_ritmo = $suscr;
-
-    if ( $suscr>4 ) {
-      $sus_tipo = 2;
-      $sus_ritmo = $suscr -4;
+    $arrSuscripciones = config('wiseabc.suscripciones');
+    $Suscripcion = $arrSuscripciones[( $sid )];
+    if ( empty($Suscripcion) ) {
+      return back()->withErrors(['alert'=>'Suscripción ya no existe']);
     }
+    $Suscripcion = (object) $Suscripcion;
 
     $result = DB::table('classrooms')
       ->join('cursos', 'classrooms.curso_id', '=', 'cursos.id')
@@ -191,8 +193,8 @@ class StudentController extends Controller
       ->select('classrooms.id')
       ->where('cursos.edad', $student->edad) // 3,6,12,16,18
       ->where('cursos.nivel', $student->nivel) //A1 B1 C1
-      ->where('classrooms.tipo', $sus_tipo) //grupal o individual
-      ->where('classrooms.ritmo', $sus_ritmo) //relax, medio, intenso
+      ->where('classrooms.tipo', $Suscripcion->tipo) //grupal o individual
+      ->where('classrooms.ritmo', $Suscripcion->ritmo) //relax, medio, intenso
       ->whereIn('class_horarios.hr', $student->getHorarioArray(1) )
       ->get();
     //select `classrooms`.`id` from `classrooms` inner join `cursos` on `classrooms`.`curso_id` = `cursos`.`id` inner join `class_horarios` on `classrooms`.`id` = `class_horarios`.`class_id` where (`cursos`.`edad` = 1 and `cursos`.`nivel` = 1) and `class_horarios`.`hr` in (9,10,11,12)
@@ -216,8 +218,8 @@ class StudentController extends Controller
         ->when( $student->nivel, function($query, $getNivel) {
           $query->where('cursos.nivel',$getNivel);
         })
-        ->where('tipo', $sus_tipo)
-        ->where('ritmo', $sus_ritmo)
+        ->where('tipo', $Suscripcion->tipo)
+        ->where('ritmo', $Suscripcion->ritmo)
         ->get();
 
       $arrClassId = array();
@@ -229,10 +231,12 @@ class StudentController extends Controller
     }//ENDif
 
     return view('admin.student.assignclass', [
-      'student' => $student,
+      'weekdays' => config('wiseabc.weekdays'),
+      'arrRitmos' => config('wiseabc.ritmo_labels'),
+      'Student' => $student,
+      'Suscripcion' => $Suscripcion,
       'clases' => $clases,
       'otrasClases' => !empty($otrasClases) ? $otrasClases : collect([]),
-      'weekdays' => config('wiseabc.weekdays')
     ]);
   }
 
@@ -243,8 +247,8 @@ class StudentController extends Controller
     ]);
 
     $clase = \App\Models\Classroom::find($valid['class_id']);
-    if ( $clase->students()->count()>3 ) {
-      return back()->withErrors(['message'=>'Esta clase ya tiene 3 estudiantes']);
+    if ( $clase->students()->count()>2 ) {
+      return back()->withErrors(['alert'=>'Esta clase ya tiene 3 estudiantes']);
     }
 
     $student->classrooms()->attach($valid['class_id']);

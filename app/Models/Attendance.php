@@ -12,6 +12,10 @@ class Attendance extends Model
 
     protected $fillable = ['user_id','class_id','teams_id','fechahora','duracion','puntual'];
 
+    protected $casts = [
+        'fechahora'=>'datetime'
+    ];
+
     public function clase(){
         return $this->belongsTo(Classroom::class);
     }
