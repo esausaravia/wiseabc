@@ -40,57 +40,67 @@ return [
 
   'suscripciones' => [
     0 => [
+      'id'=>999,
       'name'=>'Prueba',
       'tipo'=>0,
-      'ritmo'=>0
+      'ritmo'=>0,
+      'precio'=>0
     ],
     1 => [
       'id'=>1,
       'name'=>'Grupal Relax',
       'tipo'=>1,
-      'ritmo'=>1
+      'ritmo'=>1,
+      'precio'=>36
     ],
     2 => [
       'id'=>2,
       'name'=>'Grupal Medio',
       'tipo'=>1,
-      'ritmo'=>2
+      'ritmo'=>2,
+      'precio'=>72
     ],
     3 => [
       'id'=>3,
       'name'=>'Grupal Intenso',
       'tipo'=>1,
-      'ritmo'=>3
+      'ritmo'=>3,
+      'precio'=>96
     ],
     4 => [
       'id'=>4,
       'name'=>'Grupal Intenso+',
       'tipo'=>1,
-      'ritmo'=>4
+      'ritmo'=>4,
+      'precio'=>140
     ],
     5 => [
       'id'=>5,
       'name'=>'Individual Relax',
       'tipo'=>2,
-      'ritmo'=>1
+      'ritmo'=>1,
+      'precio'=>80
     ],
     6 => [
       'id'=>6,
       'name'=>'Individual Medio',
       'tipo'=>2,
-      'ritmo'=>2
+      'ritmo'=>2,
+      'precio'=>160
     ],
     7 => [
       'id'=>7,
       'name'=>'Individual Intenso',
       'tipo'=>2,
-      'ritmo'=>3
+      'ritmo'=>3,
+      'precio'=>216
     ],
     8 => [
       'id'=>8,
       'name'=>'Individual Intenso+',
       'tipo'=>2,
-      'ritmo'=>4
+      'ritmo'=>4,
+      'precio'=>320
     ],
   ],
 

@@ -109,7 +109,7 @@ class ClassroomController extends Controller
         $redirect = $request->input('redirect');
 
         return $request->wantsJson() ? response()->json(['redirect'=> $redirect, 'message'=>'Clase creada con éxito', 'classroom'=>$classroom, 'res2'=>$res2 ])
-            : redirect()->route('admin.classroom.index')->with('success','Clase creada con éxito');
+            : redirect()->route('admin.classroom.assignStudents', $classroom->id)->with('success','Clase creada con éxito');
     }
 
     /**
