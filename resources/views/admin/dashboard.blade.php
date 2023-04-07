@@ -2,22 +2,24 @@
   <h1 class="text-2xl mb-5">Dashboard</h1>
   <section class="grid grid-cols-1 gap-4 md:grid-cols-3 xl:gap-5 my-5">
     <div class="rounded-2xl bg-green-100 py-4 px-5 text-center text-green-900">
-      <h3>Ingresos acumulados</h3>
-      <p class="text-[2rem] font-medium">$9,999.99</p>
-      <p class="text-sm">estimados a fin de mes</p>
-      <p>$99,999.99</p>
+      <h3>Ingresos estimados</h3>
+      <p class="text-[2rem] font-medium">${{$ingresosAcumulados}}</p>
+      <!--<p class="text-sm">estimados a fin de mes</p>
+      <p>$99,999.99</p>-->
     </div>
 
     <div class="rounded-2xl bg-black/10 dark:bg-white/10 py-4 px-5 text-center">
       <h3>Egresos acumulados</h3>
-      <p class="text-[2rem] font-medium">$9,999.99</p>
+      <p class="text-[2rem] font-medium">${{ $egresoAcumuladoMes }}</p>
       <p class="text-sm">estimados a fin de mes</p>
-      <p>$99,999.99</p>
+      <p>${{ $egresoEstimadoMes }}</p>
     </div>
 
     <div class="rounded-2xl bg-black/10 dark:bg-white/10 py-4 px-5 text-center">
       <h3>Próximo corte</h3>
       <p class="text-[2rem] font-medium">{{ $finmes }}</p>
+      <p class="text-sm">diferencia</p>
+      <p>${{ $ingresosAcumulados - $egresoEstimadoMes }}</p>
     </div>
   </section>
 

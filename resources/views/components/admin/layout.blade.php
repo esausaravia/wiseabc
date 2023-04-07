@@ -39,7 +39,7 @@
       </label>
     </div>
   </header>
-  <aside id="AdminAside" class="fixed top-0 left-0 h-full -translate-x-full xl:translate-x-0 bg-gray-300 dark:bg-slate-900 shadow-md z-10 pt-[68px] px-5 pb-6 font-accent">
+  <aside id="AdminAside" class="fixed top-0 left-0 h-full -translate-x-full xl:translate-x-0 shadow-md z-10 bg-blue-900 pt-[68px] px-3 md:px-4 xl:px-5 pb-5 text-gray-200 font-accent">
     <ul class="font-accent">
       <li><a href="{{ route('admin.home') }}" class="block p-2">Inicio</a></li>
       <li><a href="{{ route('admin.cursos.index') }}" class="block p-2">Cursos</a></li>

@@ -18,11 +18,15 @@
 @endphp
 <div {{ $attributes->class(['fieldset'])}} >
 
-  @if ( !empty($label) && is_object($label) )
-  <label {{ $label->attributes->class(['block', "after:content-['*'] after:text-rose-700 after:pl-1"=>$required]) }}>{{ $label }}</label>
+  @if ( !empty($label) )
 
-  @elseif ( !empty($label) )
-  <label class="block @if ($required) after:content-['*'] after:text-rose-700 after:pl-1 @endif">{{ $label }}</label>
+    @if (is_object($label) )
+    <label for="{{$id}}" {{ $label->attributes->class(["after:content-['*'] after:text-rose-700 after:pl-1"=>$required]) }} > {{$label}} </label>
+
+    @else
+    <label for="{{$id}}" class="block font-medium text-sm @if($required) after:content-['*'] after:text-rose-700 after:pl-1 @endif">{{$label}} </label>
+    @endif
+
   @endif
 
   @unless($fullwidth)

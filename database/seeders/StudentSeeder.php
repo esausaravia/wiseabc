@@ -19,7 +19,7 @@ class StudentSeeder extends Seeder
         $Edades = $Edades->slice(0,2);
 
         $Suscripciones = collect( config('wiseabc.suscripciones') );
-        $arrSuscripciones = [1,2,5,6];
+        $arrSuscripciones = [1,2,5];
 
         $arrHorarios = [10,12];
 
@@ -30,8 +30,8 @@ class StudentSeeder extends Seeder
             foreach($Edades AS $edad=>$edad_label) {
 
                 foreach($arrSuscripciones AS $sid) {
-                    $Suscripcion = (object)$Suscripciones->first(function($value, $key) use ($sid){
-                        return $key===$sid;
+                    $Suscripcion = (object)$Suscripciones->first(function($item, $key) use ($sid){
+                        return $item['id']===$sid;
                     });
 
                     foreach( $arrHorarios AS $___hr ) {

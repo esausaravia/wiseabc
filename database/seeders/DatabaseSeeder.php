@@ -69,14 +69,11 @@ class DatabaseSeeder extends Seeder
     Curso::create(['edad' => 6, 'nivel' => 5, 'name' => 'Avanzado para juniors (RH5)']);
     Curso::create(['edad' => 6, 'nivel' => 6, 'name' => 'Avanzado para juniors (RH6)']);
 
-    $cursos = Curso::all();
-
     /**
      * Profesores
      */
     //horarios lun mie vie 9-10 y 11-12
     $horarios = [1 => [9, 10, 11, 12], 3 => [9, 10, 11, 12], 5 => [9, 10, 11, 12]];
-
 
     $profesores = \App\Models\User::factory()->count(4)->create(['user_type'=>3]);
     foreach($profesores AS $teacher) {
@@ -123,7 +120,8 @@ class DatabaseSeeder extends Seeder
     $enWeekdays = config('wiseabc.en_weekdays');
     $hoy = now('America/Mexico_City')->locale('es');
     $cursoStart = now('America/Mexico_City')->locale('es')->subMonth();
-    $cursoEnd = now('America/Mexico_City')->locale('es')->addMonths(5);
+
+    $cursos = Curso::where('nivel','<',3)->get();
 
     foreach( $profesores AS $profe ) {
       $horarios = [1 => [9, 11], 3 => [9, 11], 5 => [9, 11]];
@@ -148,8 +146,7 @@ class DatabaseSeeder extends Seeder
           'status' => 'active',
           'tipo' => 1,
           'ritmo' => 1,
-          'start' => $cursoStart->isoFormat('YYYY-MM-DD'),
-          'ends_at' => $cursoEnd->isoFormat('YYYY-MM-DD')
+          'start' => $cursoStart->format('Y-m-d')
         ]);
 
         /**
@@ -160,44 +157,42 @@ class DatabaseSeeder extends Seeder
         $classroom->saveHorarios([$dia=>[$hr]]);
 
         /**
-         * CREAR SCHEDULE del mes pasado
+         * CREAR Attendances del mes pasado
          *
          */
         $_sigdia = $cursoStart->copy()->next( $enWeekdays[($dia)] )->hour($hr)->minute(0);
-        $schedule = Schedule::create([
-          'class_id' => $classroom->id,
-          'teams_id' => $teamsInfo->id,
-          'fechahora' => $_sigdia->isoFormat('YYYY-MM-DD HH:mm:00'),
-        ]);
+        while( $_sigdia->lessThan($hoy) ) {
 
-        /**
-         * Crear asistencia
-         */
-        $attendance = Attendance::create([
-          'user_id' => $profe->id,
-          'class_id' => $classroom->id,
-          'teams_id' => $teamsInfo->id,
-          'fechahora' => $schedule->fechahora,
-          'duracion' => 2400, //40 mins
-          'puntual' => true
-        ]);
+          /**
+           * Crear asistencia
+           */
+          $attendance = Attendance::create([
+            'user_id' => $profe->id,
+            'class_id' => $classroom->id,
+            'teams_id' => $teamsInfo->id,
+            'fechahora' => $_sigdia->format('Y-m-d H:i:00'),
+            'duracion' => 2400, //40 mins
+            'puntual' => true
+          ]);
 
-        /**
-         * Recibo
-         */
-        $receipt = Receipt::create([
-          'attendance_id'=> $attendance->id,
-          'status'=>'pendiente',
-          'amount'=>0
-        ]);
+          /**
+           * Recibo
+           */
+          $receipt = Receipt::create([
+            'attendance_id'=> $attendance->id,
+            'status'=>'pendiente',
+            'amount'=>0
+          ]);
 
-        foreach($conceptosDePago AS $pconcept) {
-          $receipt->conceptos()->attach( $pconcept->id, ['amount'=>$pconcept->amount] );
+          foreach($conceptosDePago AS $pconcept) {
+            $receipt->conceptos()->attach( $pconcept->id, ['amount'=>$pconcept->amount] );
 
-          $receipt->amount = $receipt->amount + $pconcept->amount;
-        }
-        $receipt->save();
+            $receipt->amount = $receipt->amount + $pconcept->amount;
+          }
+          $receipt->save();
 
+          $_sigdia->next( $enWeekdays[($dia)] )->hour($hr)->minute(0);
+        }//END mientras _sigdia < hoy
 
         /**
          * CREAR SCHEDULE CON HORARIO DE CLASE
@@ -237,6 +232,7 @@ class DatabaseSeeder extends Seeder
     /**
      * Crear un pago para cada profesor
      */
+    $profesores = $profesores->slice(0, $profesores->count()/2);
     $finmes = $cursoStart->copy()->endOfMonth()->isoFormat('YYYY-MM-DD HH:mm:ss');
     foreach( $profesores AS $profe ) {
       $asistencias = Attendance::where('user_id', $profe->id)->where('fechahora','<',$finmes)->get();
@@ -260,6 +256,7 @@ class DatabaseSeeder extends Seeder
       }
 
     }//endforeach profe
+
 
     $this->call([
       StudentSeeder::class

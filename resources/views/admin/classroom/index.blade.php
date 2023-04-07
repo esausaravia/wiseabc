@@ -1,36 +1,27 @@
 <x-admin.layout>
-  <form>
-    <div class="flex items-center my-3">
-      <form class="inline-flex">
-        <div class="mr-2 mb-5">
-          <x-forms.input label="Profesor:"  name="searchfor" id="searchfor"  :value="$request->input('searchfor')" type="search"/>
-        </div>
-        <div class="mr-3 mb-5">
-          <x-forms.select label="Cursos" name="cursos" :value="$request->input('cursos')" :options="$cursos" ></x-forms.select>
-        </div>
-        <div class="mr-3 mb-5">
-          <x-forms.select label="Edad" name="edad"  :value="$request->input('edad')"  :options="config('wiseabc.edad_labels')" ></x-forms.select>
-        </div>
-        <div class="mr-3 mb-5">
-          <x-forms.select label="Nivel" name="nivel"  :value="$request->input('nivel')"  :options="config('wiseabc.nivel_labels')" ></x-forms.select>
-        </div>
-        <div class="mr-3 mb-5">
-          <x-forms.select label="Tipo" name="tipo"  :value="$request->input('tipo')"  :options="\App\Models\Classroom::$arrTipos" ></x-forms.select>
-        </div>
-        <div class="mr-3 mb-5">
-          <x-forms.select label="Ritmo" name="ritmo"  :value="$request->input('ritmo')"  :options="config('wiseabc.ritmo_labels')" ></x-forms.select>
-        </div>
-        <div class="mr-3 ">
-          <button class="h-12 xl:h-8 shadow-md rounded-2xl px-3 bg-rojo text-white text-center flex items-center" type="submit">Buscar</button>
-        </div>
-      </form>
-      <form class="inline-flex">
-        <div class="mr-3 mb-1">
-          <x-forms.input name="searchfor" id="searchfor" value="" type="hidden"></x-forms.input>
-          <button class="h-12 xl:h-8 shadow-md rounded-2xl px-3 bg-blue-700 text-white text-center flex items-center" type="submit">Limpiar</button>
-        </div>
-      </form>
-    </div>
+  <section class="lg:flex my-5">
+    <form class="flex flex-wrap form-filters">
+
+      <x-forms.input label="Profesor:" name="searchfor" type="search" :value="$request->input('searchfor')" class="mr-3" />
+
+      <x-forms.select label="Cursos" name="cursos" :options="$cursos" :value="$request->input('cursos')" class="mr-3" ></x-forms.select>
+
+      <x-forms.select label="Edad" name="edad" :value="$request->input('edad')" :options="config('wiseabc.edad_labels')" class="mr-3" ></x-forms.select>
+
+      <x-forms.select label="Nivel" name="nivel" :value="$request->input('nivel')" :options="config('wiseabc.nivel_labels')" class="mr-3" ></x-forms.select>
+
+      <x-forms.select label="Tipo" name="tipo" :value="$request->input('tipo')" :options="\App\Models\Classroom::$arrTipos" class="mr-3" ></x-forms.select>
+
+      <x-forms.select label="Ritmo" name="ritmo" :value="$request->input('ritmo')" :options="config('wiseabc.ritmo_labels')" class="mr-3" ></x-forms.select>
+
+      <button class="self-end mb-1 mr-3 shadow-md rounded-full border-2 border-transparent bg-blue-900 px-3 text-center leading-7 text-sm font-accent font-medium text-gray-100" type="submit">Buscar</button>
+    </form>
+    <form class="flex">
+      <x-forms.input name="searchfor" value="" type="hidden"></x-forms.input>
+      <button class="self-end mb-1 mr-3 shadow-md rounded-full border-2 border-transparent bg-white px-3 text-center leading-7 text-sm font-accent font-medium" type="submit">Limpiar</button>
+    </form>
+  </section>
+
   <div class="grid grid-cols-1 gap-5 md:grid-cols-2 xl:grid-cols-3">
     @foreach($clases AS $clase)
     <article class="shadow-md rounded-lg p-3 bg-white dark:bg-white/5">
@@ -61,7 +52,11 @@
 
       </div>
       <div class="flex justify-between font-accent font-medium text-sm leading-7">
+        @if ( $clase->students_count<1 )
         <a href="{{ route('admin.classroom.edit', ['classroom'=>$clase->id]) }}" class="rounded-full border-2 border-gray-100 py-2 xl:py-0 px-3 shadow-md">Editar</a>
+        @else
+        <a class="rounded-full border-2 border-gray-300 bg-gray-300 text-white py-2 xl:py-0 px-3">Editar</a>
+        @endif
         <a href="{{ route('admin.classroom.assignStudents', $clase->id) }}" class="rounded-full border-2 border-gray-100 py-2 xl:py-0 px-3 shadow-md">Asignar estudiantes</a>
       </div>
     </article>

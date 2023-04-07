@@ -1,4 +1,5 @@
 <?php
+use App\Http\Controllers\AdminController;
 use App\Http\Controllers\ClassroomController;
 use App\Http\Controllers\StudentController;
 use App\Http\Controllers\TeacherController;
@@ -22,8 +23,7 @@ use Illuminate\Support\Facades\DB;
 Route::get('test', function(Request $request){
 
 	ob_start();
-	$tz = \Carbon\CarbonTimeZone::create('PDT');
-	print_r($tz);
+
 
 	//$hoy = now('America/Mexico_City')->locale('es');
 	$hoy = new Carbon('2023-04-01 14:03:00', '-0600');
@@ -110,33 +110,7 @@ Route::group(['prefix'=>'admin','as'=>'admin.','middleware' => ['auth','admin']]
 		return redirect()->route('admin.home');
 	});
 
-	Route::get('dashboard', function(){
-		$cursos = App\Models\Curso::all();
-
-		$hoy = now('America/Mexico_City')->locale('es');
-		$finmes = $hoy->copy()->endOfMonth();
-		$cortePasado = $hoy->copy()->subMonth()->endOfMonth();
-
-		$sinClase = \App\Models\user::where('user_type','2')->doesntHave('classrooms')->count();
-
-		$builder = DB::table('attendances')
-		->join('receipts', function($join){
-			$join->on('attendances.id','=','receipts.attendance_id')
-					->whereNull('receipts.payment_id');
-		})
-		->selectRaw('user_id, SUM(receipts.`amount`) as amount')
-		->groupBy('user_id');
-		//$sql = vsprintf(str_replace(array('?'), array('\'%s\''), $builder->toSql()), $builder->getBindings()); dd($sql);
-		$RecibosPendientes = $builder->get();
-
-		return view('admin.dashboard',[
-			'arrCursos'=>$cursos,
-			'sinClase'=>$sinClase,
-			'finmes'=>$finmes->isoFormat('ddd DD MMMM'),
-			'RecibosPendientes'=>$RecibosPendientes,
-			'cortePasado'=>$cortePasado->isoFormat('DD MMMM')
-		]);
-	})->name('home');
+	Route::get('dashboard', [AdminController::class, 'home'])->name('home');
 
 	Route::get('pago/profesor/{profeid}', function(){
 		return view('admin.payments.paraprofe');
