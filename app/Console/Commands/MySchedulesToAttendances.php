@@ -34,7 +34,7 @@ class MySchedulesToAttendances extends Command
   {
     $hoy = now('America/Mexico_City');
     // Obtener horarios vencidos
-    $schedules = Schedule::where('fechahora', '<', $hoy->copy()->subMinutes(45) )->get();
+    $schedules = Schedule::with('classroom')->where('fechahora', '<', $hoy->copy()->subHour() )->get();
 
     // Iniciar transacción
 

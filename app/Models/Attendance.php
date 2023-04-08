@@ -16,22 +16,26 @@ class Attendance extends Model
         'fechahora'=>'datetime'
     ];
 
-    public function clase(){
-        return $this->belongsTo(Classroom::class);
-    }
-
+    /**
+     * Relationships
+     */
     public function classroom(){
-        return $this->belongsTo(Classroom::class);
+        return $this->belongsTo(Classroom::class, 'class_id', 'id');
     }
-
+    public function clase(){
+        return $this->belongsTo(Classroom::class, 'class_id', 'id');
+    }
     public function user(){
         return $this->belongsTo(User::class);
     }
-
-    public function receipt(){
-        return $this->hasOne(Receipt::class);
+    public function payment() {
+        return $this->belongsTo(Payment::class);
     }
-    public function recibo() {
-        return $this->hasOne(Receipt::class);
+    public function pago(){
+        return $this->belongsTo(Payment::class);
+    }
+    public function pconcepts(){
+        //     $this->belongsToMany(Model::class, 'table', 'current_model_id', 'related_model_id');
+        return $this->belongsToMany(PaymentConcept::class, 'attendance_pconcept', 'attendance_id', 'pconcept_id' )->as('recibo')->withPivot('amount');
     }
 }

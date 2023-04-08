@@ -12,8 +12,9 @@ class PaymentConcept extends Model
 
     protected $fillable = ['concept','amount'];
 
-    public function recibos() {
-        //                         (Model::class, 'table', 'current_model_id', 'related_model_id');
-        return $this->belongsToMany(Receipt::class, 'receipt_pconcept', 'pconcept_id', 'receipt_id')->withPivot('amount');
+    public function attendances(){
+        //     $this->belongsToMany(Model::class, 'table', 'current_model_id', 'related_model_id');
+        return $this->belongsToMany(Attendance::class, 'attendance_pconcept', 'pconcept_id', 'attendance_id' )->withPivot('amount');
     }
+
 }

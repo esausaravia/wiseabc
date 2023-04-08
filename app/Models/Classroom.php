@@ -75,6 +75,10 @@ class Classroom extends Model
         return $this->hasMany(Schedule::class, 'class_id')->orderBy('fechahora');
     }
 
+    public function attendances() {
+        return $this->hasMany(Attendance::class, 'class_id')->orderBy('fechahora');
+    }
+
     /**
      * Accessors
      */

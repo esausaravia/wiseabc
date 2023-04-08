@@ -3,7 +3,9 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Models\Payment;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class PaymentController extends Controller
 {
@@ -12,9 +14,48 @@ class PaymentController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
-        //
+		$hoy = now('America/Mexico_City')->locale('es');
+		$cortePasado = $hoy->copy()->subMonth()->endOfMonth();
+
+        /**
+		 * Recibos pendientes mes pasado
+		 */
+		$egresoAcumuladoMes = 0;
+
+		$TeachersNotPaid = \App\Models\User::withWhereHas('attendances', function($query) use ($cortePasado) {
+			$query->withSum('pconcepts as recibo_subtotal','attendance_pconcept.amount')->where('fechahora','<',$cortePasado)
+			      ->whereNull('payment_id');
+		});
+		//echo vsprintf(str_replace(array('?'), array('\'%s\''), $TeachersNotPaid->toSql()), $TeachersNotPaid->getBindings());
+
+		$TeachersNotPaid = $TeachersNotPaid->get();
+		foreach($TeachersNotPaid AS $teacher) {
+			//echo "{$teacher->name} \n";
+			$teacher->saldo_pendiente = 0;
+			foreach( $teacher->attendances AS $attendance ) {
+				//echo "  #{$attendance->id} : {$attendance->fechahora} : $ {$attendance->recibo_subtotal}\n";
+				$teacher->saldo_pendiente += $attendance->recibo_subtotal;
+			}
+			//echo "  saldo pendiente: $ {$teacher->saldo_pendiente}\n";
+			//echo PHP_EOL;
+			$egresoAcumuladoMes += $teacher->saldo_pendiente;
+		}
+
+        /**
+		 * Recibos pagados mes pasado
+		 */
+        $Payments = Payment::with(['user'])->whereHas('attendances',function($query) use ($cortePasado){
+            $query->where('fechahora','<', $cortePasado);
+        })->get();
+        //$sql = vsprintf(str_replace(array('?'), array('\'%s\''), $Payments->toSql()), $Payments->getBindings()); dd($sql);
+
+        return view('admin.payments.index',[
+            'cortePasado'=>$cortePasado->format('d M'),
+            'TeachersNotPaid'=>$TeachersNotPaid,
+            'Payments'=>$Payments
+        ]);
     }
 
     /**

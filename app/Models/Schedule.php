@@ -9,8 +9,6 @@ class Schedule extends Model
 {
     use HasFactory;
 
-    protected $table = 'class_schedules';
-
     protected $fillable = ['class_id','teams_id','fechahora'];
 
     protected $casts = [

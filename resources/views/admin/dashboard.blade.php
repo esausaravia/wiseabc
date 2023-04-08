@@ -84,33 +84,30 @@
           </tr>
         </thead>
         <tbody class="">
-          @foreach($RecibosPendientes AS $pendiente)
-            @php
-            $profe = \App\Models\User::find($pendiente->user_id)
-            @endphp
-            <tr class=" odd:bg-white even:bg-white/50 dark:odd:bg-white/10 dark:even:bg-white/5 text-center">
-              <td class="px-2 py-2 text-left">{{ $profe->name }}</td>
-              <td class="px-2 py-2">${{$pendiente->amount}}</td>
-              <td class="px-2 py-2 text-sm">
-                <p class="">
-                  <span class="inline-block rounded-2xl px-3 leading-6 bg-orange-100 text-orange-400">
-                    <span class="ico"><i class="fa-light fa-hourglass-clock"></i></span>
-                    Pendiente
-                  </span>
-                </p>
-                <p class="">{{ $cortePasado }}</p>
-              </td>
-              <td class="">
-                <div class="flex justify-center">
-                  <a href="{{ route('admin.pagoparaprofe', 1) }}" class="btn rounded-3xl px-3 py-1 bg-white text-gray-600 text-sm font-accent font-medium shadow-md">detalle</a>
-                </div>
-              </td>
-            </tr>
+          @foreach($TeachersNotPaid AS $teacher)
+          <tr class=" odd:bg-white even:bg-white/50 dark:odd:bg-white/10 dark:even:bg-white/5 text-center">
+            <td class="px-2 py-2 text-left">{{ $teacher->name }}</td>
+            <td class="px-2 py-2">${{ $teacher->saldo_pendiente}}</td>
+            <td class="px-2 py-2 text-sm">
+              <p class="">
+                <span class="inline-block rounded-2xl px-3 leading-6 bg-orange-100 text-orange-400">
+                  <span class="ico"><i class="fa-light fa-hourglass-clock"></i></span>
+                  Pendiente
+                </span>
+              </p>
+              <p class="">{{ $cortePasado }}</p>
+            </td>
+            <td class="">
+              <div class="flex justify-center">
+                <a href="{{ route('admin.pagoparaprofe', 1) }}" class="btn rounded-3xl px-3 py-1 bg-white text-gray-600 text-sm font-accent font-medium shadow-md">detalle</a>
+              </div>
+            </td>
+          </tr>
           @endforeach
         </tbody>
       </table>
       <div class="flex justify-center my-5">
-        <a href="{{ route('admin.pagos') }}" class="btn rounded-3xl px-4 bg-white text-gray-500 leading-12 shadow-lg">ver más</a>
+        <a href="{{ route('admin.pagos.index') }}" class="btn rounded-3xl px-4 bg-white text-gray-500 leading-12 shadow-lg">ver más</a>
       </div>
     </section>
 
