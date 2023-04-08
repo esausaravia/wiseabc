@@ -8,7 +8,6 @@ use App\Models\Curso;
 use App\Models\Schedule;
 use App\Models\TeamsInfo;
 use App\Models\Attendance;
-use App\Models\Receipt;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
 
@@ -34,19 +33,18 @@ class DatabaseSeeder extends Seeder
      * NUNCA truncar users
      */
     DB::table('attendances')->truncate();
+    DB::table('attendance_pconcept')->truncate();
     DB::table('classrooms')->truncate();
     DB::table('class_horarios')->truncate();
-    DB::table('class_schedules')->truncate();
     DB::table('class_student')->truncate();
     DB::table('cursos')->truncate();
     DB::table('payments')->truncate();
     DB::table('payment_concepts')->truncate();
-    DB::table('receipts')->truncate();
-    DB::table('receipt_pconcept')->truncate();
+    DB::table('schedules')->truncate();
     DB::table('teams_infos')->truncate();
+    DB::table('usermetas')->truncate();
     DB::table('users')->truncate();
     DB::table('user_horarios')->truncate();
-    DB::table('usermetas')->truncate();
 
     /**
      * Admin User
@@ -175,21 +173,9 @@ class DatabaseSeeder extends Seeder
             'puntual' => true
           ]);
 
-          /**
-           * Recibo
-           */
-          $receipt = Receipt::create([
-            'attendance_id'=> $attendance->id,
-            'status'=>'pendiente',
-            'amount'=>0
-          ]);
-
           foreach($conceptosDePago AS $pconcept) {
-            $receipt->conceptos()->attach( $pconcept->id, ['amount'=>$pconcept->amount] );
-
-            $receipt->amount = $receipt->amount + $pconcept->amount;
+            $attendance->pconcepts()->attach( $pconcept->id, ['amount'=>$pconcept->amount] );
           }
-          $receipt->save();
 
           $_sigdia->next( $enWeekdays[($dia)] )->hour($hr)->minute(0);
         }//END mientras _sigdia < hoy
@@ -232,14 +218,16 @@ class DatabaseSeeder extends Seeder
     /**
      * Crear un pago para cada profesor
      */
-    $profesores = $profesores->slice(0, $profesores->count()/2);
-    $finmes = $cursoStart->copy()->endOfMonth()->isoFormat('YYYY-MM-DD HH:mm:ss');
+    $profesores = $profesores->slice(0, ceil($profesores->count()/2) );
+    $finmes = $cursoStart->copy()->endOfMonth()->format('Y-m-d H:i:s');
     foreach( $profesores AS $profe ) {
-      $asistencias = Attendance::where('user_id', $profe->id)->where('fechahora','<',$finmes)->get();
+      $Asistencias = Attendance::with(['pconcepts'])->where('user_id', $profe->id)->where('fechahora','<',$finmes)->get();
 
       $pago_amount = 0;
-      foreach( $asistencias AS $asistencia ) {
-        $pago_amount = $pago_amount + $asistencia->recibo->amount;
+      foreach( $Asistencias AS $asistencia ) {
+        foreach($asistencia->pconcepts AS $pconcept) {
+          $pago_amount += $pconcept->recibo->amount;
+        }
       }
 
       $pago = \App\Models\Payment::create([
@@ -248,12 +236,7 @@ class DatabaseSeeder extends Seeder
         'amount'=>$pago_amount
       ]);
 
-      foreach( $asistencias AS $asistencia ) {
-        $recibo = $asistencia->recibo;
-        $recibo->payment_id = $pago->id;
-        $recibo->status = 'pagado';
-        $recibo->save();
-      }
+      $pago->attendances()->saveMany($Asistencias);
 
     }//endforeach profe
 

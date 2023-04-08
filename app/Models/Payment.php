@@ -12,12 +12,21 @@ class Payment extends Model
 
     protected $fillable = ['user_id','reference','amount'];
 
-    public function users() {
-        return $this->belongsToMany(User::class);
+    /**
+     * Relationships
+     */
+    /**
+     * Devuelve el profesor que recibe el pago
+     * @return User::class
+     */
+    public function user() {
+        return $this->belongsTo(User::class);
     }
-
-    public function recibos() {
-        return $this->hasMany(Receipt::class); //(Receipt::class, 'payment_id', 'id');
+    public function attendances() {
+        return $this->hasMany(Attendance::class);
+    }
+    public function asistencias(){
+        return $this->hasMany(Attendance::class);
     }
 
 }

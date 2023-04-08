@@ -39,7 +39,7 @@ class MySchedules extends Command
       $msApi = new MsApiController();
       $token = $msApi->getAccessToken();
       $Clases =  Classroom::where('status','active')
-                    ->where('ends_at','>=', $hoy->isoFormat('YYYY-MM-DD') )->get();
+                    ->where('ends_at','>=', $hoy->format('Y-m-d') )->get();
 
       foreach($Clases as $clase) {
 

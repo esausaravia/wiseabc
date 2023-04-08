@@ -94,6 +94,13 @@ class User extends Authenticatable
         return $this->classrooms()->where('status','active')->where('ends_at','>=', now('America/Mexico_City')->locale('es')->isoFormat('YYYY-MM-DD') )->first();
     }
 
+    public function attendances(){
+        return $this->hasMany(Attendance::class);
+    }
+    public function asistencias(){
+        return $this->hasMany(Attendance::class);
+    }
+
     public function suscription() {
         return $this->usermetas()->where('metakey','suscripcion')->get();
     }

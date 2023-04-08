@@ -23,8 +23,6 @@ use Illuminate\Support\Facades\DB;
 Route::get('test', function(Request $request){
 
 	ob_start();
-
-
 	//$hoy = now('America/Mexico_City')->locale('es');
 	$hoy = new Carbon('2023-04-01 14:03:00', '-0600');
 	$hoy->locale('es');
@@ -112,13 +110,9 @@ Route::group(['prefix'=>'admin','as'=>'admin.','middleware' => ['auth','admin']]
 
 	Route::get('dashboard', [AdminController::class, 'home'])->name('home');
 
-	Route::get('pago/profesor/{profeid}', function(){
+	Route::get('pago/profesor/{teacher_id}', function(){
 		return view('admin.payments.paraprofe');
 	})->name('pagoparaprofe');
-
-	Route::get('pagos', function(){
-		return view('admin.payments.list');
-	})->name('pagos');
 
 	Route::get('classroom/createforcurso/{curso}', [\App\Http\Controllers\Admin\ClassroomController::class, 'createForCurso'])->name('classroom.createforcurso');
 
@@ -132,14 +126,15 @@ Route::group(['prefix'=>'admin','as'=>'admin.','middleware' => ['auth','admin']]
 
 	Route::post('student/{student}/assignclass', [\App\Http\Controllers\Admin\StudentController::class, 'assignClassroom2']);
 
+	Route::resource('classroom', \App\Http\Controllers\Admin\ClassroomController::class);
 
 	Route::resource('cursos', \App\Http\Controllers\Admin\CursoController::class);
 
-	Route::resource('teacher', \App\Http\Controllers\Admin\TeacherController::class);
-
-	Route::resource('classroom', \App\Http\Controllers\Admin\ClassroomController::class);
+	Route::resource('pagos', \App\Http\Controllers\Admin\PaymentController::class);
 
 	Route::resource('student', \App\Http\Controllers\Admin\StudentController::class);
+
+	Route::resource('teacher', \App\Http\Controllers\Admin\TeacherController::class);
 
   Route::get('token', [\App\Http\Controllers\Admin\MsApiController::class, 'getAccessToken'])->name('token');
   Route::get('access', [\App\Http\Controllers\Admin\MsApiController::class, 'getTokenAccess'])->name('access');

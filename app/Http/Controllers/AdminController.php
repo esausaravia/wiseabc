@@ -28,18 +28,6 @@ class AdminController extends Controller
 			$ingresosAcumulados += $susc['precio'];
 		}
 
-		/**
-		 * Egresos acumulados al corte
-		 */
-		$builder = DB::table('attendances')
-		->join('receipts', function($join){
-			$join->on('attendances.id','=','receipts.attendance_id')
-					->whereNull('receipts.payment_id');
-		})
-		->selectRaw('SUM(receipts.`amount`) as amount')
-		->where('fechahora','>',$cortePasado);
-		//$sql = vsprintf(str_replace(array('?'), array('\'%s\''), $builder->toSql()), $builder->getBindings()); dd($sql);
-		$egresoAcumuladoMes = $builder->first()->amount;
 
 		/**
 		 * Egresos estimados a fin de mes
@@ -82,24 +70,36 @@ class AdminController extends Controller
 			$egresoEstimadoMes += $costo_clase * $clasesporsemana;
 		}
 
+
 		/**
 		 * Alumnos sin classroom
 		 */
 		$sinClase = \App\Models\user::where('user_type','2')->doesntHave('classrooms')->count();
 
+
 		/**
 		 * Recibos pendientes mes pasado
 		 */
-		$builder = DB::table('attendances')
-		->join('receipts', function($join){
-			$join->on('attendances.id','=','receipts.attendance_id')
-					->whereNull('receipts.payment_id');
-		})
-		->selectRaw('user_id, SUM(receipts.`amount`) as amount')
-		->where('fechahora','<',$cortePasado)
-		->groupBy('user_id')->orderByDesc('amount');
-		//$sql = vsprintf(str_replace(array('?'), array('\'%s\''), $builder->toSql()), $builder->getBindings()); dd($sql);
-		$RecibosPendientes = $builder->get();
+		$egresoAcumuladoMes = 0;
+
+		$TeachersNotPaid = \App\Models\User::withWhereHas('attendances', function($query) use ($cortePasado) {
+			$query->withSum('pconcepts as recibo_subtotal','attendance_pconcept.amount')->where('fechahora','<',$cortePasado)
+			      ->whereNull('payment_id');
+		});
+		//echo vsprintf(str_replace(array('?'), array('\'%s\''), $TeachersNotPaid->toSql()), $TeachersNotPaid->getBindings());
+
+		$TeachersNotPaid = $TeachersNotPaid->get();
+		foreach($TeachersNotPaid AS $teacher) {
+			//echo "{$teacher->name} \n";
+			$teacher->saldo_pendiente = 0;
+			foreach( $teacher->attendances AS $attendance ) {
+				//echo "  #{$attendance->id} : {$attendance->fechahora} : $ {$attendance->recibo_subtotal}\n";
+				$teacher->saldo_pendiente += $attendance->recibo_subtotal;
+			}
+			//echo "  saldo pendiente: $ {$teacher->saldo_pendiente}\n";
+			//echo PHP_EOL;
+			$egresoAcumuladoMes += $teacher->saldo_pendiente;
+		}
 
 		$cursos = \App\Models\Curso::all();
 		return view('admin.dashboard',[
@@ -110,7 +110,7 @@ class AdminController extends Controller
 			'ingresosAcumulados'=>$ingresosAcumulados,
 			'egresoAcumuladoMes'=>$egresoAcumuladoMes,
 			'egresoEstimadoMes'=>$egresoEstimadoMes,
-			'RecibosPendientes'=>$RecibosPendientes
+			'TeachersNotPaid'=>$TeachersNotPaid
 		]);
   }
 }

@@ -84,7 +84,7 @@ class StudentController extends Controller
    */
   public function edit($id)
   {
-    $student = User::with(['usermetas'])->find($id);
+    $student = User::with(['usermetas','horarios','classrooms'])->find($id);
 
     if ( $student->fname===null ) {
       $arrName = explode(' ', $student->name);
