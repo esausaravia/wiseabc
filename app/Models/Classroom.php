@@ -21,7 +21,7 @@ class Classroom extends Model
 
     public static $arrTipos = [
         1 => 'Grupal',
-        2 => 'Individual'
+        2 => 'Particular'
     ];
 
     protected static function booted() {

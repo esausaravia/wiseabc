@@ -28,7 +28,7 @@
           </td>
           <td class="">
             <div class="flex justify-center">
-              <a href="{{ route('admin.pagoparaprofe', $teacher->id) }}" class="btn rounded-3xl px-3 py-1 bg-white text-gray-600 text-sm font-accent font-medium shadow-md">detalle</a>
+              <a href="{{ route('admin.pagoparaprofe', ['id'=>$teacher->id ]) }}" class="btn rounded-3xl px-3 py-1 bg-white text-gray-600 text-sm font-accent font-medium shadow-md">detalle</a>
             </div>
           </td>
         </tr>

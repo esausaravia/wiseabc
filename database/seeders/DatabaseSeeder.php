@@ -70,6 +70,7 @@ class DatabaseSeeder extends Seeder
     /**
      * Profesores
      */
+    $hoy = now('America/Mexico_City');
     //horarios lun mie vie 9-10 y 11-12
     $horarios = [1 => [9, 10, 11, 12], 3 => [9, 10, 11, 12], 5 => [9, 10, 11, 12]];
 
@@ -78,6 +79,7 @@ class DatabaseSeeder extends Seeder
 
       $oldEmail = $teacher->email;
       $teacher->email = 'profe'.$teacher->id.'@wiseabcenglish.com';
+      $teacher->created_at = $hoy->copy()->subMonths(3)->subDay();
       $teacher->save();
 
       $arrName = explode(' ', $teacher->name);
@@ -116,7 +118,6 @@ class DatabaseSeeder extends Seeder
      * Crear classrooms, schedules y attendances
      */
     $enWeekdays = config('wiseabc.en_weekdays');
-    $hoy = now('America/Mexico_City')->locale('es');
     $cursoStart = now('America/Mexico_City')->locale('es')->subMonth();
 
     $cursos = Curso::where('nivel','<',3)->get();
