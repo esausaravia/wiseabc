@@ -40,7 +40,7 @@
         <p class="mb-1 font-medium">{{ $sigClase->isoFormat('ddd D MMMM h:00 a') }} – {{ $sigClaseFin->isoFormat('h:mm a') }}</p>
       </div>
       <div>
-        @if ( $hoy->lessThan( $sigClaseFin ) && $hoy->greaterThan( $sigClase->copy()->subMinutes(5) ) )
+        @if ( $hoy->lessThan( $sigClaseFin ) && $hoy->greaterThan( $sigClase->copy()->subMinutes(5) )  )
 
         <a href="https://teams.microsoft.com/l/meetup-join/19%3ameeting_YTliMzhiMjMtZmExZC00NTc2LWEwNWYtOTI4MWNhZDhhYjU5%40thread.v2/0?context=%7b%22Tid%22%3a%22e196ec1f-12cb-43bf-a0aa-f7d14741ec2e%22%2c%22Oid%22%3a%22467eb4b6-313a-4960-8367-d383828c9a41%22%7d" target="_blank" class="btn flex px-4 py-3 rounded-full border-2 border-white bg-violet-700 text-white">
           <span class="mr-2">Abrir</span>
