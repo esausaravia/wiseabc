@@ -49,7 +49,7 @@
         <tr class="even:bg-black/5 dark:even:bg-white/5">
           <td class="px-2">{{ $profe->id }}</td>
           <td class="p-2">{{ $profe->name }}</td>
-          <td class="px-2 text-center"> {{$profe->teachclasses()->count()}} </td>
+          <td class="px-2 text-center"> {{ $profe->teachclasses_count }} </td>
           <td class="px-2 text-sm ">
             <div class="flex">
               <a href="{{ route('admin.classroom.createforteacher', ['teacher'=>$profe]) }}" class="px-2">

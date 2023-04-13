@@ -258,10 +258,9 @@ class ClassroomController extends Controller
     }
 
     public function assignStudents($id) {
+        ob_start();
         $Classroom = Classroom::find($id);
         $weekdays = config('wiseabc.weekdays');
-
-        ob_start();
 
         $querySinClase = DB::table('users')
             ->leftJoin('class_student','class_student.user_id','=','users.id')
@@ -325,7 +324,9 @@ class ClassroomController extends Controller
                 : back()->withInput()->withErrors(['alert'=>'No se encontró la clase #'.$id]);
         }
 
-        //$Students = User::find($input['students']);
+        if ( empty($input['students']) ) {
+            $input['students'] = array();
+        }
 
         $Classroom->students()->sync($input['students']);
         $Classroom->refresh();

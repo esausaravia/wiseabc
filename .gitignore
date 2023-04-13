@@ -19,3 +19,4 @@ yarn-error.log
 notes.txt
 /resources/css/tailwind.css
 public/js/admin.classroom.cforcurso.js
+public/js/admin.pagos.js

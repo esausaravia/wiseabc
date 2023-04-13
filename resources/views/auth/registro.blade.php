@@ -152,7 +152,7 @@
         <p>Clic en los horarios que puede tomar clase.</p>
 
         <x-forms.option-group type="checkbox" name="horarios" :options="config('wiseabc.horarios_labels')">
-          <x-slot:optcont class="grid grid-cols-4 md:grid-cols-8"></x-slot>
+          <x-slot:optcont class="rounded-lg shadow-md grid grid-cols-4 md:grid-cols-8 bg-white text-gray-500 leading-12 xl:leading-8 text-center"></x-slot>
         </x-option-group>
 
         <div id="clases-disponibles" class="hidden" data-ajx="{{ route('clases.disponibles') }}">
@@ -177,14 +177,16 @@
     </form>
   </section>
 
-  <section class="md:w-1/2 lg:ml-5 lg:w-1/3 xl:w-1/4 grid grid-cols-1 gap-5">
-    <h2 class="text-lg md:text-xl font-medium font-accent "><a href="{{ route('regprof') }}">Registro de profesor</a></h2>
-    <a href="{{ route('regprof') }}">
-      <img width="1536" height="1536"  class="lazyload w-full h-auto" alt="" src="data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw=="  data-src="https://mezcalent.com/wiseabc/wp-content/uploads/2022/09/profesor-digital-1x1-1.jpg" decoding="async" data-srcset="https://mezcalent.com/wiseabc/wp-content/uploads/2022/09/profesor-digital-1x1-1.jpg 1536w, https://mezcalent.com/wiseabc/wp-content/uploads/2022/09/profesor-digital-1x1-1-420x420.jpg 420w, https://mezcalent.com/wiseabc/wp-content/uploads/2022/09/profesor-digital-1x1-1-1024x1024.jpg 1024w, https://mezcalent.com/wiseabc/wp-content/uploads/2022/09/profesor-digital-1x1-1-210x210.jpg 210w, https://mezcalent.com/wiseabc/wp-content/uploads/2022/09/profesor-digital-1x1-1-768x768.jpg 768w" data-sizes="auto" />
-    </a>
-    <p class="text-sm text-right">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut elit tellus, luctus nec ullamcorper mattis, pulvinar dapibus.</p>
-    <p class="text-right">
-      <a href="{{ route('regprof') }}" class="inline-block rounded-lg bg-azul p-3 font-medium font-accent text-sm text-gray-100">Profesores</a>
-    </p>
+  <section class="md:w-1/2 lg:ml-8 lg:w-1/3 xl:w-1/4">
+    <div class="rounded-lg bg-white px-4 py-5 shadow-md">
+      <h2 class="text-lg md:text-xl font-medium font-accent mb-3"><a href="{{ route('regprof') }}">Teacher sign-up</a></h2>
+      <a class="block mb-3" href="{{ route('regprof') }}">
+        <img width="1536" height="1536"  class="lazyload w-full h-auto" alt="" src="data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw=="  data-src="https://mezcalent.com/wiseabc/wp-content/uploads/2022/09/profesor-digital-1x1-1.jpg" decoding="async" data-srcset="https://mezcalent.com/wiseabc/wp-content/uploads/2022/09/profesor-digital-1x1-1.jpg 1536w, https://mezcalent.com/wiseabc/wp-content/uploads/2022/09/profesor-digital-1x1-1-420x420.jpg 420w, https://mezcalent.com/wiseabc/wp-content/uploads/2022/09/profesor-digital-1x1-1-1024x1024.jpg 1024w, https://mezcalent.com/wiseabc/wp-content/uploads/2022/09/profesor-digital-1x1-1-210x210.jpg 210w, https://mezcalent.com/wiseabc/wp-content/uploads/2022/09/profesor-digital-1x1-1-768x768.jpg 768w" data-sizes="auto" />
+      </a>
+      <p class="text-sm text-right mb-3">Sé parte de nuestro equipo de profesores y Únete a la familia de WiseABC English, regístrate como profesor aquí y ahora.</p>
+      <p class="text-right">
+        <a href="{{ route('regprof') }}" class="inline-block rounded-lg bg-azul p-3 font-medium font-accent text-sm text-gray-100">Profesores</a>
+      </p>
+    </div>
   </section>
 </x-layoutreg>

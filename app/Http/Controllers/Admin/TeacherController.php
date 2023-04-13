@@ -18,33 +18,30 @@ class TeacherController extends Controller
   public function index(Request $request)
   {
 
-
     $search = $request->get('searchfor');
     $classroom = $request->get('classroom');
     $estatus = $request->get('estatus');
-    $profes = User::where('user_type', 3)
+    $profes = User::withCount([
+        'teachclasses'=>function($query){
+          $query->where('status','active');
+        }
+      ])
+      ->where('user_type', 3)
       ->when($search, function ($query) use ($search) {
         $query->where('name', 'like', '%' . $search . '%')
-          ->orWhere('email', 'like', '%' . $search . '%')->where('user_type', 3);
+          ->orWhere('email', 'like', '%' . $search . '%');
       })
       ->when($estatus, function ($query) use ($estatus) {
         $query->where('status', $estatus);
       })
       ->when($classroom, function ($query) use ($classroom) {
         if ($classroom == '1') {
-          $query->whereExists(function ($query) {
-            $query->select(User::raw(1))
-              ->from('classrooms')
-              ->whereRaw('classrooms.teacher_id = users.id')->select('users.*');
-          });
+          $query->has('teachclasses');
         } else {
-          $query->whereNotExists(function ($query) {
-            $query->select(User::raw(1))
-              ->from('classrooms')
-              ->whereRaw('classrooms.teacher_id = users.id')->select('users.*');
-          });
+          $query->doesntHave('teachclasses');
         }
-      })->with(['classrooms'])->orderBy('name')->get();
+      })->orderBy('name')->get();
+
     return view('admin.profes', compact('profes', 'search', 'request'));
   }
 

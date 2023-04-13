@@ -23,20 +23,37 @@ class StudentController extends Controller
     $edad = $request->get('edad');
     $estatus = $request->get('estatus');
 
-    $students = User::where('user_type', 2)->when($search, function($query) use ($search) {
-      $query->where('name', 'like', '%'.$search.'%')
-        ->orWhere('email', 'like', '%'.$search.'%');
-    })->when($estatus, function($query) use ($estatus) {
-      $query->where('status', $estatus);
-    })->when($edad, function($query) use ($edad) {
-      $query->distinct()->join('usermetas as sm', 'sm.user_id', '=', 'users.id')
-        ->where('sm.metakey', 'edad')
-        ->where('sm.metaval', $edad);
-    })->when($nivel, function($query) use ($nivel) {
-      $query->distinct()->join('usermetas', 'usermetas.user_id', '=', 'users.id')
-        ->where('usermetas.metakey', 'nivel')
-        ->where('usermetas.metaval', $nivel);
-    })->select('users.*')->with(['usermetas','classrooms'])->orderBy('name')->get();
+    $students = User::with([
+        'usermetas',
+        'classrooms'=>function($query){
+          $query->where('status','active')->where('ends_at','>=', now('-0600') );
+        }
+      ])
+        ->where('user_type', 2)
+
+        ->when($search, function($query) use ($search) {
+          $query->where('name', 'like', '%'.$search.'%')
+            ->orWhere('email', 'like', '%'.$search.'%');
+        })
+
+        ->when($estatus, function($query) use ($estatus) {
+          $query->where('status', $estatus);
+        })
+
+        ->when($edad, function($query) use ($edad) {
+          $query->distinct()->join('usermetas as sm', 'sm.user_id', '=', 'users.id')
+            ->where('sm.metakey', 'edad')
+            ->where('sm.metaval', $edad);
+        })
+
+        ->when($nivel, function($query) use ($nivel) {
+          $query->distinct()->join('usermetas', 'usermetas.user_id', '=', 'users.id')
+            ->where('usermetas.metakey', 'nivel')
+            ->where('usermetas.metaval', $nivel);
+        })
+
+        ->orderBy('name')->get();
+
     $nivel = DB::table('cursos')->get();
     return view('admin.students', compact('students','search', 'nivel', 'request'));
   }
@@ -70,9 +87,19 @@ class StudentController extends Controller
    */
   public function show($id)
   {
-    $student = User::with(['usermetas','horarios','classrooms'])->find($id);
+    $student = User::with([
+        'usermetas',
+        'horarios',
+        'classrooms'=>function($query){
+          $query->where('status','active')->where('ends_at','>=', now('-0600') );
+        },
+        'classrooms.curso',
+        'classrooms.horarios'
+      ])->find($id);
+
     return view('admin.student.show', [
-      'student'=>$student
+      'student'=>$student,
+      'ritmo_labels'=>config('wiseabc.ritmo_labels')
     ]);
   }
 
@@ -84,7 +111,15 @@ class StudentController extends Controller
    */
   public function edit($id)
   {
-    $student = User::with(['usermetas','horarios','classrooms'])->find($id);
+    $student = User::with([
+        'usermetas',
+        'horarios',
+        'classrooms'=>function($query){
+          $query->where('status','active')->where('ends_at','>=', now('-0600') );
+        },
+        'classrooms.curso',
+        'classrooms.horarios'
+      ])->find($id);
 
     if ( $student->fname===null ) {
       $arrName = explode(' ', $student->name);
@@ -99,8 +134,18 @@ class StudentController extends Controller
       ]);
     }
 
+    $arrHorariosOcupados = array();
+    if ( !empty($student->currentClassroom) ) {
+
+      foreach($student->currentClassroom->getHorariosArray() AS $_dia=>$_arrHrs) {
+        $arrHorariosOcupados = array_merge( $arrHorariosOcupados, $_arrHrs );
+      }
+    }
+
     return view('admin.student.form', [
-      'student'=>$student
+      'student'=>$student,
+      'ritmo_labels'=>config('wiseabc.ritmo_labels'),
+      'arrHorariosOcupados'=>$arrHorariosOcupados
     ]);
   }
 
@@ -122,9 +167,10 @@ class StudentController extends Controller
       'tel' => ['regex:/[0-9()#&+*-=.]+/i'],
     ]);
 
-    if (!empty($valid['email']) ) {
+    if (!empty($valid['email']) )
+    {
 
-      $existing_email = \Illuminate\Support\Facades\DB::table('users')->select('id')->where('email', 'like', $valid['email'])->where('id','<>', $student->id)->get();
+      $existing_email = DB::table('users')->select('id')->where('email', 'like', $valid['email'])->where('id','<>', $student->id)->get();
       if ( $existing_email->count()>0 )
       {
         return $request->wantsJson() ? response()->json(['email'=>'Este correo ya lo tiene otro usuario'], 400)
@@ -137,25 +183,28 @@ class StudentController extends Controller
 
     $input = $request->all();
 
-    if (!empty($input['status']) ) {
+    if (!empty($input['status']) )
+    {
       $student->status = $input['status'];
     }
 
-    if ( !empty($input['fname']) && !empty($input['lname']) ) {
+    if ( !empty($input['fname']) && !empty($input['lname']) )
+    {
       $student->name = ucwords($input['fname'].' '.$input['lname']);
     }
 
-    if ( !empty($input['password']) ) {
+    if ( !empty($input['password']) )
+    {
       $student->password = Hash::make($input['password']);
     }
     $student->save();
+
+    $student->saveMetas($input);
 
     if ( !empty($input['horarios']) && is_array($input['horarios']) )
     {
       $student->saveHorarios($input['horarios']);
     }
-
-    $student->saveMetas($input);
 
     return $request->wantsJson() ? response()->json(['message'=>"Guardado con éxito"])
       : redirect()->route('admin.student.index')->with('success','Guardado con éxito');
