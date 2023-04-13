@@ -1,6 +1,111 @@
 <x-admin.layout>
-  <h2 class="font-accent font-medium text-xl">Detalle de estudiante</h2>
-  <div class="my-5">
+  <h1 class="font-accent font-bold text-xl lg:text-2xl mb-5">Detalle de estudiante #{{$student->id}}</h1>
+
+  <section class="flex flex-wrap">
+    <div class="rounded-lg shadow-md p-3 bg-gray-50 mb-5 md:mr-5">
+      <div class="flex">
+        <figure class="mr-4">
+          <img height="96" width="96" class="rounded-full object-contain w-20 h-20 md:w-24 md:h-24 bg-white border-gray-100" alt="{{$student->name}}" src="{{ asset('img/spacer.gif') }}" >
+        </figure>
+        <div>
+          <h3 class="font-medium mb-2">{{$student->name}}</h3>
+          <p class="mb-2">
+            <b class="block -mb-1 font-accent text-xs">e-mail</b>
+            {{$student->email}}
+          </p>
+          <p class="mb-2">
+            <b class="block -mb-1 font-accent text-xs">tel</b>
+            {{$student->tel}}
+          </p>
+        </div>
+      </div>
+
+      <div class="flex flex-wrap -mx-2">
+        <p class="mb-2 px-2">
+          <b class="block -mb-1 font-accent text-xs">edad</b>
+          {{$student->edad_label }}
+        </p>
+        <p class="mb-2 px-2">
+          <b class="block -mb-1 font-accent text-xs">nivel</b>
+          {{$student->nivel_label }}
+        </p>
+
+        <p class="mb-2 px-2">
+          <b class="block -mb-1 font-accent text-xs">registro</b>
+          {{$student->created_at->isoFormat('D MMM Y')}}
+        </p>
+        @if (!empty($student->deleted_at))
+        <p class="mb-2 px-2 text-rojo">
+          <b class="block -mb-1 font-accent text-xs">eliminado</b>
+          {{$student->created_at->isoFormat('D MMM Y')}}
+        </p>
+        @endif
+
+        <p class="mb-2 px-2">
+          <b class="block -mb-1 font-accent text-xs">timezone</b>
+          {{$student->timezone }}
+        </p>
+      </div>
+
+      <div class="horarios">
+        <b class="block -mb-1 font-accent text-xs">horarios</b>
+        <x-user-card-horarios :horarios="$student->getHorarioArray()" :user_type="2"></x-user-card-horarios>
+      </div>
+    </div>{{--/card--}}
+
+    @php $suscripcion = $student->suscription() @endphp
+    @if( !empty($suscripcion) )
+    <section class="rounded-lg shadow-md p-3 bg-gray-50 mb-5 md:mr-5">
+      <h3 class="font-bold font-accent text-xs">Suscripción: {{ $suscripcion->id }}</h3>
+      <p class="mb-2">{{$suscripcion->name}}</p>
+      <p class="text-sm">
+        {{ $suscripcion->tipo==1 ? 'Grupal' : 'Particular' }} | {{ $ritmo_labels[( $suscripcion->ritmo )] }}
+      </p>
+      <p>$@money($suscripcion->precio)</p>
+    </section>
+    @endif
+
+    @if ( !empty( $student->currentClassroom ) )
+    <section class="rounded-lg shadow-md p-3 bg-gray-50 mb-5 md:mr-5">
+      <h4 class="font-accent font-bold text-xs">Classroom actual: #{{$student->currentClassroom->id}}</h4>
+
+      <p class="mb-2">{{$student->currentClassroom->curso->name}}</p>
+
+      <p class="mb-2">
+        <b class="block -mb-1 font-accent text-xs">Teacher</b>
+        {{$student->currentClassroom->teacher->name}}
+      </p>
+
+      <ul class="flex flex-wrap -mx-2 text-sm">
+        <li class="mb-2 px-2"><strong class="block text-xs">Edad</strong>
+          {{$student->currentClassroom->curso->edadLabel}}
+        </li>
+        <li class="mb-2 px-2"><strong class="block text-xs">Nivel</strong>
+          {{$student->currentClassroom->curso->nivelLabel}}
+        </li>
+        <li class="mb-2 px-2"><strong class="block text-xs">Tipo</strong>
+          {{$student->currentClassroom->tipoLabel}}
+        </li>
+        <li class="mb-2 px-2"><strong class="block text-xs">Ritmo</strong>
+          {{$student->currentClassroom->ritmoLabel}}
+        </li>
+        <li class="mb-2 px-2"><strong class="block text-xs">Inició</strong>
+          {{ $student->currentClassroom->start->isoFormat('D MMM Y') }}
+        </li>
+        <li class="mb-2 px-2"><strong class="block text-xs">Fin</strong>
+          {{ $student->currentClassroom->ends_at->isoFormat('D MMM Y') }}
+          ( {{ $student->currentClassroom->endsInWeeks() }}w )
+        </li>
+      </ul>
+
+      <h4 class="font-bold text-xs">Horarios</h4>
+      <x-user-card-horarios class="flex flex-wrap" :horarios="$student->currentClassroom->getHorarioArray()"></x-user-card-horarios>
+
+    </section>{{--/card-suscripcion--}}
+    @endif
+  </section>
+
+  <div class="my-5 overflow-auto w-full">
     @foreach ($student->getAttributes() as $_key=>$_val )
       <p>
         <strong>{{$_key}}</strong>: {{ print_r($_val, true) }}
@@ -12,34 +117,5 @@
         <strong>{{$meta->metakey}}</strong>: {{ print_r($meta->metaval, true) }}
       </p>
     @endforeach
-
-    <div class="my-5">
-      <h3 class="font-medium font-accent">Horarios</h3>
-      <x-user-card-horarios :horarios="$student->getHorarioArray()" :user_type="2"></x-user-card-horarios>
-    </div>
   </div>
-  <section class="my-5">
-    <h3 class="font-accent font-medium text-lg">Clase asignada</h3>
-    @foreach ($student->classrooms as $clase)
-      <li data-id="{{$clase->id}}">
-        {{$clase->curso->name}}
-        <div class="text-sm">
-          <ul class="flex flex-wrap">
-            <li class="mr-2"><strong>Edad</strong>: {{$clase->curso->edad_label}}</li>
-            <li class="mr-2"><strong>Nivel</strong>: {{$clase->curso->nivel_label}}</li>
-            <li class="mr-2"><strong>Tipo</strong>: {{$clase->tipo_label}}</li>
-            <li class="mr-2"><strong>Ritmo</strong>: {{$clase->ritmo_label}}</li>
-          </ul>
-          <ul class="flex flex-wrap">
-            <li class="mr-2"><strong>Inicio</strong>: {{$clase->start}}</li>
-            <li class="mr-2"><strong>Fin</strong>: {{ $clase->ends_at }}</li>
-            <li class="mr-2"><strong>Quedan</strong>: {{$clase->endsInWeeks() }} semanas</li>
-            <li class="mr-2"><strong>Asignada</strong>: {{$clase->pivot->created_at }}</li>
-          </ul>
-          <strong class="block">Horarios</strong>
-          <x-user-card-horarios :horarios="$clase->getHorarioArray()"></x-user-card-horarios>
-        </div>
-      </li>
-    @endforeach
-  </section>
 </x-admin.layout>

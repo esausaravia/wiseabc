@@ -36,8 +36,8 @@
         </ul>
 
         <ul class="flex flex-wrap">
-          <li class="mr-2"><strong>Inició</strong>: {{ $clase->start }} </li>
-          <li class="mr-2"><strong>Fin</strong>: {{ $clase->ends_at }} </li>
+          <li class="mr-2"><strong>Inició</strong>: {{ $clase->start->isoFormat('D MMM') }} </li>
+          <li class="mr-2"><strong>Fin</strong>: {{ $clase->ends_at->isoFormat('D MMM') }} </li>
           <li class="mr-2">( {{ $clase->endsInWeeks() }}w )</li>
         </ul>
 

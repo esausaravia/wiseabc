@@ -19,7 +19,7 @@ class StudentController extends Controller
     $activarSigClaseBtn = false;
     $hoy = now('America/Mexico_City')->locale('es');
 
-    $clase = $user->currentClassroom();
+    $clase = $user->currentClassroom;
 
     if ($clase && is_object($clase) ) {
       $sigClase = $clase->sigFechaHora();

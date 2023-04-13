@@ -90,10 +90,6 @@ class User extends Authenticatable
         return $this->belongsToMany(Classroom::class, 'class_student', 'user_id', 'class_id')->withTimestamps()->orderByPivot('created_at', 'desc');
     }
 
-    public function currentClassroom() {
-        return $this->classrooms()->where('status','active')->where('ends_at','>=', now('America/Mexico_City')->locale('es')->isoFormat('YYYY-MM-DD') )->first();
-    }
-
     public function attendances(){
         return $this->hasMany(Attendance::class);
     }
@@ -102,7 +98,21 @@ class User extends Authenticatable
     }
 
     public function suscription() {
-        return $this->usermetas()->where('metakey','suscripcion')->get();
+        $sid = $this->usermetas()->where('metakey','suscripcion')->first();
+        if (empty($sid) )
+        {
+            return null;
+        }
+        $sid = $sid->metaval;
+        $Suscripciones = collect( config('wiseabc.suscripciones') );
+        $suscripcion = $Suscripciones->first(function($item) use ($sid){
+            return (int)$item['id']===(int)$sid;
+        });
+        if ( empty($suscripcion) ) {
+            return null;
+        }
+
+        return !empty($suscripcion) ? (object)$suscripcion : null;
     }
 
     /**
@@ -132,19 +142,18 @@ class User extends Authenticatable
             },
         );
     }
+    protected function currentClassroom(): Attribute
+    {
+        return Attribute::make(
+            get: function($value, $attributes){
+                return $this->classrooms()->where('status','active')->where('ends_at','>=', now('America/Mexico_City') )->first();
+            }
+        );
+    }
 
     /**
      * Class Methods
      */
-	public function __get($gkey)
-	{
-        $attr = $this->getAttribute($gkey);
-		if ( $attr!==NULL ) {
-			return $attr;
-		}
-        $meta = $this->getMeta($gkey);
-        return $meta!==NULL ? $meta : $attr;
-	}
 
 	/**
 	 * @param string $mkey
@@ -368,4 +377,19 @@ class User extends Authenticatable
 
         return asset( $filePath.'/'.$fileName );
     }
+
+
+    /**
+     * Devuelve el atributo nativo del Modelo o el usermeta
+     *
+     */
+	public function __get($gkey)
+	{
+        $attr = $this->getAttribute($gkey);
+		if ( $attr!==NULL ) {
+			return $attr;
+		}
+        $meta = $this->getMeta($gkey);
+        return $meta!==NULL ? $meta : $attr;
+	}
 }

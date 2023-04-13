@@ -38,7 +38,7 @@
         <x-forms.option-group label="Edad" name="edad" :options="config('wiseabc.edad_labels')" :value="$user->edad" required class="mb-3"></x-option-group>
 
         <x-forms.option-group label="Horarios" type="checkbox" name="horarios[1]" :options="config('wiseabc.horarios_labels')" :value="$user->getHorarioArray(1)" required class="mb-3">
-          <x-slot:optcont class="grid grid-cols-4 md:grid-cols-8"></x-slot>
+          <x-slot:optcont class="rounded-lg shadow-md grid grid-cols-4 md:grid-cols-8 bg-white text-gray-500 leading-12 xl:leading-8 text-center"></x-slot>
         </x-option-group>
 
         <textarea name="" id="" cols="30" rows="10">{{ print_r($user->getHorarioArray(1), true) }}</textarea>

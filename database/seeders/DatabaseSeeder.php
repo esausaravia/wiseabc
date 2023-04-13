@@ -78,7 +78,7 @@ class DatabaseSeeder extends Seeder
     foreach($profesores AS $teacher) {
 
       $oldEmail = $teacher->email;
-      $teacher->email = 'profe'.$teacher->id.'@wiseabcenglish.com';
+      $teacher->email = 'teacher'.$teacher->id.'@wiseabcenglish.com';
       $teacher->created_at = $hoy->copy()->subMonths(3)->subDay();
       $teacher->save();
 
