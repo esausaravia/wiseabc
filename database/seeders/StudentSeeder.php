@@ -26,7 +26,7 @@ class StudentSeeder extends Seeder
         $students_count = 0;
 
         for( $nivel=1; $nivel<7; $nivel++ ) {
-
+            $Edades = array(6=>'6 años');
             foreach($Edades AS $edad=>$edad_label) {
 
                 foreach($arrSuscripciones AS $sid) {
@@ -49,7 +49,7 @@ class StudentSeeder extends Seeder
                                 'suscripcion'=>$sid,
                                 'clase_tipo' => $Suscripcion->tipo,
                                 'ritmo' => $Suscripcion->ritmo,
-                                'timezone' => 'America/Mexico_City'
+                                'timezone' => '-0600'
                             ]);
                             $student->saveHorarios([1=>[$___hr]]);
                             $students_count++;

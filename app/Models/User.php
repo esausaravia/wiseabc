@@ -146,7 +146,7 @@ class User extends Authenticatable
     {
         return Attribute::make(
             get: function($value, $attributes){
-                return $this->classrooms()->where('status','active')->where('ends_at','>=', now('America/Mexico_City') )->first();
+                return $this->classrooms()->where('status','active')->where('ends_at','>=', now('-0600') )->first();
             }
         );
     }

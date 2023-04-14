@@ -26,8 +26,19 @@ class Classroom extends Model
 
     protected static function booted() {
         static::saving(function($clase){
+
             $semanas = ceil($clase->curso->duracion / $clase->ritmo);
-            $clase->ends_at = Carbon::parse($clase->start)->addWeek($semanas)->format('Y-m-d');
+
+            if ( is_object($clase->start) && class_basename($clase->start)==='Carbon' )
+            {
+                $clase->start->setTimezone('UTC');
+                $clase->ends_at = $clase->start->copy()->addWeek($semanas);
+            }
+            else if ( is_string($clase->start) )
+            {
+                $fecha = \Carbon\Carbon::parse( $clase->start );
+                $clase->ends_at = $fecha->addWeek($semanas);
+            }
         });
     }
 
@@ -176,14 +187,13 @@ class Classroom extends Model
         $enWeekdays = config('wiseabc.en_weekdays');
 
         if ( is_object($offset) && class_basename($offset)==='Carbon' ) {
-            $hoy = $offset;
+            $hoy = $offset->setTimezone('-0600');
         }
         else if ( is_string($offset) ) {
-            $hoy = new Carbon($offset, 'America/Mexico_City');
-            $hoy->locale('es');
+            $hoy = new Carbon($offset, '-0600');
         }
         else {
-            $hoy = now('America/Mexico_City')->locale('es');
+            $hoy = now('-0600');
         }
 
         $hoy_diasem = (int)$hoy->isoFormat('d');

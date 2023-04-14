@@ -33,7 +33,7 @@ class MyReceipts extends Command
      */
     public function handle()
     {
-      $hoy = now('America/Mexico_City');
+      $hoy = now('-0600');
 
       $Attendances = \App\Models\Attendance::with(['user','classroom'])
 			    ->whereDoesntHave('pconcepts')
