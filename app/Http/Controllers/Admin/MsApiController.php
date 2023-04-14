@@ -4,11 +4,6 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 
-use DateInterval;
-use DateTime;
-use Illuminate\Http\Request;
-use Microsoft\Graph\Graph;
-
 class MsApiController extends Controller
 {
 
@@ -47,14 +42,15 @@ class MsApiController extends Controller
 
     if ( is_object($fecha) && class_basename($fecha)==='Carbon' )
     {
-      $fecha = $fecha->copy()->setTimezone('-0600');
+      $fecha = $fecha->copy();
     }
     else if ( is_string($fecha) && !empty($fecha) ) {
-      $fecha = new \Carbon\Carbon($fecha, '-0600');
+      $fecha = \Carbon\Carbon::parse($fecha);
     }
     else {
       return false;
     }
+    $fecha->setTimezone('-0600');
 
     $body = [
       'subject' => $subject,
