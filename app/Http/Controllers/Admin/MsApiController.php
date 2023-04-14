@@ -12,35 +12,50 @@ use Microsoft\Graph\Graph;
 class MsApiController extends Controller
 {
 
+  public static $token = null;
 
-  public function getAccessToken(){
+  public static function getAccessToken(){
     $guzzle = new \GuzzleHttp\Client();
     $url = env('OAUTH_APP_TOKEN_ENDPOINT');
-    $token = json_decode($guzzle->post($url, [
+
+    self::$token = json_decode( $guzzle->post($url, [
       'form_params' => [
         'client_id' => env('OAUTH_APP_ID'),
         'client_secret' => env('OAUTH_CLIENT_ID'),
         'scope' => env('OAUTH_SCOPES'),
         'grant_type' => 'client_credentials',
       ],
-    ])->getBody()->getContents());
+    ])->getBody()->getContents() );
 
-    return $token->access_token;
+    return self::$token->access_token;
   }
 
-
-  public function createOnlineMeeting( $subject,  $fecha , $token)
+  public function createOnlineMeeting( $subject,  $fecha, $reqBody=array())
   {
+    if ( empty(self::$token) || empty(self::$token->access_token) )
+    {
+      $token = self::getAccessToken();
+    }
+
     $client = new \GuzzleHttp\Client([
       'base_uri' => 'https://graph.microsoft.com/v1.0/',
       'headers' => [
-        'Authorization' => 'Bearer ' . $token,
+        'Authorization' => 'Bearer ' . self::$token->access_token,
         'Content-Type' => 'application/json'
       ]
     ]);
-    $date = new DateTime($fecha);
-    $date->add(new DateInterval('PT40M'));
-    $fecha_con_minutos_agregados = $date->format('Y-m-d H:i:s.u');
+
+    if ( is_object($fecha) && class_basename($fecha)==='Carbon' )
+    {
+      $fecha = $fecha->copy()->setTimezone('-0600');
+    }
+    else if ( is_string($fecha) && !empty($fecha) ) {
+      $fecha = new \Carbon\Carbon($fecha, '-0600');
+    }
+    else {
+      return false;
+    }
+
     $body = [
       'subject' => $subject,
       'body' => [
@@ -48,19 +63,22 @@ class MsApiController extends Controller
         'content' => $subject
       ],
       'start' => [
-        'dateTime' => $fecha,
-        'timeZone' => 'Pacific Standard Time',
+        'dateTime' => $fecha->format('Y-m-d\TH:i:s'),
+        'timeZone' => 'America/Mexico_City',
       ],
       'end' => [
-        'dateTime' => $fecha_con_minutos_agregados,
-        'timeZone' => 'Pacific Standard Time',
+        'dateTime' => $fecha->copy()->addMinutes(40)->format('Y-m-d\TH:i:s'),
+        'timeZone' => 'America/Mexico_City',
       ],
       'location' => [
-        'displayName' => 'Sala de conferencias',
+        'displayName' => 'WiseABC Online Classroom',
       ],
       'isOnlineMeeting' => true,
       'onlineMeetingProvider' => 'teamsForBusiness'
     ];
+
+    $body = array_merge_recursive( $body, $reqBody );
+
     $response = $client->post('users/esau@wiseabcenglish.com/calendar/events', [
       'body' => json_encode($body)
     ]);
