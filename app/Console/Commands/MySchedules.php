@@ -33,7 +33,7 @@ class MySchedules extends Command
     {
       $paraSemanas = 2; //cuantas semanas hacia adelante
       $enWeekdays = config('wiseabc.en_weekdays');//monday,tuesday,etc.
-      $hoy = now('America/Mexico_City')->locale('es');
+      $hoy = now('-0600')->locale('es');
       $hastaFecha = $hoy->copy()->addWeeks($paraSemanas);
 
       $msApi = new MsApiController();
@@ -49,7 +49,7 @@ class MySchedules extends Command
 
         $lastSchedule = $schedules->last();
         if ( !empty($lastSchedule) ) {
-          $lastSchedule = new Carbon($lastSchedule->fechahora, 'America/Mexico_City');
+          $lastSchedule = new Carbon($lastSchedule->fechahora, '-0600');
         }
 
         while( $schedules_count < $schedules_need ) {

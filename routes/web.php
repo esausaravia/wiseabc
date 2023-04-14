@@ -23,20 +23,7 @@ use Illuminate\Support\Facades\DB;
 Route::get('test', function(Request $request){
 
 	ob_start();
-	//$hoy = now('America/Mexico_City')->locale('es');
-	$test = now('America/Mexico_City')->subMonths(3)->subDay();
-	echo $test->format('Y-m-d H:i:s O|T').PHP_EOL;
-	dd( ob_get_clean() );
-
-	$hoy = new Carbon('2023-04-01 14:03:00', '-0600');
-	$hoy->locale('es');
-	echo $hoy->format('Y-m-d H:i:s O|T').PHP_EOL;
-
-	$fecha2 = $hoy->copy()->setTimezone('PST');//ajusta la hora
-	echo $fecha2->format('Y-m-d H:i:s O|T').PHP_EOL;
-
-	$fecha3 = $hoy->copy()->shiftTimezone('PST');//sin cambiar la hora
-	echo $fecha3->format('Y-m-d H:i:s O|T').PHP_EOL;
+	//$hoy = now('-0600')->locale('es');
 
 	ddd( ob_get_clean() );
 })->name('test');
@@ -137,8 +124,5 @@ Route::group(['prefix'=>'admin','as'=>'admin.','middleware' => ['auth','admin']]
 	Route::resource('student', \App\Http\Controllers\Admin\StudentController::class);
 
 	Route::resource('teacher', \App\Http\Controllers\Admin\TeacherController::class);
-
-  Route::get('token', [\App\Http\Controllers\Admin\MsApiController::class, 'getAccessToken'])->name('token');
-  Route::get('access', [\App\Http\Controllers\Admin\MsApiController::class, 'getTokenAccess'])->name('access');
 
 });

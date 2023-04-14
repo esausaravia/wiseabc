@@ -11,7 +11,7 @@ class AdminController extends Controller
 
 		$Suscripciones = collect( config('wiseabc.suscripciones') );
 
-		$hoy = now('America/Mexico_City')->locale('es');
+		$hoy = now('-0600')->locale('es');
 		$finmes = $hoy->copy()->endOfMonth();
 		$cortePasado = $hoy->copy()->subMonth()->endOfMonth();
 

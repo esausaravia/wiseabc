@@ -32,7 +32,7 @@ class MySchedulesToAttendances extends Command
    */
   public function handle()
   {
-    $hoy = now('America/Mexico_City');
+    $hoy = now('-0600');
     // Obtener horarios vencidos
     $schedules = Schedule::with('classroom')->where('fechahora', '<', $hoy->copy()->subHour() )->get();
 

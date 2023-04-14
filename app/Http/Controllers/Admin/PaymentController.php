@@ -19,7 +19,7 @@ class PaymentController extends Controller
      */
     public function index(Request $request)
     {
-		$hoy = now('America/Mexico_City')->locale('es');
+		$hoy = now('-0600')->locale('es');
 		$cortePasado = $hoy->copy()->subMonth()->endOfMonth();
 
         /**
@@ -227,7 +227,7 @@ class PaymentController extends Controller
 
         $Teacher = \App\Models\User::find($id);
 
-		$hoy = now('America/Mexico_City')->locale('es');
+		$hoy = now('-0600')->locale('es');
 		$cortePasado = $hoy->copy()->subMonth()->endOfMonth();
 
         $PaymentConcepts = \App\Models\PaymentConcept::all();
@@ -274,8 +274,8 @@ class PaymentController extends Controller
         $AttendanceCollectionsByDay = collect();
         foreach($arrDias AS $_dia) {
             echo 'dia: '.$_dia.PHP_EOL;
-            $check1 = new Carbon($_dia.' 00:00:00', 'America/Mexico_City');
-            $check2 = new Carbon($_dia.' 23:59:59', 'America/Mexico_City');
+            $check1 = new Carbon($_dia.' 00:00:00', '-0600');
+            $check2 = new Carbon($_dia.' 23:59:59', '-0600');
             echo "  check1: ".$check1->format('Y-m-d H:i:s').PHP_EOL;
             echo "  check2: ".$check2->format('Y-m-d H:i:s').PHP_EOL;
 

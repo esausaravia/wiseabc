@@ -95,13 +95,6 @@ class ClassroomController extends Controller
         ]);
         $horarios = $request->input('horarios');
 
-        $curso = \App\Models\Curso::find($valid['curso_id']);
-
-        $ends_at = new Carbon( $valid['start'] );
-        $ends_at->shiftTimezone('America/Mexico_City')->locale('es');
-        $ends_at->addWeeks( $curso->duracion / $valid['ritmo'] );
-        $valid['ends_at'] = $ends_at->isoFormat('YYYY-MM-DD');
-
         $classroom = Classroom::create($valid);
 
         $res2 = $classroom->saveHorarios($horarios);

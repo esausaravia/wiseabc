@@ -70,16 +70,16 @@ class DatabaseSeeder extends Seeder
     /**
      * Profesores
      */
-    $hoy = now('America/Mexico_City');
+    $hoy = now('-0600');
     //horarios lun mie vie 9-10 y 11-12
     $horarios = [1 => [9, 10, 11, 12], 3 => [9, 10, 11, 12], 5 => [9, 10, 11, 12]];
 
-    $profesores = \App\Models\User::factory()->count(4)->create(['user_type'=>3]);
+    $profesores = \App\Models\User::factory()->count(2)->create(['user_type'=>3]);
     foreach($profesores AS $teacher) {
 
       $oldEmail = $teacher->email;
       $teacher->email = 'teacher'.$teacher->id.'@wiseabcenglish.com';
-      $teacher->created_at = $hoy->copy()->subMonths(3)->subDay();
+      $teacher->created_at = $hoy->copy()->setTimezone('UTC')->subMonths(3)->subDay();
       $teacher->save();
 
       $arrName = explode(' ', $teacher->name);
@@ -88,7 +88,7 @@ class DatabaseSeeder extends Seeder
         'lname' => array_pop($arrName),
         'fname' => implode(' ', $arrName),
         'personal_email' => $oldEmail,
-        'timezone' => 'America/Mexico_City'
+        'timezone' => '-0600'
       ]);
 
       $teacher->saveHorarios($horarios);
@@ -118,7 +118,7 @@ class DatabaseSeeder extends Seeder
      * Crear classrooms, schedules y attendances
      */
     $enWeekdays = config('wiseabc.en_weekdays');
-    $cursoStart = now('America/Mexico_City')->locale('es')->subMonth();
+    $cursoStart = $hoy->copy()->subMonth();
 
     $cursos = Curso::where('nivel','<',3)->get();
 
@@ -145,7 +145,7 @@ class DatabaseSeeder extends Seeder
           'status' => 'active',
           'tipo' => 1,
           'ritmo' => 1,
-          'start' => $cursoStart->format('Y-m-d')
+          'start' => $cursoStart->copy()->setTimezone('UTC')
         ]);
 
         /**
@@ -169,7 +169,7 @@ class DatabaseSeeder extends Seeder
             'user_id' => $profe->id,
             'class_id' => $classroom->id,
             'teams_id' => $teamsInfo->id,
-            'fechahora' => $_sigdia->format('Y-m-d H:i:00'),
+            'fechahora' => $_sigdia->copy()->setTimezone('UTC'),
             'duracion' => 2400, //40 mins
             'puntual' => true
           ]);
@@ -185,9 +185,10 @@ class DatabaseSeeder extends Seeder
          * CREAR SCHEDULE CON HORARIO DE CLASE
          * $fechahora = $classroom->sigFechaHora()
          */
+        echo '    next schedule: '.$classroom->sigFechaHora()->format('Y-m-d H:i O').PHP_EOL;
         $schedule = Schedule::create([
           'class_id' => $classroom->id,
-          'fechahora' => $classroom->sigFechaHora(),
+          'fechahora' => $classroom->sigFechaHora()->copy()->setTimezone('UTC'),
         ]);
 
         /**
@@ -206,7 +207,7 @@ class DatabaseSeeder extends Seeder
             'clase_tipo' => 1,
             'ritmo' => 1,
             'suscripcion'=>1,
-            'timezone' => 'America/Mexico_City'
+            'timezone' => '-0600'
           ]);
 
           $student->saveHorarios([1=>[$hr]]);
@@ -220,7 +221,7 @@ class DatabaseSeeder extends Seeder
      * Crear un pago para cada profesor
      */
     $profesores = $profesores->slice(0, ceil($profesores->count()/2) );
-    $finmes = $cursoStart->copy()->endOfMonth()->format('Y-m-d H:i:s');
+    $finmes = $cursoStart->copy()->endOfMonth();
     foreach( $profesores AS $profe ) {
       $Asistencias = Attendance::with(['pconcepts'])->where('user_id', $profe->id)->where('fechahora','<',$finmes)->get();
 

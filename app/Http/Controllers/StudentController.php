@@ -17,7 +17,7 @@ class StudentController extends Controller
     $sigClase = null;
     $sigClaseFin = null;
     $activarSigClaseBtn = false;
-    $hoy = now('America/Mexico_City')->locale('es');
+    $hoy = now('-0600')->locale('es');
 
     $clase = $user->currentClassroom;
 

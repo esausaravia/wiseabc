@@ -51,7 +51,7 @@ class TeacherController extends Controller
   public function home(Request $request) {
     $user = $request->user();
 
-    $hoy = now('America/Mexico_City')->locale('es');
+    $hoy = now('-0600')->locale('es');
 
     $clases = $user->teachclasses()->withCount('students')->where('status','active')->where('ends_at','>=', $hoy->isoFormat('YYYY-MM-DD') )->get();
 
