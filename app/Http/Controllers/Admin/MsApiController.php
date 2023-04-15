@@ -3,39 +3,104 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
-
-use DateInterval;
-use DateTime;
-use Illuminate\Http\Request;
-use Microsoft\Graph\Graph;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Storage;
 
 class MsApiController extends Controller
 {
 
   public static $token = null;
 
-  public static function getAccessToken(){
+  public static function getFileToken()
+  {
+    $fileToken = Storage::get('MsApiToken.txt');
+
+    if ( empty($fileToken) ) {
+      return null;
+    }
+
+    $fileToken = json_decode($fileToken);
+
+    if ( empty($fileToken) || !is_object($fileToken) || empty($fileToken->expires_at) ) {
+      return null;
+    }
+
+    $expires_at = \Carbon\Carbon::parse($fileToken->expires_at);
+
+    if ( !is_object($expires_at) ) {
+      return null;
+    }
+
+    if ( $expires_at->subSeconds(30)->lessThan( now() ) ) {
+      return null;
+    }
+
+    self::$token = $fileToken;
+    return $fileToken;
+  }
+
+  /**
+   * Solicita un Access Token a Microsoft Graph API
+   * https://learn.microsoft.com/en-us/graph/auth-v2-service#4-get-an-access-token
+   *
+   */
+  public static function reqBearerToken(){
+    Log::info('MsApiController::reqBearerToken');
+
     $guzzle = new \GuzzleHttp\Client();
     $url = env('OAUTH_APP_TOKEN_ENDPOINT');
 
-    self::$token = json_decode( $guzzle->post($url, [
+    $response = $guzzle->post( $url, [
       'form_params' => [
         'client_id' => env('OAUTH_APP_ID'),
         'client_secret' => env('OAUTH_CLIENT_ID'),
         'scope' => env('OAUTH_SCOPES'),
         'grant_type' => 'client_credentials',
       ],
-    ])->getBody()->getContents() );
+    ]);
+
+    $resBody = $response->getBody()->getContents();
+
+    self::$token = json_decode( $resBody );
+
+    self::$token->expires_at = now()->addSeconds( self::$token->expires_in )->format('Y-m-d H:i:s');
+
+    Storage::put('MsApiToken.txt', json_encode(self::$token) );
+
+    return self::$token;
+  }
+
+  public static function getAccessToken(){
+
+    if ( empty(self::$token) || !is_object(self::$token) || empty(self::$token->access_token) )
+    {
+      if ( self::getFileToken()==null ) {
+        self::reqBearerToken();
+      }
+    }
 
     return self::$token->access_token;
   }
 
-  public function createOnlineMeeting( $subject,  $fecha, $reqBody=array())
+  public function createOnlineMeeting( $subject, $fecha, $reqBody=array() )
   {
-    if ( empty(self::$token) || empty(self::$token->access_token) )
-    {
-      $token = self::getAccessToken();
+    if ( empty($subject) || empty($fecha) ) {
+      return false;
     }
+
+    if ( is_object($fecha) && class_basename($fecha)==='Carbon' )
+    {
+      $fecha = $fecha->copy();
+    }
+    else if ( is_string($fecha) && !empty($fecha) )
+    {
+      $fecha = \Carbon\Carbon::parse($fecha);
+    }
+    else {
+      return false;
+    }
+
+    $token = self::getAccessToken();
 
     $client = new \GuzzleHttp\Client([
       'base_uri' => 'https://graph.microsoft.com/v1.0/',
@@ -45,30 +110,10 @@ class MsApiController extends Controller
       ]
     ]);
 
-    if ( is_object($fecha) && class_basename($fecha)==='Carbon' )
-    {
-      $fecha = $fecha->copy()->setTimezone('-0600');
-    }
-    else if ( is_string($fecha) && !empty($fecha) ) {
-      $fecha = new \Carbon\Carbon($fecha, '-0600');
-    }
-    else {
-      return false;
-    }
-
-    $body = [
-      'subject' => $subject,
+    $defaults = [
       'body' => [
         'contentType' => 'HTML',
         'content' => $subject
-      ],
-      'start' => [
-        'dateTime' => $fecha->format('Y-m-d\TH:i:s'),
-        'timeZone' => 'America/Mexico_City',
-      ],
-      'end' => [
-        'dateTime' => $fecha->copy()->addMinutes(40)->format('Y-m-d\TH:i:s'),
-        'timeZone' => 'America/Mexico_City',
       ],
       'location' => [
         'displayName' => 'WiseABC Online Classroom',
@@ -77,12 +122,30 @@ class MsApiController extends Controller
       'onlineMeetingProvider' => 'teamsForBusiness'
     ];
 
-    $body = array_merge_recursive( $body, $reqBody );
+    if ( !is_array($reqBody) ) {
+      $reqBody = array();
+    }
+
+    $body = array_merge_recursive( $defaults, $reqBody );
+
+    $fecha->setTimezone('-0600');
+
+    $body = array_merge_recursive( $body, [
+      'subject' => $subject,
+      'start' => [
+        'dateTime' => $fecha->format('Y-m-d\TH:i:s'),
+        'timeZone' => 'America/Mexico_City',
+      ],
+      'end' => [
+        'dateTime' => $fecha->copy()->addMinutes(40)->format('Y-m-d\TH:i:s'),
+        'timeZone' => 'America/Mexico_City',
+      ]
+    ] );
 
     $response = $client->post('users/esau@wiseabcenglish.com/calendar/events', [
       'body' => json_encode($body)
     ]);
-    return json_decode($response->getBody()->getContents(), true);
+    return json_decode( $response->getBody()->getContents(), true);
   }
 
 
