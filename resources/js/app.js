@@ -178,12 +178,6 @@ window.addEventListener('DOMContentLoaded',function(){
     });
   });
 
-
-  /**
-   * FORMS
-   */
-  const evFormSuccess = new Event('formsuccess');
-
   /**
    * Append timezone input
    */
@@ -209,19 +203,34 @@ window.addEventListener('DOMContentLoaded',function(){
     });
   })(document.querySelectorAll('form'));
 
+
   /**
-   * disable submit btn
+   * FORMS
    */
+  const evFormSuccess = new Event('formsuccess');
+  const evFormError = new Event('formerror');
+
   (function(forms){
-    if (!forms || !forms.forEach) return false;
+    if (!forms || !forms.forEach)  return false;
 
     forms.forEach(function(form){
+
+      /**
+       * disable submit btn
+       */
       form.addEventListener('submit', function(ev){
         this.querySelectorAll('[type="submit"]').forEach(function(btn){
-          btn.disabled = true;
+          btn.disabled = true
+          btn.setAttribute('data-submit-disabled','true')
+        });
+      });
+      form.addEventListener('formerror', function(ev){
+        this.querySelectorAll('[type="submit"][data-submit-disabled]').forEach(function(btn){
+          btn.disabled = false
         });
       });
     });
+
   })(document.querySelectorAll('form'));
 
   /**
@@ -240,6 +249,7 @@ window.addEventListener('DOMContentLoaded',function(){
         if (errel && errel.classList) {
           errel.classList.add('hidden');
         }
+
         axios({
           url:form.action,
           method: form.method ? form.method : 'get',
@@ -248,20 +258,19 @@ window.addEventListener('DOMContentLoaded',function(){
         .then(function(resp){
           console.log('ajx-form success', resp);
 
-          form.querySelectorAll('[type="submit"]').forEach( function(btn){
-            btn.disabled = false;
-          });
-
           let rmsg = resp.data && resp.data.message ? resp.data.message : null;
 
           rmsg ? ( alert(rmsg), console.log('response.data.message', rmsg) ) : console.log('response.data', resp.data );
 
-          if ( resp.data && resp.data.redirect && resp.data.redirect!=="" ){
-            location.href = resp.data.redirect
-          }
-
-
           form.dispatchEvent(evFormSuccess);
+
+          if (resp.data && resp.data.redirect && resp.data.redirect!=="")
+          {
+            window.location.href = resp.data.redirect;
+          }
+          else if (form.dataset.redirect && form.dataset.redirect!=="") {
+            window.location.href = form.dataset.redirect;
+          }
         })
         .catch(function(resp){
           console.log('ajx-form catch', resp);

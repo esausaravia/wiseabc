@@ -21,6 +21,12 @@ use Illuminate\Support\Facades\DB;
 */
 
 Route::get('test', function(Request $request){
+	$authuser = Auth::user();
+	return [
+			'auth_user'=>$authuser,
+			'request_user'=>$request->user(),
+			'now'=>now()
+	];
 
 	ob_start();
 	//$hoy = now('-0600')->locale('es');
@@ -31,7 +37,10 @@ Route::get('test', function(Request $request){
 Route::get('/', function (Request $request) {
 	$user = $request->user();
 
-	if ($user->user_type===2 ) {
+	if ($user->user_type===1 ) {
+		return redirect()->route('admin.home');
+	}
+	elseif ($user->user_type===2 ) {
 		return redirect()->route('student.home');
 	}
 	else if ( $user->user_type==3 ) {
