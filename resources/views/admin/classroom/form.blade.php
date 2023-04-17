@@ -7,7 +7,7 @@
         Editar clase #{{$clase->id}}
       @endempty
     </h1>
-    <form action="{{route('admin.classroom.update', ['classroom'=>$clase->id])}}" method="POST" class="grid grid-cols-1 gap-5 lg:grid-cols-2">
+    <form action="{{route('admin.classroom.update', ['classroom'=>$clase->id])}}" method="POST" class="grid grid-cols-1 gap-5 lg:grid-cols-2" data-redirect="{{route('admin.classroom.index')}}">
       @csrf
       @method('PUT')
       <div class="flex">

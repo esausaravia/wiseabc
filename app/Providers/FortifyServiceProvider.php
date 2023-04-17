@@ -33,7 +33,7 @@ class FortifyServiceProvider extends ServiceProvider
 
         if ($user->user_type===1) {
           return $request->wantsJson()
-            ? response()->json(['redirect' => route('admin.home') ])
+            ? response()->json(['message'=>'Bienvenido','redirect' => route('admin.home') ])
             : redirect()->route('admin.home');
         }
 
