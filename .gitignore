@@ -1,9 +1,10 @@
+.DS_Store
 /node_modules
 /public/build
 /public/hot
 /public/storage
-/public/css/app.css
-/public/js/app.js
+/public/css
+/public/js
 /storage/*.key
 /vendor
 .env
@@ -19,5 +20,4 @@ yarn-error.log
 notes.txt
 /resources/css/tailwind.css
 public/js/admin.classroom.cforcurso.js
-public/js/admin.pagos.js
 public/js/admin.pagos.js
