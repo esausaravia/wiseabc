@@ -20,7 +20,7 @@
     @foreach($arrPagosPorConcepto AS $concepto=>$cant)
     <div class="">
       <h4>{{ $concepto }}</h4>
-      <p class="text-3xl font-serif">$@money($cant)</p>
+      <p class="text-3xl font-serif">$@money($cant/100)</p>
     </div>
     @endforeach
     <div class="">
@@ -47,7 +47,7 @@
           <td class="px-2">{{$attendance->fechahora->isoFormat('DD MMM / HH:mm')}}</td>
           <td class="px-2">#{{ $attendance->classroom->id }}</td>
           <td class="px-2">{{ $attendance->classroom->curso->name }}</td>
-          <td class="px-2">$@money($attendance->subtotal)</td>
+          <td class="px-2">$@money($attendance->subtotal/100)</td>
         </tr>
         @endforeach
       </tbody>

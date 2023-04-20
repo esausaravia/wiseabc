@@ -13,10 +13,15 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('payment_concepts', function (Blueprint $table) {
+        Schema::create('payments', function (Blueprint $table) {
             $table->id();
-            $table->string('concept');
-            $table->unsignedMediumInteger('amount');
+
+            $table->unsignedBigInteger('user_id');
+            $table->foreign('user_id')->references('id')->on('users');
+
+            $table->string('status')->default('paid')->index();
+            $table->unsignedMediumInteger('amount')->default(0);
+            $table->unsignedMediumInteger('fee')->default(0);
             $table->timestamps();
             $table->softDeletes();
         });
@@ -29,6 +34,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('payment_concepts');
+        Schema::dropIfExists('payments');
     }
 };

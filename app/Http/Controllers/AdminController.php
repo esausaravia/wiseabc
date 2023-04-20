@@ -83,8 +83,9 @@ class AdminController extends Controller
 		$egresoAcumuladoMes = 0;
 
 		$TeachersNotPaid = \App\Models\User::withWhereHas('attendances', function($query) use ($cortePasado) {
-			$query->withSum('pconcepts as recibo_subtotal','attendance_pconcept.amount')->where('fechahora','<',$cortePasado)
-			      ->whereNull('payment_id');
+			$query->withSum('pconcepts as recibo_subtotal','attendance_pconcept.amount')
+			    ->where('fechahora','<',$cortePasado)
+			    ->whereNull('payout_id');
 		});
 		//echo vsprintf(str_replace(array('?'), array('\'%s\''), $TeachersNotPaid->toSql()), $TeachersNotPaid->getBindings());
 
@@ -94,7 +95,7 @@ class AdminController extends Controller
 			$teacher->saldo_pendiente = 0;
 			foreach( $teacher->attendances AS $attendance ) {
 				//echo "  #{$attendance->id} : {$attendance->fechahora} : $ {$attendance->recibo_subtotal}\n";
-				$teacher->saldo_pendiente += $attendance->recibo_subtotal;
+				$teacher->saldo_pendiente += floor( $attendance->recibo_subtotal/100 );
 			}
 			//echo "  saldo pendiente: $ {$teacher->saldo_pendiente}\n";
 			//echo PHP_EOL;
@@ -108,8 +109,8 @@ class AdminController extends Controller
 			'finmes'=>$finmes->isoFormat('ddd DD MMMM'),
 			'cortePasado'=>$cortePasado->isoFormat('DD MMMM'),
 			'ingresosAcumulados'=>$ingresosAcumulados,
-			'egresoAcumuladoMes'=>$egresoAcumuladoMes,
-			'egresoEstimadoMes'=>$egresoEstimadoMes,
+			'egresoAcumuladoMes'=> $egresoAcumuladoMes,
+			'egresoEstimadoMes'=>floor( $egresoEstimadoMes /100 ),
 			'TeachersNotPaid'=>$TeachersNotPaid
 		]);
   }

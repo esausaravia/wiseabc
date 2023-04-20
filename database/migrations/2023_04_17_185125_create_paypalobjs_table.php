@@ -13,12 +13,13 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('payment_concepts', function (Blueprint $table) {
+        Schema::create('paypalobjs', function (Blueprint $table) {
             $table->id();
-            $table->string('concept');
-            $table->unsignedMediumInteger('amount');
+            $table->string('paypal_id');
+            $table->text('object');
+            $table->unsignedBigInteger('paypalable_id')->index();
+            $table->string('paypalable_type')->index();
             $table->timestamps();
-            $table->softDeletes();
         });
     }
 
@@ -29,6 +30,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('payment_concepts');
+        Schema::dropIfExists('paypalobjs');
     }
 };

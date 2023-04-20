@@ -118,7 +118,7 @@ Route::group(['prefix'=>'admin','as'=>'admin.','middleware' => ['auth','admin']]
 
 	Route::post('classroom/{id}/assignStudents', [\App\Http\Controllers\Admin\ClassroomController::class, 'assignStudents2']);
 
-	Route::get('pagos/profesor/{id}', [\App\Http\Controllers\Admin\PaymentController::class, 'paraprofe'])->name('pagoparaprofe');
+	Route::get('pagos/profesor/{id}', [\App\Http\Controllers\Admin\PayoutController::class, 'paraprofe'])->name('pagoparaprofe');
 
 	Route::get('student/{student}/assignclass', [\App\Http\Controllers\Admin\StudentController::class, 'assignClassroom'])->name('student.assignclass');
 
@@ -128,7 +128,7 @@ Route::group(['prefix'=>'admin','as'=>'admin.','middleware' => ['auth','admin']]
 
 	Route::resource('cursos', \App\Http\Controllers\Admin\CursoController::class);
 
-	Route::resource('pagos', \App\Http\Controllers\Admin\PaymentController::class);
+	Route::resource('pagos', \App\Http\Controllers\Admin\PayoutController::class);
 
 	Route::resource('student', \App\Http\Controllers\Admin\StudentController::class);
 

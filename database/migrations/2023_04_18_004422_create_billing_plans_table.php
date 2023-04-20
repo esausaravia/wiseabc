@@ -13,14 +13,12 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('payments', function (Blueprint $table) {
+        Schema::create('billing_plans', function (Blueprint $table) {
             $table->id();
-
-            $table->unsignedBigInteger('user_id');
-            $table->foreign('user_id')->references('id')->on('users');
-
-            $table->string('reference')->unique();
-            $table->unsignedInteger('amount');
+            $table->string('name');
+            $table->unsignedSmallInteger('tipo')->index();
+            $table->unsignedSmallInteger('ritmo')->index();
+            $table->unsignedMediumInteger('price');
             $table->timestamps();
             $table->softDeletes();
         });
@@ -33,9 +31,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('payments', function (Blueprint $table) {
-            $table->dropForeign('user_id');
-        });
-
+        Schema::dropIfExists('billing_plans');
     }
 };
