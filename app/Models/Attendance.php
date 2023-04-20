@@ -28,11 +28,11 @@ class Attendance extends Model
     public function user(){
         return $this->belongsTo(User::class);
     }
-    public function payment() {
-        return $this->belongsTo(Payment::class);
+    public function payout() {
+        return $this->belongsTo(Payout::class);
     }
     public function pago(){
-        return $this->belongsTo(Payment::class);
+        return $this->belongsTo(Payout::class);
     }
     public function pconcepts(){
         //     $this->belongsToMany(Model::class, 'table', 'current_model_id', 'related_model_id');

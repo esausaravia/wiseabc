@@ -60,47 +60,23 @@ class DatabaseSeeder extends Seeder
     /**
      * Cursos
      */
-    Curso::create(['edad' => 6, 'nivel' => 1, 'name' => 'Básico para juniors (RH1)']);
-    Curso::create(['edad' => 6, 'nivel' => 2, 'name' => 'Básico para juniors (RH2)']);
-    Curso::create(['edad' => 6, 'nivel' => 3, 'name' => 'Intermedio para juniors (RH3)']);
-    Curso::create(['edad' => 6, 'nivel' => 4, 'name' => 'Intermedio para juniors (RH4)']);
-    Curso::create(['edad' => 6, 'nivel' => 5, 'name' => 'Avanzado para juniors (RH5)']);
-    Curso::create(['edad' => 6, 'nivel' => 6, 'name' => 'Avanzado para juniors (RH6)']);
+    $this->call([
+      CursoSeeder::class
+    ]);
 
     /**
      * Profesores
      */
-    $hoy = now('-0600');
-    //horarios lun mie vie 9-10 y 11-12
-    $horarios = [1 => [9, 10, 11, 12], 3 => [9, 10, 11, 12], 5 => [9, 10, 11, 12]];
-
-    $profesores = \App\Models\User::factory()->count(2)->create(['user_type'=>3]);
-    foreach($profesores AS $teacher) {
-
-      $oldEmail = $teacher->email;
-      $teacher->email = 'teacher'.$teacher->id.'@wiseabcenglish.com';
-      $teacher->created_at = $hoy->copy()->setTimezone('UTC')->subMonths(3)->subDay();
-      $teacher->save();
-
-      $arrName = explode(' ', $teacher->name);
-
-      $teacher->saveMetas([
-        'lname' => array_pop($arrName),
-        'fname' => implode(' ', $arrName),
-        'personal_email' => $oldEmail,
-        'timezone' => '-0600'
-      ]);
-
-      $teacher->saveHorarios($horarios);
-    }
+    $this->call([
+      TeacherSeeder::class
+    ]);
 
     /**
      * Conceptos de pago
      */
-    \App\Models\PaymentConcept::create(['concept' => 'Base', 'amount' => 5]);
-    \App\Models\PaymentConcept::create(['concept' => 'Puntualidad', 'amount' => 6]);
-    \App\Models\PaymentConcept::create(['concept' => 'Lealtad', 'amount' => 3]);
-    \App\Models\PaymentConcept::create(['concept' => 'Grupal', 'amount' => 1]);
+    $this->call([
+      PaymentConceptSeeder::class
+    ]);
     $conceptosDePago = \App\Models\PaymentConcept::all();
 
     /**
@@ -117,10 +93,12 @@ class DatabaseSeeder extends Seeder
     /**
      * Crear classrooms, schedules y attendances
      */
+    $hoy = now('-0600');
     $enWeekdays = config('wiseabc.en_weekdays');
     $cursoStart = $hoy->copy()->subMonth();
 
     $cursos = Curso::where('nivel','<',3)->get();
+    $profesores = \App\Models\User::where('user_type',3)->take(2)->get();
 
     foreach( $profesores AS $profe ) {
       $horarios = [1 => [9, 11], 3 => [9, 11], 5 => [9, 11]];
@@ -232,8 +210,9 @@ class DatabaseSeeder extends Seeder
         }
       }
 
-      $pago = \App\Models\Payment::create([
+      $pago = \App\Models\Payout::create([
         'user_id'=>$profe->id,
+        'status'=>'paid',
         'reference'=>uuid_create(),
         'amount'=>$pago_amount
       ]);

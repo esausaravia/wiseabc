@@ -23,10 +23,10 @@ return new class extends Migration
             $table->foreign('class_id')->references('id')->on('classrooms')->onUpdate('cascade')->onDelete('cascade');
 
             $table->unsignedBigInteger('teams_id')->nullable();
-            $table->foreign('teams_id')->nullable()->references('id')->on('teams_infos')->onUpdate('cascade')->onDelete('set null');
+            $table->foreign('teams_id')->references('id')->on('teams_infos')->onUpdate('cascade')->onDelete('set null');
 
-            $table->unsignedBigInteger('payment_id')->nullable();
-            $table->foreign('payment_id')->references('id')->on('payments')->onUpdate('cascade')->onDelete('set null');
+            $table->unsignedBigInteger('payout_id')->nullable();
+            $table->foreign('payout_id')->references('id')->on('payouts')->onUpdate('cascade')->onDelete('set null');
 
             $table->dateTimeTz('fechahora')->index();
             $table->unsignedInteger('duracion')->default(0);//40 mins * 60 seg = 2400 seg

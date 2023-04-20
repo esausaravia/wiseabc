@@ -17,14 +17,16 @@
       <p class="text-3xl font-serif">{{ $num_clases }}</p>
     </div>
     @foreach($PaymentConcepts AS $pconcept)
-    <div class="m-3">
-      <h4>{{ $pconcept->concept }}</h4>
-      <p class="text-3xl font-serif">$<span data-pconcept-subtotal="{{$pconcept->id}}">@money( $arrPagosPorConcepto[($pconcept->id)])</span></p>
-    </div>
+      @unless( empty($arrPagosPorConcepto[($pconcept->id)]) )
+      <div class="m-3">
+        <h4>{{ $pconcept->concept }}</h4>
+        <p class="text-3xl font-serif">$<span data-pconcept-subtotal="{{$pconcept->id}}">@money( $arrPagosPorConcepto[($pconcept->id)] )</span></p>
+      </div>
+      @endunless
     @endforeach
     <div class="m-3">
       <h4>Total</h4>
-      <p class="text-3xl font-serif">$<span class="payment-amount">@money($payment_amount)</span> </p>
+      <p class="text-3xl font-serif">$<span class="payment-amount">@money($payout_amount)</span> </p>
     </div>
   </section>
 
@@ -44,42 +46,36 @@
         <div class="md:grid md:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4 md:gap-4 lg:gap-5">
 
           @foreach( $_Attendances AS $attendance )
-          <div class="attendance bg-white shadow rounded-xl p-3" data-attendance-id="{{$attendance->id}}">
+          <div class="attendance bg-white shadow rounded-xl p-3" data-attendance-id="{{$attendance->id}}" >
             <input type="hidden" name="attendance_id[]" value="{{$attendance->id}}" />
 
-            <p class=" mb-2">#{{ $attendance->classroom->id }} {{ $attendance->classroom->curso->name }}, {{$attendance->classroom->tipoLabel}}, {{$attendance->classroom->ritmoLabel}}, {{$attendance->fechahora->format('H:i')}}</p>
+            <p class=" mb-2">#{{ $attendance->classroom->id }} {{ $attendance->classroom->curso->name }}, {{$attendance->classroom->tipoLabel}}, {{$attendance->classroom->ritmoLabel}}, {{$attendance->fechahora->setTimezone('-0600')->format('H:i')}}</p>
 
             <table class="text-sm leading-8 mx-auto">
               @foreach($attendance->pconcepts AS $pconcept)
+              <tr data-pconcept-id="{{$pconcept->id}}">
                 @if($pconcept->id<3)
-                <tr data-pconcept-id="{{$pconcept->id}}">
-                  <td>
-                    <label class="-ml-[18px]">
-                      <input type="checkbox" name="attendance_pconcept[{{$attendance->id}}][]" checked value="{{$pconcept->id}}" >
-                      <input type="hidden" name="attendance_pconcept_{{$attendance->id}}_{{$pconcept->id}}" value="{{$pconcept->recibo->amount}}">
-                      <span> {{$pconcept->concept}}: </span>
-                    </label>
-                  </td>
-                  <td>$@money($pconcept->recibo->amount)</td>
-                </tr>
-                @else
-                <tr class="leading-normal" data-pconcept-id="{{$pconcept->id}}">
-                  <input type="hidden" name="attendance_pconcept[{{$attendance->id}}][]" value="{{$pconcept->id}}" >
-                  <input type="hidden" name="attendance_pconcept_{{$attendance->id}}_{{$pconcept->id}}" value="{{$pconcept->recibo->amount}}">
-                  <td>{{$pconcept->concept}}:</td>
-                  <td>$@money($pconcept->recibo->amount)</td>
-                </tr>
-                @endif
-              @endforeach
-              <tr class="hidden">
                 <td>
                   <label class="-ml-[18px]">
-                    <input type="checkbox" name="" checked >
-                    <span> Puntualidad: </span>
+                    <input type="checkbox" name="attendance_pconcept[{{$attendance->id}}][]" checked value="{{$pconcept->id}}"
+                      data-attendance-id="{{$attendance->id}}"
+                      data-pconcept-id="{{$pconcept->id}}"
+                      data-recibo-amount="{{$pconcept->recibo->amount}}" />
+                    <span> {{$pconcept->concept}}: </span>
                   </label>
                 </td>
-                <td>$6</td>
+                <td>$@money($pconcept->recibo->amount)</td>
+                @else
+                <td>{{$pconcept->concept}}:
+                  <input type="hidden" name="attendance_pconcept[{{$attendance->id}}][]" value="{{$pconcept->id}}"
+                  data-attendance-id="{{$attendance->id}}"
+                  data-pconcept-id="{{$pconcept->id}}"
+                  data-recibo-amount="{{$pconcept->recibo->amount}}" />
+                </td>
+                <td>$@money($pconcept->recibo->amount)</td>
+                @endif
               </tr>
+              @endforeach
               <tr class="leading-normal font-medium text-base">
                 <td>Subtotal</td>
                 <td class="attendance-subtotal">$@money($attendance->subtotal)</td>
@@ -104,7 +100,7 @@
 
       <x-forms.input label="Método de pago" name="metodopago" class="mb-3" value="PayPal" />
 
-      <x-forms.input label="Monto" name="amount" class="mb-3" required :value="$payment_amount" />
+      <x-forms.input label="Monto" name="amount" class="mb-3" required :value="$payout_amount" />
 
       <x-forms.input label="Referencia" name="reference" class="mb-3" required />
 
@@ -122,7 +118,7 @@
     const PageFile = 'pagos-paraprofe';
     const Attendances = @json($Attendances);
     const arrPagosPorConcepto = @json($arrPagosPorConcepto);
-    let PaymentAmount = {{ $payment_amount }};
+    let PaymentAmount = {{ $payout_amount }};
   </script>
   <script defer src="{{ asset('js/admin.pagos.js') }}"></script>
   @endPushOnce

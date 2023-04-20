@@ -7,13 +7,13 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
-class PaymentConcept extends Model
+class BillingPlan extends Model
 {
     use HasFactory, SoftDeletes;
 
-    protected $fillable = ['concept','amount'];
+    protected $fillable = ['name','tipo','ritmo','price'];
 
-    protected function amount(): Attribute
+    protected function price(): Attribute
     {
         return Attribute::make(
             get: fn ($value) => $value/100,
@@ -21,9 +21,10 @@ class PaymentConcept extends Model
         );
     }
 
-    public function attendances(){
-        //     $this->belongsToMany(Model::class, 'table', 'current_model_id', 'related_model_id');
-        return $this->belongsToMany(Attendance::class, 'attendance_pconcept', 'pconcept_id', 'attendance_id' )->withPivot('amount');
+    /**
+     * Relationships
+     */
+    public function paypal(){
+        return $this->morphOne(Paypalobj::class, 'paypalable');
     }
-
 }

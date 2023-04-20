@@ -7,11 +7,11 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
-class Payment extends Model
+class Payout extends Model
 {
     use HasFactory, SoftDeletes;
 
-    protected $fillable = ['user_id','status','amount'];
+    protected $fillable = ['user_id','status','reference','amount'];
 
     protected function amount(): Attribute
     {
@@ -30,6 +30,12 @@ class Payment extends Model
      */
     public function user() {
         return $this->belongsTo(User::class);
+    }
+    public function attendances() {
+        return $this->hasMany(Attendance::class);
+    }
+    public function asistencias(){
+        return $this->hasMany(Attendance::class);
     }
 
     public function paypal(){
