@@ -172,7 +172,10 @@ class DatabaseSeeder extends Seeder
         /**
          * Crear 2 estudiantes para cada clase
          */
-        $students = \App\Models\User::factory()->count(2)->create(['user_type'=>2]);
+        $students = \App\Models\User::factory()->count(2)->create([
+          'user_type'=>2,
+          'password' => bcrypt('qwerasdf')
+        ]);
         foreach($students AS $student) {
 
           $arrName = explode(' ', $student->name);
