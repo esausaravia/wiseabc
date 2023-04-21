@@ -19,7 +19,7 @@ class StudentSeeder extends Seeder
         $Edades = $Edades->slice(0,2);
 
         $Suscripciones = collect( config('wiseabc.suscripciones') );
-        $arrSuscripciones = [1,2,5];
+        $arrSuscripciones = [2,5];
 
         $arrHorarios = [10,12];
 
@@ -36,7 +36,10 @@ class StudentSeeder extends Seeder
 
                     foreach( $arrHorarios AS $___hr ) {
 
-                        $students = \App\Models\User::factory()->count(2)->create(['user_type'=>2]);
+                        $students = \App\Models\User::factory()->count(2)->create([
+                            'user_type'=>2,
+                            'password' => bcrypt('qwerasdf')
+                        ]);
                         foreach($students AS $student) {
 
                             $arrName = explode(' ', $student->name);

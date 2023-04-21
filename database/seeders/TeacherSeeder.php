@@ -36,7 +36,10 @@ class TeacherSeeder extends Seeder
         ]);
         $teacher->saveHorarios($horarios);
 
-        $teacher = \App\Models\User::factory()->create(['user_type'=>3]);
+        $teacher = \App\Models\User::factory()->create([
+            'user_type'=>3,
+            'password' => bcrypt('qwerasdf')
+        ]);
         $oldEmail = $teacher->email;
         $teacher->email = 'teacher'.$teacher->id.'@wiseabcenglish.com';
         $teacher->created_at = now('UTC')->subMonths(3)->subDay();
