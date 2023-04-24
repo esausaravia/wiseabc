@@ -61,7 +61,7 @@
             @foreach ($arrHorarios[($dia)] as $hr)
             <label for="idia{{$dia}}hr{{$hr}}" class="cursor-pointer block border-b border-gray-400 last:border-b-0">
               <input type="checkbox" id="idia{{$dia}}hr{{$hr}}" name="horarios[{{$dia}}][]" value="{{$hr}}" class="sr-only peer" @checked( !empty($oldHorarios[( $dia )]) && in_array($hr, $oldHorarios[( $dia )] ) ) />
-              <div class="px-2 peer-checked:bg-azul peer-checked:text-white leading-12 xl:leading-8">{{$hr}}:00</div>
+              <div class="px-2 peer-checked:bg-azulw peer-checked:text-white leading-12 xl:leading-8">{{$hr}}:00</div>
             </label>
             @endforeach
           </div>

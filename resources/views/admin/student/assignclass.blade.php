@@ -26,9 +26,9 @@
         <section class="">
           <h3 class="text-lg font-accent font-medium">Suscripción</h3>
           <div class="rounded-lg shadow-md bg-white dark:bg-white/10 p-3">
-            <p><b>{{$Suscripcion->name}}</b></p>
+            <p><b>{{ $billPlan->name }} </b></p>
             <p class="text-sm">
-              <b>Tipo: </b> {{ $Suscripcion->tipo==1 ? 'Grupal' : 'Particular' }} | <b>Ritmo: {{ $arrRitmos[( $Suscripcion->ritmo )] }} </b>
+              <b>Tipo: </b> {{ $billPlan->tipo==1 ? 'Grupal' : 'Particular' }} | <b>Ritmo: {{ $billPlan->ritmoLabel }} </b>
             </p>
           </div>
         </section>

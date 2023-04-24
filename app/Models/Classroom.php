@@ -129,16 +129,6 @@ class Classroom extends Model
         return Carbon::parse($this->ends_at)->diffInWeeks( $start );
     }
 
-    public function getSuscripcion() {
-        $arrSuscripciones = config('wiseabc.suscripciones');
-        foreach($arrSuscripciones AS $sid=>$suscripcion) {
-            if ((int)$suscripcion['ritmo']===$this->ritmo && (int)$suscripcion['tipo']===$this->tipo ) {
-                return $sid;
-            }
-        }
-        return false;
-    }
-
     /**
      * Devuelve los horarios de la clase como Array
      * @return array

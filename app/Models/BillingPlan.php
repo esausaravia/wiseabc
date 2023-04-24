@@ -13,18 +13,31 @@ class BillingPlan extends Model
 
     protected $fillable = ['name','tipo','ritmo','price'];
 
-    protected function price(): Attribute
-    {
-        return Attribute::make(
-            get: fn ($value) => $value/100,
-            set: fn ($value) => floor($value*100),
-        );
-    }
-
     /**
      * Relationships
      */
     public function paypal(){
         return $this->morphOne(Paypalobj::class, 'paypalable');
+    }
+
+    public function users()
+    {
+        return $this->belongsToMany( User::class, 'subscriptions', 'billing_plan_id', 'user_id' )->as('subscription')->withTimestamps()->withPivot('status')->orderByPivot('created_at', 'desc');
+    }
+
+    /**
+     * Accesors
+     */
+    protected function ritmoLabel(): Attribute
+    {
+        return Attribute::make(
+            get: function($value, $attributes) {
+                $config = config('wiseabc.ritmo_labels');
+                if (!is_array($config) ) {
+                    $config = array();
+                }
+                return $this->ritmo!==NULL && !empty($config[( $this->ritmo )]) ? $config[( $this->ritmo )] : $this->ritmo;
+            },
+        );
     }
 }

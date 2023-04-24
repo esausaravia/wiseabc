@@ -1,6 +1,7 @@
-@php
-  $user = \Illuminate\Support\Facades\Auth::user();
-@endphp
+@props([
+  'user'=>\Illuminate\Support\Facades\Auth::user(),
+  'body'=>new \Illuminate\View\ComponentSlot()
+])
 <!DOCTYPE html>
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
 <head>
@@ -19,9 +20,9 @@
     window.app.home = '{{ route('home') }}';
   </script>
 </head>
-<body class="bg-gray-100 text-gray-600 dark:bg-azul dark:text-gray-200">
-  <header id="MainHeader" class="fixed top-0 left-0 w-full bg-gray-100 dark:bg-azul shadow-md z-20 flex justify-between items-center">
-    <button class="btn btn-toggle-aside w-12 text-azul dark:text-gray-200 text-center text-[22px] leading-12"><i class="fa-light fa-bars"></i></button>
+<body {{ $body->attributes->class(['bg-gray-100 text-gray-600 dark:bg-azulw dark:text-gray-400', $attributes->get('class')]) }}>
+  <header id="MainHeader" class="fixed top-0 left-0 w-full bg-gray-100 dark:bg-azulw shadow-md z-20 flex justify-between items-center">
+    <button class="btn btn-toggle-aside w-12 text-azul-600 dark:text-gray-200 text-center text-[22px] leading-12"><i class="fa-light fa-bars"></i></button>
 
     <div class="flex text-sm font-accent font-medium">
       <span class="p-2">Hola {{ !empty($user->fname) ? $user->fname : $user->name }}</span>
@@ -41,7 +42,7 @@
       </label>
     </div>
   </header>
-  <aside id="MainAside" class="fixed top-0 left-0 -translate-x-full lg:translate-x-0 h-full shadow-md pt-[68px] px-5 pb-6 bg-azul dark:bg-slate-900 text-white font-accent font-medium z-10">
+  <aside id="MainAside" class="fixed top-0 left-0 -translate-x-full lg:translate-x-0 h-full shadow-md pt-[68px] px-5 pb-6 bg-azulw dark:bg-black/20 text-gray-400 font-accent font-medium z-10">
     <nav class="flex flex-col font-accent text-center uppercase text-[10px]">
       @php
         $route_group = $user->user_type==2 ? 'student' : 'teacher';
@@ -72,7 +73,9 @@
   </aside>
   <div id="MainContainer" class="p-3 pt-16 lg:pt-20 lg:pl-[130px] lg:pr-5 lg:pb-5">
     {{ $slot }}
-    <x-alert-incontent></x-alert-incontent>
+
+    <x-colores></x-colores>
   </div>
+  <x-layout-toast></x-layout-toast>
 </body>
 </html>

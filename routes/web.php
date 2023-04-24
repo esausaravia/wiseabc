@@ -3,11 +3,11 @@ use App\Http\Controllers\AdminController;
 use App\Http\Controllers\ClassroomController;
 use App\Http\Controllers\StudentController;
 use App\Http\Controllers\TeacherController;
+use Illuminate\Foundation\Auth\EmailVerificationRequest;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
-use Illuminate\Support\Facades\DB;
 
 /*
 |--------------------------------------------------------------------------
@@ -46,7 +46,7 @@ Route::get('/', function (Request $request) {
 	else if ( $user->user_type==3 ) {
 		return redirect()->route('teacher.home');
 	}
-})->middleware('auth')->name('home');
+})->middleware(['auth'])->name('home');
 
 Route::get('registro-profesor', function () {
 	return view('teacher.registro');
@@ -63,6 +63,13 @@ Route::get('salir', function(){
 	return redirect('login');
 })->name('salir');
 
+Route::get('/email/verify/{id}/{hash}', function (EmailVerificationRequest $request) {
+	$request->fulfill();
+
+	return redirect()->route('home');
+})->middleware(['auth', 'signed'])->name('verification.verify');
+
+
 Route::get('clases/disponibles', [ClassroomController::class, 'disponibles'])->name('clases.disponibles');
 
 Route::resource('clases', ClassroomController::class);
@@ -74,9 +81,9 @@ Route::group(['prefix'=>'student','as'=>'student.','middleware' => ['auth','stud
 
 	Route::get('home', [StudentController::class, 'home'])->name('home');
 
-	Route::get('elegir-suscripcion', [StudentController::class, 'elegirSuscripcion'])->name('elegir-suscripcion');
+	Route::get('elegir-subscripcion', [StudentController::class, 'elegirSubscripcion'])->name('elegir-subscripcion');
 
-	Route::post('elegir-suscripcion', [StudentController::class, 'suscribe'])->name('suscribe');
+	Route::post('elegir-subscripcion', [StudentController::class, 'suscribe'])->name('suscribe');
 
 	Route::get('pagos', [StudentController::class, 'pagos'])->name('pagos');
 

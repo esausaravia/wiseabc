@@ -5,13 +5,15 @@ namespace App\Models;
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
-use Laravel\Sanctum\HasApiTokens;
-use Intervention\Image\Facades\Image;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Intervention\Image\Facades\Image;
+use Laravel\Sanctum\HasApiTokens;
+use Illuminate\Support\Facades\Log;
 
-class User extends Authenticatable
+class User extends Authenticatable implements MustVerifyEmail
 {
     use HasApiTokens, HasFactory, Notifiable, SoftDeletes;
 
@@ -97,22 +99,10 @@ class User extends Authenticatable
         return $this->hasMany(Attendance::class);
     }
 
-    public function suscription() {
-        $sid = $this->usermetas()->where('metakey','suscripcion')->first();
-        if (empty($sid) )
-        {
-            return null;
-        }
-        $sid = $sid->metaval;
-        $Suscripciones = collect( config('wiseabc.suscripciones') );
-        $suscripcion = $Suscripciones->first(function($item) use ($sid){
-            return (int)$item['id']===(int)$sid;
-        });
-        if ( empty($suscripcion) ) {
-            return null;
-        }
-
-        return !empty($suscripcion) ? (object)$suscripcion : null;
+    //old metakey suscripcion
+    public function billingplans()
+    {
+        return $this->belongsToMany( BillingPlan::class, 'subscriptions', 'user_id', 'billing_plan_id' )->as('subscription')->withTimestamps()->withPivot('status')->orderByPivot('created_at', 'desc');
     }
 
     /**
@@ -142,11 +132,23 @@ class User extends Authenticatable
             },
         );
     }
+    protected function ritmoLabel(): Attribute
+    {
+        return Attribute::make(
+            get: function($value, $attributes) {
+                $config = config('wiseabc.ritmo_labels');
+                if (!is_array($config) ) {
+                    $config = array();
+                }
+                return $this->ritmo!==NULL && !empty($config[( $this->ritmo )]) ? $config[( $this->ritmo )] : $this->ritmo;
+            },
+        );
+    }
     protected function currentClassroom(): Attribute
     {
         return Attribute::make(
             get: function($value, $attributes){
-                return $this->classrooms()->where('status','active')->where('ends_at','>=', now('-0600') )->first();
+                return $this->classrooms()->where('status','active')->where('ends_at','>=', now() )->first();
             }
         );
     }

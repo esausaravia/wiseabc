@@ -37,10 +37,10 @@ class FortifyServiceProvider extends ServiceProvider
             : redirect()->route('admin.home');
         }
 
-        if ($user->user_type===2 && $user->suscripcion===null) {
+        if ($user->user_type===2 && $user->clase_tipo===null) {
           return $request->wantsJson()
-            ? response()->json(['redirect' => route('student.elegir-suscripcion') ])
-            : redirect()->route('student.elegir-suscripcion');
+            ? response()->json(['redirect' => route('student.elegir-subscripcion') ])
+            : redirect()->route('student.elegir-subscripcion');
         }
 
         return $request->wantsJson()

@@ -77,14 +77,14 @@
         </div>
         @endif
 
-        @php $suscripcion = $student->suscription() @endphp
-        @if( !empty($suscripcion) )
-        <div class="rounded-lg shadow-md p-3 bg-gray-50 my-5 ">
-          <h4 class="font-medium">Suscripción: {{ $suscripcion->name }}</h4>
-          <p class="text-sm">{{ $suscripcion->tipo==1 ? 'Grupal' : 'Particular' }} | {{ $ritmo_labels[( $suscripcion->ritmo )] }}</p>
-          <p>$@money($suscripcion->precio)</p>
-        </div>
+        @if( !empty($student->billingplans) && ( $billPlan = $student->billingplans->first() )!==null )
+        <section class="rounded-lg shadow-md p-3 bg-gray-50 mb-5 md:mr-5">
+          <h3 class="font-bold font-accent text-xs">Suscripción:</h3>
+          <p class="mb-2">{{ $billPlan->name }}</p>
+          <p>$@money($billPlan->precio)</p>
+        </section>
         @endif
+
         <textarea rows="10" class="w-full" readonly>@foreach($student->usermetas AS $meta){{$meta->metakey}}: {{$meta->metaval}}
 @endforeach</textarea>
       </section>

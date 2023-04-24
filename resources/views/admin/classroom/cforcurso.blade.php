@@ -61,7 +61,7 @@
               @foreach ($arrHrs as $hr)
               <label for="iprof{{$prof->id}}dia{{$dia}}hr{{$hr}}" class="cursor-pointer block border-b border-black/5 last:border-b-0">
                 <input type="checkbox" id="iprof{{$prof->id}}dia{{$dia}}hr{{$hr}}" name="horarios[{{$dia}}][]" value="{{$hr}}" class="sr-only peer" @checked( !empty($oldHorarios[( $dia )]) && in_array($hr, $oldHorarios[( $dia )] ) ) />
-                <div class="px-2 peer-checked:bg-azul peer-checked:text-white leading-12 xl:leading-8">{{$hr}}:00</div>
+                <div class="px-2 peer-checked:bg-azulw peer-checked:text-white leading-12 xl:leading-8">{{$hr}}:00</div>
               </label>
               @endforeach
 
@@ -86,15 +86,11 @@
 
         <ul id="students-list" class="students-list">
           @foreach ( $curso->alumnos_sin_clase AS $student )
-            @php
-              $suscripcion = $arrSuscripciones[( $student->suscripcion )];
-            @endphp
-          <li class="py-2 border-b border-b-black/10 text-sm last:border-b-0" data-student-id="{{$student->id}}" data-tipo="{{ $suscripcion['tipo'] }}" data-ritmo="{{ $suscripcion['ritmo'] }}" data-horarios="{{ implode(',', $student->getHorarioArray(1) ) }}" >
+          <li class="py-2 border-b border-b-black/10 text-sm last:border-b-0" data-student-id="{{$student->id}}" data-tipo="{{ $student->clase_tipo }}" data-ritmo="{{ $student->ritmo }}" data-horarios="{{ implode(',', $student->getHorarioArray(1) ) }}" >
             <p>{{ $student->name }}</p>
             <div class="text-xs">
-              <!--<p>Suscripcion: {{ $suscripcion['name'] }}</p>-->
-              <p><b>Tipo: </b> <span>{{ $suscripcion['tipo']==1 ? 'Grupal' : 'Particular' }}</span> |
-                <b>Intensidad: </b> <span>{{ $ritmo_labels[( $suscripcion['ritmo'] )] }}</span>
+              <p><b>Tipo: </b> <span>{{ (int)$student->clase_tipo===1 ? 'Grupal' : 'Particular' }}</span> |
+                <b>Intensidad: </b> <span>{{ $student->ritmoLabel }}</span>
               </p>
               <p><b class="">Horarios:</b>
                 <x-user-card-horarios :horarios="$student->getHorarioArray()" user_type="2" ></x-user-card-horarios>

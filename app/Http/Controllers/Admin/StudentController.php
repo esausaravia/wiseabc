@@ -7,56 +7,67 @@ use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Log;
 
 class StudentController extends Controller
 {
-  /**
-   * Display a listing of the resource.
-   *
-   * @return \Illuminate\Http\Response
-   */
-  public function index(Request $request)
-  {
-    //
-    $search = $request->get('searchfor');
-    $nivel = $request->get('nivel');
-    $edad = $request->get('edad');
-    $estatus = $request->get('estatus');
+    /**
+     * Display a listing of the resource.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function index(Request $request)
+    {
+        $search = $request->get('searchfor');
+        $nivel = $request->get('nivel');
+        $edad = $request->get('edad');
+        $ritmo = $request->get('ritmo');
+        $clase_tipo = $request->get('clase_tipo');
+        $estatus = $request->get('estatus');
 
-    $students = User::with([
-        'usermetas',
-        'classrooms'=>function($query){
-          $query->where('status','active')->where('ends_at','>=', now('-0600') );
-        }
-      ])
+        $Students = User::with([
+            'usermetas',
+            'classrooms'=>function($query){
+                $query->where('status','active')->where('ends_at','>=', now() );
+            }
+        ])
         ->where('user_type', 2)
-
         ->when($search, function($query) use ($search) {
-          $query->where('name', 'like', '%'.$search.'%')
-            ->orWhere('email', 'like', '%'.$search.'%');
+            $query->where('name', 'like', '%'.$search.'%')
+                ->orWhere('email', 'like', '%'.$search.'%');
         })
-
         ->when($estatus, function($query) use ($estatus) {
-          $query->where('status', $estatus);
+            $query->where('status', $estatus);
         })
-
         ->when($edad, function($query) use ($edad) {
-          $query->distinct()->join('usermetas as sm', 'sm.user_id', '=', 'users.id')
-            ->where('sm.metakey', 'edad')
-            ->where('sm.metaval', $edad);
+            $query->whereHas('usermetas', function($_query) use ($edad) {
+                $_query->where('metakey', 'edad' )
+                    ->where('metaval', $edad)->select('user_id');
+            });
         })
-
         ->when($nivel, function($query) use ($nivel) {
-          $query->distinct()->join('usermetas', 'usermetas.user_id', '=', 'users.id')
-            ->where('usermetas.metakey', 'nivel')
-            ->where('usermetas.metaval', $nivel);
+            $query->whereHas('usermetas', function($_query) use ($nivel) {
+                $_query->where('metakey', 'nivel' )
+                    ->where('metaval', $nivel)->select('user_id');
+            });
+        })
+        ->when($ritmo, function($query) use ($ritmo) {
+            $query->whereHas('usermetas', function($_query) use ($ritmo) {
+                $_query->where('metakey', 'ritmo' )
+                    ->where('metaval', $ritmo)->select('user_id');
+            });
         })
 
-        ->orderBy('name')->get();
+        ->orderBy('name');
+        $sql = vsprintf(str_replace(array('?'), array('\'%s\''), $Students->toSql()), $Students->getBindings());
+        //Log::debug("admin StudentController index sql: \n".$sql);
+        //dd($sql);
 
-    $nivel = DB::table('cursos')->get();
-    return view('admin.students', compact('students','search', 'nivel', 'request'));
-  }
+        $Students = $Students->get();
+
+        $nivel = DB::table('cursos')->get();
+        return view('admin.students', compact('Students','search', 'nivel', 'edad', 'ritmo', 'clase_tipo', 'request'));
+    }
 
   /**
    * Show the form for creating a new resource.
@@ -223,18 +234,15 @@ class StudentController extends Controller
 
   public function assignClassroom(Request $request, User $student) {
 
-    $sid = $student->getMeta('suscripcion');
+    if ( $student->clase_tipo==null || $student->ritmo==null ) {
+      return back()->withErrors(['alert'=>'Estudiante sin elegir tipo de clase']);
+    }
 
-    if ( empty($sid) ) {
+    $billPlan = \App\Models\BillingPlan::where('status','ACTIVE')->where('tipo',$student->clase_tipo)->where('ritmo',$student->ritmo)->first();
+
+    if ( empty($billPlan) ) {
       return back()->withErrors(['alert'=>'Estudiante sin suscripción']);
     }
-
-    $arrSuscripciones = config('wiseabc.suscripciones');
-    $Suscripcion = $arrSuscripciones[( $sid )];
-    if ( empty($Suscripcion) ) {
-      return back()->withErrors(['alert'=>'Suscripción ya no existe']);
-    }
-    $Suscripcion = (object) $Suscripcion;
 
     $result = DB::table('classrooms')
       ->join('cursos', 'classrooms.curso_id', '=', 'cursos.id')
@@ -242,8 +250,8 @@ class StudentController extends Controller
       ->select('classrooms.id')
       ->where('cursos.edad', $student->edad) // 3,6,12,16,18
       ->where('cursos.nivel', $student->nivel) //A1 B1 C1
-      ->where('classrooms.tipo', $Suscripcion->tipo) //grupal o individual
-      ->where('classrooms.ritmo', $Suscripcion->ritmo) //relax, medio, intenso
+      ->where('classrooms.tipo', $billPlan->tipo) //grupal o individual
+      ->where('classrooms.ritmo', $billPlan->ritmo) //relax, medio, intenso
       ->whereIn('class_horarios.hr', $student->getHorarioArray(1) )
       ->get();
     //select `classrooms`.`id` from `classrooms` inner join `cursos` on `classrooms`.`curso_id` = `cursos`.`id` inner join `class_horarios` on `classrooms`.`id` = `class_horarios`.`class_id` where (`cursos`.`edad` = 1 and `cursos`.`nivel` = 1) and `class_horarios`.`hr` in (9,10,11,12)
@@ -267,8 +275,8 @@ class StudentController extends Controller
         ->when( $student->nivel, function($query, $getNivel) {
           $query->where('cursos.nivel',$getNivel);
         })
-        ->where('tipo', $Suscripcion->tipo)
-        ->where('ritmo', $Suscripcion->ritmo)
+        ->where('tipo', $billPlan->tipo)
+        ->where('ritmo', $billPlan->ritmo)
         ->get();
 
       $arrClassId = array();
@@ -283,7 +291,7 @@ class StudentController extends Controller
       'weekdays' => config('wiseabc.weekdays'),
       'arrRitmos' => config('wiseabc.ritmo_labels'),
       'Student' => $student,
-      'Suscripcion' => $Suscripcion,
+      'billPlan' => $billPlan,
       'clases' => $clases,
       'otrasClases' => !empty($otrasClases) ? $otrasClases : collect([]),
     ]);

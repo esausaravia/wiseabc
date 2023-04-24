@@ -3,15 +3,14 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use Illuminate\Support\Carbon;
 
 class StudentController extends Controller
 {
   public function home(Request $request){
     $user = $request->user();
 
-    if ( $user->suscripcion===null ) {
-      return redirect()->route('student.elegir-suscripcion');
+    if ( $user->clase_tipo===null ) {
+      return redirect()->route('student.elegir-subscripcion');
     }
     $clase = null;
     $sigClase = null;
@@ -41,28 +40,26 @@ class StudentController extends Controller
     ]);
   }
 
-  public function elegirSuscripcion(Request $request) {
-    return view('student.elegir-suscripcion');
+  public function elegirSubscripcion(Request $request) {
+    return view('student.elegir-subscripcion');
   }
 
   public function suscribe(Request $request) {
-    if ( empty($request->suscripcion) ) {
-      return redirect()->route('student.elegir-suscripcion');
+    if ( empty($request->clase_tipo) ) {
+      return redirect()->route('student.elegir-subscripcion');
     }
 
-    $arrSuscripciones = config('wiseabc.suscripciones');
-    $susc = $arrSuscripciones[( $request->suscripcion )];
-    if ( empty($susc) ) {
-      return redirect()->route('student.elegir-suscripcion');
+    $billPlan = \App\Models\BillingPlan::where('tipo',$request->clase_tipo)->where('ritmo',$request->ritmo)->first();
+
+    if ( empty($billPlan) ) {
+      return redirect()->route('student.elegir-subscripcion');
     }
 
     $user = $request->user();
 
-    $user->status = 'suscribed';
     $user->saveMetas([
-      'suscripcion'=>$request->suscripcion,
-      'clase_tipo'=>$susc['tipo'],
-      'ritmo'=>$susc['ritmo']
+      'clase_tipo'=>$billPlan->tipo,
+      'ritmo'=>$billPlan->ritmo
     ]);
 
     return redirect()->route('home');

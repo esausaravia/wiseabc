@@ -39,24 +39,24 @@
 
         <div class="md:grid grid-cols-2 gap-5 text-sm my-4">
           <div>
-            <p class="text-xs font-bold uppercase">Grupo [{{ $arrStudents['grupal'] }}]</p>
+            <p class="text-xs font-bold uppercase">Grupo [{{ $arrStudents['grupo_subtotal'] }}]</p>
             <ul class="flex -mx-2">
-              @foreach( config('wiseabc.ritmo_labels') AS $rk=>$ritmo )
+              @foreach( $ritmo_labels AS $rk=>$ritmo )
               <li class="px-2">
                 <p>{{$ritmo}}</p>
-                <span class="text-base">{{ $arrStudents['suscripciones'][$rk] }}</span>
+                <span class="text-base">{{ $arrStudents['t1'][$rk] }}</span>
               </li>
               @endforeach
             </ul>
           </div>
 
           <div>
-            <p class="text-xs font-bold uppercase">Particular [{{ $arrStudents['particular'] }}]</p>
+            <p class="text-xs font-bold uppercase">Particular [{{ $arrStudents['particular_subtotal'] }}]</p>
             <ul class="flex -mx-2">
               @foreach( config('wiseabc.ritmo_labels') AS $rk=>$ritmo )
               <li class="px-2">
                 <p>{{$ritmo}}</p>
-                <span class="text-base">{{ $arrStudents['suscripciones'][($rk+4)] }}</span>
+                <span class="text-base">{{ $arrStudents['t2'][($rk)] }}</span>
               </li>
               @endforeach
             </ul>

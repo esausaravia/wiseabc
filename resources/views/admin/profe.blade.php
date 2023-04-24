@@ -17,7 +17,7 @@
     <div class="grid gap-5 grid-cols-1 xl:grid-cols-2 my-5">
 
       <section class="rounded-xl py-3 px-4 bg-white text-gray-600">
-        <h3 class="mb-2 font-accent font-medium text-xs text-azul dark:text-gray-600 uppercase">Visible para todos</h3>
+        <h3 class="mb-2 font-accent font-medium text-xs text-azul-600 dark:text-gray-600 uppercase">Visible para todos</h3>
 
         <div class="md:flex">
           <div class="mb-4 md:mb-0 md:mr-4 flex-grow-0 flex-shrink-0">
@@ -56,7 +56,7 @@
       </section>
 
       <section class="rounded-xl py-3 px-4 bg-white dark:bg-white/10">
-        <h3 class="mb-2 font-accent font-medium text-xs text-azul dark:text-inherit uppercase">Acceso</h3>
+        <h3 class="mb-2 font-accent font-medium text-xs text-azul-600 dark:text-inherit uppercase">Acceso</h3>
 
         <x-forms.select label="Estatus" name="status" :value="$profe->status" :options="['active'=>'Activo','disabled'=>'Desactivado']" required></x-forms.select>
 
@@ -67,7 +67,7 @@
       </section>
 
       <section class="rounded-xl py-3 px-4 bg-white dark:bg-white/10">
-        <h3 class="mb-2 font-accent font-medium text-xs text-azul dark:text-inherit uppercase">otros</h3>
+        <h3 class="mb-2 font-accent font-medium text-xs text-azul-600 dark:text-inherit uppercase">otros</h3>
 
         <div class="grid grid-cols-1 gap-3 md:grid-cols-2">
           <x-forms.input type="email" name="personal_email" label="Personal Email" :value="$profe->personal_email" required></x-forms.input>
@@ -86,7 +86,7 @@
 
       {{-- Horarios --}}
       <section class="rounded-xl py-3 px-4 bg-white dark:bg-white/10">
-        <h3 class="mb-2 font-accent font-medium text-sm text-azul dark:text-inherit uppercase">Disponibilidad de horario</h3>
+        <h3 class="mb-2 font-accent font-medium text-sm text-azul-600 dark:text-inherit uppercase">Disponibilidad de horario</h3>
 
         <div class="grid grid-cols-4 md:grid-cols-7 gap-3 text-center leading-12 xl:leading-8">
 

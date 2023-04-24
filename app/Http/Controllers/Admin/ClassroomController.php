@@ -194,8 +194,9 @@ class ClassroomController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function createForCurso(\App\Models\Curso $curso) {
-        $arrSuscripciones = config('wiseabc.suscripciones');
+
         $weekdays = config('wiseabc.weekdays');
+        $BillPlans = \App\Models\BillingPlan::where('status','ACTIVE')->get();
         $profes = User::where('user_type',3)->where('status', 'active')->orderBy('name')->get();
 
         ob_start();
@@ -207,11 +208,10 @@ class ClassroomController extends Controller
         $curso->alumnosSinClase();
         $arrStudentsToJS = collect();
         foreach($curso->alumnos_sin_clase AS $student) {
-            $suscripcion = $arrSuscripciones[( $student->suscripcion )];
             $obj = [
                 'id'=>$student->id,
-                'tipo'=>$suscripcion['tipo'],
-                'ritmo'=>$suscripcion['ritmo'],
+                'tipo'=>$student->clase_tipo,
+                'ritmo'=>$student->ritmo,
                 'horarios'=>$student->getHorarioArray(1)
             ];
             $arrStudentsToJS->push($obj);
@@ -224,7 +224,7 @@ class ClassroomController extends Controller
             'profes'=>$profes,
             'weekdays'=>$weekdays,
             'ritmo_labels'=>config('wiseabc.ritmo_labels'),
-            'arrSuscripciones'=>$arrSuscripciones,
+            'BillPlans'=>$BillPlans,
             'arrStudentsToJS'=> $arrStudentsToJS
         ]);
     }
