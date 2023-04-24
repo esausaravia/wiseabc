@@ -104,55 +104,55 @@
             <p>Lun.</p>
             <label for="ilun8" class="cursor-pointer">
               <input type="checkbox" name="horarios[1][]" id="ilun8" value="8" class="sr-only peer" />
-              <div class="border-b border-gray-400 px-2 peer-checked:bg-azul peer-checked:text-white">8:00</div>
+              <div class="border-b border-gray-400 px-2 peer-checked:bg-azulw peer-checked:text-white">8:00</div>
             </label>
             <label for="ilun9" class="cursor-pointer">
               <input type="checkbox" name="horarios[1][]" id="ilun9" value="9" class="sr-only peer" />
-              <div class="border-b border-gray-400 px-2 peer-checked:bg-azul peer-checked:text-white">9:00</div>
+              <div class="border-b border-gray-400 px-2 peer-checked:bg-azulw peer-checked:text-white">9:00</div>
             </label>
             <label for="ilun10" class="cursor-pointer">
               <input type="checkbox" name="horarios[1][]" id="ilun10" value="10" class="sr-only peer" />
-              <div class="border-b border-gray-400 px-2 peer-checked:bg-azul peer-checked:text-white">10:00</div>
+              <div class="border-b border-gray-400 px-2 peer-checked:bg-azulw peer-checked:text-white">10:00</div>
             </label>
             <label for="ilun11" class="cursor-pointer">
               <input type="checkbox" name="horarios[1][]" id="ilun11" value="11" class="sr-only peer" />
-              <div class="border-b border-gray-400 px-2 peer-checked:bg-azul peer-checked:text-white">11:00</div>
+              <div class="border-b border-gray-400 px-2 peer-checked:bg-azulw peer-checked:text-white">11:00</div>
             </label>
             <label for="ilun12" class="cursor-pointer">
               <input type="checkbox" name="horarios[1][]" id="ilun12" value="12" class="sr-only peer" />
-              <div class="border-b border-gray-400 px-2 peer-checked:bg-azul peer-checked:text-white">12:00</div>
+              <div class="border-b border-gray-400 px-2 peer-checked:bg-azulw peer-checked:text-white">12:00</div>
             </label>
             <label for="ilun13" class="cursor-pointer">
               <input type="checkbox" name="horarios[1][]" id="ilun13" value="13" class="sr-only peer" />
-              <div class="border-b border-gray-400 px-2 peer-checked:bg-azul peer-checked:text-white">13:00</div>
+              <div class="border-b border-gray-400 px-2 peer-checked:bg-azulw peer-checked:text-white">13:00</div>
             </label>
             <label for="ilun14" class="cursor-pointer">
               <input type="checkbox" name="horarios[1][]" id="ilun14" value="14" class="sr-only peer" />
-              <div class="border-b border-gray-400 px-2 peer-checked:bg-azul peer-checked:text-white">14:00</div>
+              <div class="border-b border-gray-400 px-2 peer-checked:bg-azulw peer-checked:text-white">14:00</div>
             </label>
             <label for="ilun15" class="cursor-pointer">
               <input type="checkbox" name="horarios[1][]" id="ilun15" value="15" class="sr-only peer" />
-              <div class="border-b border-gray-400 px-2 peer-checked:bg-azul peer-checked:text-white">15:00</div>
+              <div class="border-b border-gray-400 px-2 peer-checked:bg-azulw peer-checked:text-white">15:00</div>
             </label>
             <label for="ilun16" class="cursor-pointer">
               <input type="checkbox" name="horarios[1][]" id="ilun16" value="16" class="sr-only peer" />
-              <div class="border-b border-gray-400 px-2 peer-checked:bg-azul peer-checked:text-white">16:00</div>
+              <div class="border-b border-gray-400 px-2 peer-checked:bg-azulw peer-checked:text-white">16:00</div>
             </label>
             <label for="ilun17" class="cursor-pointer">
               <input type="checkbox" name="horarios[1][]" id="ilun17" value="17" class="sr-only peer" />
-              <div class="border-b border-gray-400 px-2 peer-checked:bg-azul peer-checked:text-white">17:00</div>
+              <div class="border-b border-gray-400 px-2 peer-checked:bg-azulw peer-checked:text-white">17:00</div>
             </label>
             <label for="ilun18" class="cursor-pointer">
               <input type="checkbox" name="horarios[1][]" id="ilun18" value="18" class="sr-only peer" />
-              <div class="border-b border-gray-400 px-2 peer-checked:bg-azul peer-checked:text-white">18:00</div>
+              <div class="border-b border-gray-400 px-2 peer-checked:bg-azulw peer-checked:text-white">18:00</div>
             </label>
             <label for="ilun19" class="cursor-pointer">
               <input type="checkbox" name="horarios[1][]" id="ilun19" value="19" class="sr-only peer" />
-              <div class="border-b border-gray-400 px-2 peer-checked:bg-azul peer-checked:text-white">19:00</div>
+              <div class="border-b border-gray-400 px-2 peer-checked:bg-azulw peer-checked:text-white">19:00</div>
             </label>
             <label for="ilun20" class="cursor-pointer">
               <input type="checkbox" name="horarios[1][]" id="ilun20" value="20" class="sr-only peer" />
-              <div class="px-2 peer-checked:bg-azul peer-checked:text-white">20:00</div>
+              <div class="px-2 peer-checked:bg-azulw peer-checked:text-white">20:00</div>
             </label>
           </div>
 
@@ -161,55 +161,55 @@
             <p>Mar.</p>
             <label for="imar8" class="cursor-pointer">
               <input type="checkbox" name="horarios[2][]" id="imar8" value="8" class="sr-only peer" />
-              <div class="border-b border-gray-400 px-2 peer-checked:bg-azul peer-checked:text-white">8:00</div>
+              <div class="border-b border-gray-400 px-2 peer-checked:bg-azulw peer-checked:text-white">8:00</div>
             </label>
             <label for="imar9" class="cursor-pointer">
               <input type="checkbox" name="horarios[2][]" id="imar9" value="9" class="sr-only peer" />
-              <div class="border-b border-gray-400 px-2 peer-checked:bg-azul peer-checked:text-white">9:00</div>
+              <div class="border-b border-gray-400 px-2 peer-checked:bg-azulw peer-checked:text-white">9:00</div>
             </label>
             <label for="imar10" class="cursor-pointer">
               <input type="checkbox" name="horarios[2][]" id="imar10" value="10" class="sr-only peer" />
-              <div class="border-b border-gray-400 px-2 peer-checked:bg-azul peer-checked:text-white">10:00</div>
+              <div class="border-b border-gray-400 px-2 peer-checked:bg-azulw peer-checked:text-white">10:00</div>
             </label>
             <label for="imar11" class="cursor-pointer">
               <input type="checkbox" name="horarios[2][]" id="imar11" value="11" class="sr-only peer" />
-              <div class="border-b border-gray-400 px-2 peer-checked:bg-azul peer-checked:text-white">11:00</div>
+              <div class="border-b border-gray-400 px-2 peer-checked:bg-azulw peer-checked:text-white">11:00</div>
             </label>
             <label for="imar12" class="cursor-pointer">
               <input type="checkbox" name="horarios[2][]" id="imar12" value="12" class="sr-only peer" />
-              <div class="border-b border-gray-400 px-2 peer-checked:bg-azul peer-checked:text-white">12:00</div>
+              <div class="border-b border-gray-400 px-2 peer-checked:bg-azulw peer-checked:text-white">12:00</div>
             </label>
             <label for="imar13" class="cursor-pointer">
               <input type="checkbox" name="horarios[2][]" id="imar13" value="13" class="sr-only peer" />
-              <div class="border-b border-gray-400 px-2 peer-checked:bg-azul peer-checked:text-white">13:00</div>
+              <div class="border-b border-gray-400 px-2 peer-checked:bg-azulw peer-checked:text-white">13:00</div>
             </label>
             <label for="imar14" class="cursor-pointer">
               <input type="checkbox" name="horarios[2][]" id="imar14" value="14" class="sr-only peer" />
-              <div class="border-b border-gray-400 px-2 peer-checked:bg-azul peer-checked:text-white">14:00</div>
+              <div class="border-b border-gray-400 px-2 peer-checked:bg-azulw peer-checked:text-white">14:00</div>
             </label>
             <label for="imar15" class="cursor-pointer">
               <input type="checkbox" name="horarios[2][]" id="imar15" value="15" class="sr-only peer" />
-              <div class="border-b border-gray-400 px-2 peer-checked:bg-azul peer-checked:text-white">15:00</div>
+              <div class="border-b border-gray-400 px-2 peer-checked:bg-azulw peer-checked:text-white">15:00</div>
             </label>
             <label for="imar16" class="cursor-pointer">
               <input type="checkbox" name="horarios[2][]" id="imar16" value="16" class="sr-only peer" />
-              <div class="border-b border-gray-400 px-2 peer-checked:bg-azul peer-checked:text-white">16:00</div>
+              <div class="border-b border-gray-400 px-2 peer-checked:bg-azulw peer-checked:text-white">16:00</div>
             </label>
             <label for="imar17" class="cursor-pointer">
               <input type="checkbox" name="horarios[2][]" id="imar17" value="17" class="sr-only peer" />
-              <div class="border-b border-gray-400 px-2 peer-checked:bg-azul peer-checked:text-white">17:00</div>
+              <div class="border-b border-gray-400 px-2 peer-checked:bg-azulw peer-checked:text-white">17:00</div>
             </label>
             <label for="imar18" class="cursor-pointer">
               <input type="checkbox" name="horarios[2][]" id="imar18" value="18" class="sr-only peer" />
-              <div class="border-b border-gray-400 px-2 peer-checked:bg-azul peer-checked:text-white">18:00</div>
+              <div class="border-b border-gray-400 px-2 peer-checked:bg-azulw peer-checked:text-white">18:00</div>
             </label>
             <label for="imar19" class="cursor-pointer">
               <input type="checkbox" name="horarios[2][]" id="imar19" value="19" class="sr-only peer" />
-              <div class="border-b border-gray-400 px-2 peer-checked:bg-azul peer-checked:text-white">19:00</div>
+              <div class="border-b border-gray-400 px-2 peer-checked:bg-azulw peer-checked:text-white">19:00</div>
             </label>
             <label for="imar20" class="cursor-pointer">
               <input type="checkbox" name="horarios[2][]" id="imar20" value="20" class="sr-only peer" />
-              <div class="px-2 peer-checked:bg-azul peer-checked:text-white">20:00</div>
+              <div class="px-2 peer-checked:bg-azulw peer-checked:text-white">20:00</div>
             </label>
           </div>
 
@@ -218,55 +218,55 @@
             <p>Mie.</p>
             <label for="imie8" class="cursor-pointer">
               <input type="checkbox" name="horarios[3][]" id="imie8" value="8" class="sr-only peer" />
-              <div class="border-b border-gray-400 px-2 peer-checked:bg-azul peer-checked:text-white">8:00</div>
+              <div class="border-b border-gray-400 px-2 peer-checked:bg-azulw peer-checked:text-white">8:00</div>
             </label>
             <label for="imie9" class="cursor-pointer">
               <input type="checkbox" name="horarios[3][]" id="imie9" value="9" class="sr-only peer" />
-              <div class="border-b border-gray-400 px-2 peer-checked:bg-azul peer-checked:text-white">9:00</div>
+              <div class="border-b border-gray-400 px-2 peer-checked:bg-azulw peer-checked:text-white">9:00</div>
             </label>
             <label for="imie10" class="cursor-pointer">
               <input type="checkbox" name="horarios[3][]" id="imie10" value="10" class="sr-only peer" />
-              <div class="border-b border-gray-400 px-2 peer-checked:bg-azul peer-checked:text-white">10:00</div>
+              <div class="border-b border-gray-400 px-2 peer-checked:bg-azulw peer-checked:text-white">10:00</div>
             </label>
             <label for="imie11" class="cursor-pointer">
               <input type="checkbox" name="horarios[3][]" id="imie11" value="11" class="sr-only peer" />
-              <div class="border-b border-gray-400 px-2 peer-checked:bg-azul peer-checked:text-white">11:00</div>
+              <div class="border-b border-gray-400 px-2 peer-checked:bg-azulw peer-checked:text-white">11:00</div>
             </label>
             <label for="imie12" class="cursor-pointer">
               <input type="checkbox" name="horarios[3][]" id="imie12" value="12" class="sr-only peer" />
-              <div class="border-b border-gray-400 px-2 peer-checked:bg-azul peer-checked:text-white">12:00</div>
+              <div class="border-b border-gray-400 px-2 peer-checked:bg-azulw peer-checked:text-white">12:00</div>
             </label>
             <label for="imie13" class="cursor-pointer">
               <input type="checkbox" name="horarios[3][]" id="imie13" value="13" class="sr-only peer" />
-              <div class="border-b border-gray-400 px-2 peer-checked:bg-azul peer-checked:text-white">13:00</div>
+              <div class="border-b border-gray-400 px-2 peer-checked:bg-azulw peer-checked:text-white">13:00</div>
             </label>
             <label for="imie14" class="cursor-pointer">
               <input type="checkbox" name="horarios[3][]" id="imie14" value="14" class="sr-only peer" />
-              <div class="border-b border-gray-400 px-2 peer-checked:bg-azul peer-checked:text-white">14:00</div>
+              <div class="border-b border-gray-400 px-2 peer-checked:bg-azulw peer-checked:text-white">14:00</div>
             </label>
             <label for="imie15" class="cursor-pointer">
               <input type="checkbox" name="horarios[3][]" id="imie15" value="15" class="sr-only peer" />
-              <div class="border-b border-gray-400 px-2 peer-checked:bg-azul peer-checked:text-white">15:00</div>
+              <div class="border-b border-gray-400 px-2 peer-checked:bg-azulw peer-checked:text-white">15:00</div>
             </label>
             <label for="imie16" class="cursor-pointer">
               <input type="checkbox" name="horarios[3][]" id="imie16" value="16" class="sr-only peer" />
-              <div class="border-b border-gray-400 px-2 peer-checked:bg-azul peer-checked:text-white">16:00</div>
+              <div class="border-b border-gray-400 px-2 peer-checked:bg-azulw peer-checked:text-white">16:00</div>
             </label>
             <label for="imie17" class="cursor-pointer">
               <input type="checkbox" name="horarios[3][]" id="imie17" value="17" class="sr-only peer" />
-              <div class="border-b border-gray-400 px-2 peer-checked:bg-azul peer-checked:text-white">17:00</div>
+              <div class="border-b border-gray-400 px-2 peer-checked:bg-azulw peer-checked:text-white">17:00</div>
             </label>
             <label for="imie18" class="cursor-pointer">
               <input type="checkbox" name="horarios[3][]" id="imie18" value="18" class="sr-only peer" />
-              <div class="border-b border-gray-400 px-2 peer-checked:bg-azul peer-checked:text-white">18:00</div>
+              <div class="border-b border-gray-400 px-2 peer-checked:bg-azulw peer-checked:text-white">18:00</div>
             </label>
             <label for="imie19" class="cursor-pointer">
               <input type="checkbox" name="horarios[3][]" id="imie19" value="19" class="sr-only peer" />
-              <div class="border-b border-gray-400 px-2 peer-checked:bg-azul peer-checked:text-white">19:00</div>
+              <div class="border-b border-gray-400 px-2 peer-checked:bg-azulw peer-checked:text-white">19:00</div>
             </label>
             <label for="imie20" class="cursor-pointer">
               <input type="checkbox" name="horarios[3][]" id="imie20" value="20" class="sr-only peer" />
-              <div class="px-2 peer-checked:bg-azul peer-checked:text-white">20:00</div>
+              <div class="px-2 peer-checked:bg-azulw peer-checked:text-white">20:00</div>
             </label>
           </div>
 
@@ -275,55 +275,55 @@
             <p>Jue.</p>
             <label for="ijue8" class="cursor-pointer">
               <input type="checkbox" name="horarios[4][]" id="ijue8" value="8" class="sr-only peer" />
-              <div class="border-b border-gray-400 px-2 peer-checked:bg-azul peer-checked:text-white">8:00</div>
+              <div class="border-b border-gray-400 px-2 peer-checked:bg-azulw peer-checked:text-white">8:00</div>
             </label>
             <label for="ijue9" class="cursor-pointer">
               <input type="checkbox" name="horarios[4][]" id="ijue9" value="9" class="sr-only peer" />
-              <div class="border-b border-gray-400 px-2 peer-checked:bg-azul peer-checked:text-white">9:00</div>
+              <div class="border-b border-gray-400 px-2 peer-checked:bg-azulw peer-checked:text-white">9:00</div>
             </label>
             <label for="ijue10" class="cursor-pointer">
               <input type="checkbox" name="horarios[4][]" id="ijue10" value="10" class="sr-only peer" />
-              <div class="border-b border-gray-400 px-2 peer-checked:bg-azul peer-checked:text-white">10:00</div>
+              <div class="border-b border-gray-400 px-2 peer-checked:bg-azulw peer-checked:text-white">10:00</div>
             </label>
             <label for="ijue11" class="cursor-pointer">
               <input type="checkbox" name="horarios[4][]" id="ijue11" value="11" class="sr-only peer" />
-              <div class="border-b border-gray-400 px-2 peer-checked:bg-azul peer-checked:text-white">11:00</div>
+              <div class="border-b border-gray-400 px-2 peer-checked:bg-azulw peer-checked:text-white">11:00</div>
             </label>
             <label for="ijue12" class="cursor-pointer">
               <input type="checkbox" name="horarios[4][]" id="ijue12" value="12" class="sr-only peer" />
-              <div class="border-b border-gray-400 px-2 peer-checked:bg-azul peer-checked:text-white">12:00</div>
+              <div class="border-b border-gray-400 px-2 peer-checked:bg-azulw peer-checked:text-white">12:00</div>
             </label>
             <label for="ijue13" class="cursor-pointer">
               <input type="checkbox" name="horarios[4][]" id="ijue13" value="13" class="sr-only peer" />
-              <div class="border-b border-gray-400 px-2 peer-checked:bg-azul peer-checked:text-white">13:00</div>
+              <div class="border-b border-gray-400 px-2 peer-checked:bg-azulw peer-checked:text-white">13:00</div>
             </label>
             <label for="ijue14" class="cursor-pointer">
               <input type="checkbox" name="horarios[4][]" id="ijue14" value="14" class="sr-only peer" />
-              <div class="border-b border-gray-400 px-2 peer-checked:bg-azul peer-checked:text-white">14:00</div>
+              <div class="border-b border-gray-400 px-2 peer-checked:bg-azulw peer-checked:text-white">14:00</div>
             </label>
             <label for="ijue15" class="cursor-pointer">
               <input type="checkbox" name="horarios[4][]" id="ijue15" value="15" class="sr-only peer" />
-              <div class="border-b border-gray-400 px-2 peer-checked:bg-azul peer-checked:text-white">15:00</div>
+              <div class="border-b border-gray-400 px-2 peer-checked:bg-azulw peer-checked:text-white">15:00</div>
             </label>
             <label for="ijue16" class="cursor-pointer">
               <input type="checkbox" name="horarios[4][]" id="ijue16" value="16" class="sr-only peer" />
-              <div class="border-b border-gray-400 px-2 peer-checked:bg-azul peer-checked:text-white">16:00</div>
+              <div class="border-b border-gray-400 px-2 peer-checked:bg-azulw peer-checked:text-white">16:00</div>
             </label>
             <label for="ijue17" class="cursor-pointer">
               <input type="checkbox" name="horarios[4][]" id="ijue17" value="17" class="sr-only peer" />
-              <div class="border-b border-gray-400 px-2 peer-checked:bg-azul peer-checked:text-white">17:00</div>
+              <div class="border-b border-gray-400 px-2 peer-checked:bg-azulw peer-checked:text-white">17:00</div>
             </label>
             <label for="ijue18" class="cursor-pointer">
               <input type="checkbox" name="horarios[4][]" id="ijue18" value="18" class="sr-only peer" />
-              <div class="border-b border-gray-400 px-2 peer-checked:bg-azul peer-checked:text-white">18:00</div>
+              <div class="border-b border-gray-400 px-2 peer-checked:bg-azulw peer-checked:text-white">18:00</div>
             </label>
             <label for="ijue19" class="cursor-pointer">
               <input type="checkbox" name="horarios[4][]" id="ijue19" value="19" class="sr-only peer" />
-              <div class="border-b border-gray-400 px-2 peer-checked:bg-azul peer-checked:text-white">19:00</div>
+              <div class="border-b border-gray-400 px-2 peer-checked:bg-azulw peer-checked:text-white">19:00</div>
             </label>
             <label for="ijue20" class="cursor-pointer">
               <input type="checkbox" name="horarios[4][]" id="ijue20" value="20" class="sr-only peer" />
-              <div class="px-2 peer-checked:bg-azul peer-checked:text-white">20:00</div>
+              <div class="px-2 peer-checked:bg-azulw peer-checked:text-white">20:00</div>
             </label>
           </div>
 
@@ -332,55 +332,55 @@
             <p>Vie.</p>
             <label for="ivie8" class="cursor-pointer">
               <input type="checkbox" name="horarios[5][]" id="ivie8" value="8" class="sr-only peer" />
-              <div class="border-b border-gray-400 px-2 peer-checked:bg-azul peer-checked:text-white">8:00</div>
+              <div class="border-b border-gray-400 px-2 peer-checked:bg-azulw peer-checked:text-white">8:00</div>
             </label>
             <label for="ivie9" class="cursor-pointer">
               <input type="checkbox" name="horarios[5][]" id="ivie9" value="9" class="sr-only peer" />
-              <div class="border-b border-gray-400 px-2 peer-checked:bg-azul peer-checked:text-white">9:00</div>
+              <div class="border-b border-gray-400 px-2 peer-checked:bg-azulw peer-checked:text-white">9:00</div>
             </label>
             <label for="ivie10" class="cursor-pointer">
               <input type="checkbox" name="horarios[5][]" id="ivie10" value="10" class="sr-only peer" />
-              <div class="border-b border-gray-400 px-2 peer-checked:bg-azul peer-checked:text-white">10:00</div>
+              <div class="border-b border-gray-400 px-2 peer-checked:bg-azulw peer-checked:text-white">10:00</div>
             </label>
             <label for="ivie11" class="cursor-pointer">
               <input type="checkbox" name="horarios[5][]" id="ivie11" value="11" class="sr-only peer" />
-              <div class="border-b border-gray-400 px-2 peer-checked:bg-azul peer-checked:text-white">11:00</div>
+              <div class="border-b border-gray-400 px-2 peer-checked:bg-azulw peer-checked:text-white">11:00</div>
             </label>
             <label for="ivie12" class="cursor-pointer">
               <input type="checkbox" name="horarios[5][]" id="ivie12" value="12" class="sr-only peer" />
-              <div class="border-b border-gray-400 px-2 peer-checked:bg-azul peer-checked:text-white">12:00</div>
+              <div class="border-b border-gray-400 px-2 peer-checked:bg-azulw peer-checked:text-white">12:00</div>
             </label>
             <label for="ivie13" class="cursor-pointer">
               <input type="checkbox" name="horarios[5][]" id="ivie13" value="13" class="sr-only peer" />
-              <div class="border-b border-gray-400 px-2 peer-checked:bg-azul peer-checked:text-white">13:00</div>
+              <div class="border-b border-gray-400 px-2 peer-checked:bg-azulw peer-checked:text-white">13:00</div>
             </label>
             <label for="ivie14" class="cursor-pointer">
               <input type="checkbox" name="horarios[5][]" id="ivie14" value="14" class="sr-only peer" />
-              <div class="border-b border-gray-400 px-2 peer-checked:bg-azul peer-checked:text-white">14:00</div>
+              <div class="border-b border-gray-400 px-2 peer-checked:bg-azulw peer-checked:text-white">14:00</div>
             </label>
             <label for="ivie15" class="cursor-pointer">
               <input type="checkbox" name="horarios[5][]" id="ivie15" value="15" class="sr-only peer" />
-              <div class="border-b border-gray-400 px-2 peer-checked:bg-azul peer-checked:text-white">15:00</div>
+              <div class="border-b border-gray-400 px-2 peer-checked:bg-azulw peer-checked:text-white">15:00</div>
             </label>
             <label for="ivie16" class="cursor-pointer">
               <input type="checkbox" name="horarios[5][]" id="ivie16" value="16" class="sr-only peer" />
-              <div class="border-b border-gray-400 px-2 peer-checked:bg-azul peer-checked:text-white">16:00</div>
+              <div class="border-b border-gray-400 px-2 peer-checked:bg-azulw peer-checked:text-white">16:00</div>
             </label>
             <label for="ivie17" class="cursor-pointer">
               <input type="checkbox" name="horarios[5][]" id="ivie17" value="17" class="sr-only peer" />
-              <div class="border-b border-gray-400 px-2 peer-checked:bg-azul peer-checked:text-white">17:00</div>
+              <div class="border-b border-gray-400 px-2 peer-checked:bg-azulw peer-checked:text-white">17:00</div>
             </label>
             <label for="ivie18" class="cursor-pointer">
               <input type="checkbox" name="horarios[5][]" id="ivie18" value="18" class="sr-only peer" />
-              <div class="border-b border-gray-400 px-2 peer-checked:bg-azul peer-checked:text-white">18:00</div>
+              <div class="border-b border-gray-400 px-2 peer-checked:bg-azulw peer-checked:text-white">18:00</div>
             </label>
             <label for="ivie19" class="cursor-pointer">
               <input type="checkbox" name="horarios[5][]" id="ivie19" value="19" class="sr-only peer" />
-              <div class="border-b border-gray-400 px-2 peer-checked:bg-azul peer-checked:text-white">19:00</div>
+              <div class="border-b border-gray-400 px-2 peer-checked:bg-azulw peer-checked:text-white">19:00</div>
             </label>
             <label for="ivie20" class="cursor-pointer">
               <input type="checkbox" name="horarios[5][]" id="ivie20" value="20" class="sr-only peer" />
-              <div class="px-2 peer-checked:bg-azul peer-checked:text-white">20:00</div>
+              <div class="px-2 peer-checked:bg-azulw peer-checked:text-white">20:00</div>
             </label>
           </div>
 
@@ -389,55 +389,55 @@
             <p>Sab.</p>
             <label for="isab8" class="cursor-pointer">
               <input type="checkbox" name="horarios[6][]" id="isab8" value="8" class="sr-only peer" />
-              <div class="border-b border-gray-400 px-2 peer-checked:bg-azul peer-checked:text-white">8:00</div>
+              <div class="border-b border-gray-400 px-2 peer-checked:bg-azulw peer-checked:text-white">8:00</div>
             </label>
             <label for="isab9" class="cursor-pointer">
               <input type="checkbox" name="horarios[6][]" id="isab9" value="9" class="sr-only peer" />
-              <div class="border-b border-gray-400 px-2 peer-checked:bg-azul peer-checked:text-white">9:00</div>
+              <div class="border-b border-gray-400 px-2 peer-checked:bg-azulw peer-checked:text-white">9:00</div>
             </label>
             <label for="isab10" class="cursor-pointer">
               <input type="checkbox" name="horarios[6][]" id="isab10" value="10" class="sr-only peer" />
-              <div class="border-b border-gray-400 px-2 peer-checked:bg-azul peer-checked:text-white">10:00</div>
+              <div class="border-b border-gray-400 px-2 peer-checked:bg-azulw peer-checked:text-white">10:00</div>
             </label>
             <label for="isab11" class="cursor-pointer">
               <input type="checkbox" name="horarios[6][]" id="isab11" value="11" class="sr-only peer" />
-              <div class="border-b border-gray-400 px-2 peer-checked:bg-azul peer-checked:text-white">11:00</div>
+              <div class="border-b border-gray-400 px-2 peer-checked:bg-azulw peer-checked:text-white">11:00</div>
             </label>
             <label for="isab12" class="cursor-pointer">
               <input type="checkbox" name="horarios[6][]" id="isab12" value="12" class="sr-only peer" />
-              <div class="border-b border-gray-400 px-2 peer-checked:bg-azul peer-checked:text-white">12:00</div>
+              <div class="border-b border-gray-400 px-2 peer-checked:bg-azulw peer-checked:text-white">12:00</div>
             </label>
             <label for="isab13" class="cursor-pointer">
               <input type="checkbox" name="horarios[6][]" id="isab13" value="13" class="sr-only peer" />
-              <div class="border-b border-gray-400 px-2 peer-checked:bg-azul peer-checked:text-white">13:00</div>
+              <div class="border-b border-gray-400 px-2 peer-checked:bg-azulw peer-checked:text-white">13:00</div>
             </label>
             <label for="isab14" class="cursor-pointer">
               <input type="checkbox" name="horarios[6][]" id="isab14" value="14" class="sr-only peer" />
-              <div class="border-b border-gray-400 px-2 peer-checked:bg-azul peer-checked:text-white">14:00</div>
+              <div class="border-b border-gray-400 px-2 peer-checked:bg-azulw peer-checked:text-white">14:00</div>
             </label>
             <label for="isab15" class="cursor-pointer">
               <input type="checkbox" name="horarios[6][]" id="isab15" value="15" class="sr-only peer" />
-              <div class="border-b border-gray-400 px-2 peer-checked:bg-azul peer-checked:text-white">15:00</div>
+              <div class="border-b border-gray-400 px-2 peer-checked:bg-azulw peer-checked:text-white">15:00</div>
             </label>
             <label for="isab16" class="cursor-pointer">
               <input type="checkbox" name="horarios[6][]" id="isab16" value="16" class="sr-only peer" />
-              <div class="border-b border-gray-400 px-2 peer-checked:bg-azul peer-checked:text-white">16:00</div>
+              <div class="border-b border-gray-400 px-2 peer-checked:bg-azulw peer-checked:text-white">16:00</div>
             </label>
             <label for="isab17" class="cursor-pointer">
               <input type="checkbox" name="horarios[6][]" id="isab17" value="17" class="sr-only peer" />
-              <div class="border-b border-gray-400 px-2 peer-checked:bg-azul peer-checked:text-white">17:00</div>
+              <div class="border-b border-gray-400 px-2 peer-checked:bg-azulw peer-checked:text-white">17:00</div>
             </label>
             <label for="isab18" class="cursor-pointer">
               <input type="checkbox" name="horarios[6][]" id="isab18" value="18" class="sr-only peer" />
-              <div class="border-b border-gray-400 px-2 peer-checked:bg-azul peer-checked:text-white">18:00</div>
+              <div class="border-b border-gray-400 px-2 peer-checked:bg-azulw peer-checked:text-white">18:00</div>
             </label>
             <label for="isab19" class="cursor-pointer">
               <input type="checkbox" name="horarios[6][]" id="isab19" value="19" class="sr-only peer" />
-              <div class="border-b border-gray-400 px-2 peer-checked:bg-azul peer-checked:text-white">19:00</div>
+              <div class="border-b border-gray-400 px-2 peer-checked:bg-azulw peer-checked:text-white">19:00</div>
             </label>
             <label for="isab20" class="cursor-pointer">
               <input type="checkbox" name="horarios[6][]" id="isab20" value="20" class="sr-only peer" />
-              <div class="px-2 peer-checked:bg-azul peer-checked:text-white">20:00</div>
+              <div class="px-2 peer-checked:bg-azulw peer-checked:text-white">20:00</div>
             </label>
           </div>
 
@@ -446,55 +446,55 @@
             <p>Dom.</p>
             <label for="idom8" class="cursor-pointer">
               <input type="checkbox" name="horarios[7][]" id="idom8" value="8" class="sr-only peer" />
-              <div class="border-b border-gray-400 px-2 peer-checked:bg-azul peer-checked:text-white">8:00</div>
+              <div class="border-b border-gray-400 px-2 peer-checked:bg-azulw peer-checked:text-white">8:00</div>
             </label>
             <label for="idom9" class="cursor-pointer">
               <input type="checkbox" name="horarios[7][]" id="idom9" value="9" class="sr-only peer" />
-              <div class="border-b border-gray-400 px-2 peer-checked:bg-azul peer-checked:text-white">9:00</div>
+              <div class="border-b border-gray-400 px-2 peer-checked:bg-azulw peer-checked:text-white">9:00</div>
             </label>
             <label for="idom10" class="cursor-pointer">
               <input type="checkbox" name="horarios[7][]" id="idom10" value="10" class="sr-only peer" />
-              <div class="border-b border-gray-400 px-2 peer-checked:bg-azul peer-checked:text-white">10:00</div>
+              <div class="border-b border-gray-400 px-2 peer-checked:bg-azulw peer-checked:text-white">10:00</div>
             </label>
             <label for="idom11" class="cursor-pointer">
               <input type="checkbox" name="horarios[7][]" id="idom11" value="11" class="sr-only peer" />
-              <div class="border-b border-gray-400 px-2 peer-checked:bg-azul peer-checked:text-white">11:00</div>
+              <div class="border-b border-gray-400 px-2 peer-checked:bg-azulw peer-checked:text-white">11:00</div>
             </label>
             <label for="idom12" class="cursor-pointer">
               <input type="checkbox" name="horarios[7][]" id="idom12" value="12" class="sr-only peer" />
-              <div class="border-b border-gray-400 px-2 peer-checked:bg-azul peer-checked:text-white">12:00</div>
+              <div class="border-b border-gray-400 px-2 peer-checked:bg-azulw peer-checked:text-white">12:00</div>
             </label>
             <label for="idom13" class="cursor-pointer">
               <input type="checkbox" name="horarios[7][]" id="idom13" value="13" class="sr-only peer" />
-              <div class="border-b border-gray-400 px-2 peer-checked:bg-azul peer-checked:text-white">13:00</div>
+              <div class="border-b border-gray-400 px-2 peer-checked:bg-azulw peer-checked:text-white">13:00</div>
             </label>
             <label for="idom14" class="cursor-pointer">
               <input type="checkbox" name="horarios[7][]" id="idom14" value="14" class="sr-only peer" />
-              <div class="border-b border-gray-400 px-2 peer-checked:bg-azul peer-checked:text-white">14:00</div>
+              <div class="border-b border-gray-400 px-2 peer-checked:bg-azulw peer-checked:text-white">14:00</div>
             </label>
             <label for="idom15" class="cursor-pointer">
               <input type="checkbox" name="horarios[7][]" id="idom15" value="15" class="sr-only peer" />
-              <div class="border-b border-gray-400 px-2 peer-checked:bg-azul peer-checked:text-white">15:00</div>
+              <div class="border-b border-gray-400 px-2 peer-checked:bg-azulw peer-checked:text-white">15:00</div>
             </label>
             <label for="idom16" class="cursor-pointer">
               <input type="checkbox" name="horarios[7][]" id="idom16" value="16" class="sr-only peer" />
-              <div class="border-b border-gray-400 px-2 peer-checked:bg-azul peer-checked:text-white">16:00</div>
+              <div class="border-b border-gray-400 px-2 peer-checked:bg-azulw peer-checked:text-white">16:00</div>
             </label>
             <label for="idom17" class="cursor-pointer">
               <input type="checkbox" name="horarios[7][]" id="idom17" value="17" class="sr-only peer" />
-              <div class="border-b border-gray-400 px-2 peer-checked:bg-azul peer-checked:text-white">17:00</div>
+              <div class="border-b border-gray-400 px-2 peer-checked:bg-azulw peer-checked:text-white">17:00</div>
             </label>
             <label for="idom18" class="cursor-pointer">
               <input type="checkbox" name="horarios[7][]" id="idom18" value="18" class="sr-only peer" />
-              <div class="border-b border-gray-400 px-2 peer-checked:bg-azul peer-checked:text-white">18:00</div>
+              <div class="border-b border-gray-400 px-2 peer-checked:bg-azulw peer-checked:text-white">18:00</div>
             </label>
             <label for="idom19" class="cursor-pointer">
               <input type="checkbox" name="horarios[7][]" id="idom19" value="19" class="sr-only peer" />
-              <div class="border-b border-gray-400 px-2 peer-checked:bg-azul peer-checked:text-white">19:00</div>
+              <div class="border-b border-gray-400 px-2 peer-checked:bg-azulw peer-checked:text-white">19:00</div>
             </label>
             <label for="idom20" class="cursor-pointer">
               <input type="checkbox" name="horarios[7][]" id="idom20" value="20" class="sr-only peer" />
-              <div class="px-2 peer-checked:bg-azul peer-checked:text-white">20:00</div>
+              <div class="px-2 peer-checked:bg-azulw peer-checked:text-white">20:00</div>
             </label>
           </div>
 
@@ -520,7 +520,7 @@
       </a>
       <p class="text-sm text-right">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut elit tellus, luctus nec ullamcorper mattis, pulvinar dapibus.</p>
       <p class="text-right">
-        <a href="{{ route('register') }}" class="inline-block rounded-lg bg-azul p-3 font-accent text-sm text-gray-100">Estudiante</a>
+        <a href="{{ route('register') }}" class="inline-block rounded-lg bg-azulw p-3 font-accent text-sm text-gray-100">Estudiante</a>
       </p>
     </div>
 

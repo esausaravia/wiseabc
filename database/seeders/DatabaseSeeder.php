@@ -34,12 +34,15 @@ class DatabaseSeeder extends Seeder
      */
     DB::table('attendances')->truncate();
     DB::table('attendance_pconcept')->truncate();
+    DB::table('billing_plans')->truncate();
     DB::table('classrooms')->truncate();
     DB::table('class_horarios')->truncate();
     DB::table('class_student')->truncate();
     DB::table('cursos')->truncate();
     DB::table('payments')->truncate();
     DB::table('payment_concepts')->truncate();
+    DB::table('payouts')->truncate();
+    DB::table('paypalobjs')->truncate();
     DB::table('schedules')->truncate();
     DB::table('teams_infos')->truncate();
     DB::table('usermetas')->truncate();
@@ -55,6 +58,13 @@ class DatabaseSeeder extends Seeder
       'name' => 'Esau Saravia',
       'email' => 'esau@mediaurea.com',
       'password' => bcrypt('dye2159')
+    ]);
+
+    /**
+     * Planes de subscripcion
+     */
+    $this->call([
+      BillingPlansSeeder::class
     ]);
 
     /**
@@ -187,7 +197,6 @@ class DatabaseSeeder extends Seeder
             'nivel'=>$curso->nivel,
             'clase_tipo' => 1,
             'ritmo' => 1,
-            'suscripcion'=>1,
             'timezone' => '-0600'
           ]);
 

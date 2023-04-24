@@ -27,7 +27,7 @@
       </button>
       <div class="text-center">
         <p>Si aun no tienes cuenta, </p>
-        <a href="{{ route('register') }}" class="block rounded-lg bg-azul p-3 font-accent font-medium text-gray-100 text-center">Registrate</a>
+        <a href="{{ route('register') }}" class="block rounded-lg bg-azulw p-3 font-accent font-medium text-gray-100 text-center">Registrate</a>
       </div>
     </form>
   </div>

@@ -1,7 +1,7 @@
 <x-layoutreg container-class="py-12 text-center">
-  <h1 class="text-3xl font-bold text-azul mb-8">Elegir suscripción</h1>
+  <h1 class="text-3xl font-bold text-azul-600 mb-8">Elegir suscripción</h1>
   <div class="tabs-widget overflow-hidden" data-active-class="" >
-    <div class="tabs-wrapper font-accent font-medium text-xl text-azul flex justify-center" role="tablist">
+    <div class="tabs-wrapper font-accent font-medium text-xl text-azul-600 flex justify-center" role="tablist">
       <div id="tab-grp-title" class="tab active cursor-pointer py-10px px-3 border-l border-r border-t border-black/20 dark:border-white/20 text-rojo relative after:content-[''] after:absolute after:left-full after:bottom-0 after:w-[100vw] after:h-0 after:border-t after:border-black/20 after:dark:border-white/20 before:content-[''] before:absolute before:right-full before:bottom-0 before:w-[100vw] before:h-0 before:border-t before:border-black/20 before:dark:border-white/20" data-tab="1" role="tab" aria-controls="tab-grp-content" aria-expanded="true" aria-selected="true"><span class="hidden md:inline">Clases</span> Grupales</div>
 
       <div id="tab-title2" class="tab cursor-pointer py-10px px-3 dark:text-gray-200" data-tab="2" role="tab" aria-controls="tab-content2" aria-expanded="false" aria-selected="false"><span class="hidden md:inline">Clases</span> Individuales</div>
@@ -26,8 +26,10 @@
               <li>Clase grupal de 40 min.</li>
               <li>Grupo de hasta 3 estudiantes</li>
             </ul>
-            <form action="{{ route('student.elegir-suscripcion') }}" method="post" class="mt-7">
-              @csrf <input type="hidden" name="suscripcion" value="1" />
+            <form action="{{ route('student.elegir-subscripcion') }}" method="post" class="mt-7">
+              @csrf
+              <input type="hidden" name="clase_tipo" value="1" />
+              <input type="hidden" name="ritmo" value="1" />
               <button type="submit" class="rounded-lg px-4 py-3 bg-rojo text-white font-accent font-medium ">Continuar</button>
             </form>
           </article>
@@ -48,13 +50,15 @@
               <li>Clase grupal de 40 min.</li>
               <li>Grupo de hasta 3 estudiantes</li>
             </ul>
-            <form action="{{ route('student.elegir-suscripcion') }}" method="post" class="mt-7">
-              @csrf <input type="hidden" name="suscripcion" value="2" />
+            <form action="{{ route('student.elegir-subscripcion') }}" method="post" class="mt-7">
+              @csrf
+              <input type="hidden" name="clase_tipo" value="1" />
+              <input type="hidden" name="ritmo" value="2" />
               <button type="submit" class="rounded-lg px-4 py-3 bg-rojo text-white font-accent font-medium ">Continuar</button>
             </form>
           </article>
 
-          <article class="rounded-2xl shadow-lg py-5 bg-azul text-white dark:bg-white dark:text-gray-700">
+          <article class="rounded-2xl shadow-lg py-5 bg-azulw text-white dark:bg-white dark:text-gray-700">
             <h3 class="text-2xl font-accent font-medium">Intensivo</h3>
             <p class="font-bold text-base">12 clases</p>
             <div class="my-3">
@@ -70,8 +74,10 @@
               <li>Clase grupal de 40 min.</li>
               <li>Grupo de hasta 3 estudiantes</li>
             </ul>
-            <form action="{{ route('student.elegir-suscripcion') }}" method="post" class="mt-7">
-              @csrf <input type="hidden" name="suscripcion" value="3" />
+            <form action="{{ route('student.elegir-subscripcion') }}" method="post" class="mt-7">
+              @csrf
+              <input type="hidden" name="clase_tipo" value="1" />
+              <input type="hidden" name="ritmo" value="3" />
               <button type="submit" class="rounded-lg px-4 py-3 bg-rojo text-white font-accent font-medium ">Continuar</button>
             </form>
           </article>
@@ -92,9 +98,11 @@
               <li>Clase grupal de 40 min.</li>
               <li>Grupo de hasta 3 estudiantes</li>
             </ul>
-            <form action="{{ route('student.elegir-suscripcion') }}" method="post" class="mt-7">
-              @csrf <input type="hidden" name="suscripcion" value="4" />
-              <button type="submit" class="rounded-lg px-4 py-3 bg-azul text-white font-accent font-medium ">Continuar</button>
+            <form action="{{ route('student.elegir-subscripcion') }}" method="post" class="mt-7">
+              @csrf
+              <input type="hidden" name="clase_tipo" value="1" />
+              <input type="hidden" name="ritmo" value="5" />
+              <button type="submit" class="rounded-lg px-4 py-3 bg-azulw text-white font-accent font-medium ">Continuar</button>
             </form>
           </article>
         </div>
@@ -120,8 +128,10 @@
               <li>Un solo estudiante</li>
               <li>1 clase por semana</li>
             </ul>
-            <form action="{{ route('student.elegir-suscripcion') }}" method="post" class="mt-7">
-              @csrf <input type="hidden" name="suscripcion" value="5" />
+            <form action="{{ route('student.elegir-subscripcion') }}" method="post" class="mt-7">
+              @csrf
+              <input type="hidden" name="clase_tipo" value="2" />
+              <input type="hidden" name="ritmo" value="1" />
               <button type="submit" class="rounded-lg px-4 py-3 bg-rojo text-white font-accent font-medium ">Continuar</button>
             </form>
           </article>
@@ -142,13 +152,15 @@
               <li>Un solo estudiante</li>
               <li>2 clases por semana</li>
             </ul>
-            <form action="{{ route('student.elegir-suscripcion') }}" method="post" class="mt-7">
-              @csrf <input type="hidden" name="suscripcion" value="6" />
+            <form action="{{ route('student.elegir-subscripcion') }}" method="post" class="mt-7">
+              @csrf
+              <input type="hidden" name="clase_tipo" value="2" />
+              <input type="hidden" name="ritmo" value="2" />
               <button type="submit" class="rounded-lg px-4 py-3 bg-rojo text-white font-accent font-medium ">Continuar</button>
             </form>
           </article>
 
-          <article class="rounded-2xl shadow-lg py-5 bg-azul text-white dark:bg-white dark:text-gray-700">
+          <article class="rounded-2xl shadow-lg py-5 bg-azulw text-white dark:bg-white dark:text-gray-700">
             <h3 class="text-2xl font-accent font-medium">Intensivo</h3>
             <p class="font-bold text-base">12 clases</p>
             <div class="my-3">
@@ -164,8 +176,10 @@
               <li>Un solo estudiante</li>
               <li>3 clases por semana</li>
             </ul>
-            <form action="{{ route('student.elegir-suscripcion') }}" method="post" class="mt-7">
-              @csrf <input type="hidden" name="suscripcion" value="7" />
+            <form action="{{ route('student.elegir-subscripcion') }}" method="post" class="mt-7">
+              @csrf
+              <input type="hidden" name="clase_tipo" value="2" />
+              <input type="hidden" name="ritmo" value="3" />
               <button type="submit" class="rounded-lg px-4 py-3 bg-rojo text-white font-accent font-medium ">Continuar</button>
             </form>
           </article>
@@ -186,9 +200,11 @@
               <li>Un solo estudiante</li>
               <li>5 clases por semana</li>
             </ul>
-            <form action="{{ route('student.elegir-suscripcion') }}" method="post" class="mt-7">
-              @csrf <input type="hidden" name="suscripcion" value="8" />
-              <button type="submit" class="rounded-lg px-4 py-3 bg-azul text-white font-accent font-medium ">Continuar</button>
+            <form action="{{ route('student.elegir-subscripcion') }}" method="post" class="mt-7">
+              @csrf
+              <input type="hidden" name="clase_tipo" value="2" />
+              <input type="hidden" name="ritmo" value="5" />
+              <button type="submit" class="rounded-lg px-4 py-3 bg-azulw text-white font-accent font-medium ">Continuar</button>
             </form>
           </article>
         </div>

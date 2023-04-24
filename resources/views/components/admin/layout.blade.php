@@ -1,6 +1,7 @@
-@php
-  $user = \Illuminate\Support\Facades\Auth::user();
-@endphp
+@props([
+  'user'=>\Illuminate\Support\Facades\Auth::user(),
+  'body'=>new \Illuminate\View\ComponentSlot()
+])
 <!DOCTYPE html>
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
 <head>
@@ -17,9 +18,9 @@
     window.app.home = '{{ route('home') }}';
   </script>
 </head>
-<body {{ $attributes->class('bg-gray-100 text-gray-600 dark:bg-azul dark:text-gray-200') }}>
-  <header id="AdminHeader" class="fixed top-0 left-0 w-full bg-gray-100 dark:bg-azul shadow-md z-20 flex justify-between items-center">
-    <button class="btn btn-toggle-aside w-12 text-azul dark:text-gray-200 text-center text-[22px] leading-12"><i class="fa-light fa-bars"></i></button>
+<body {{ $body->attributes->class(['bg-gray-100 text-gray-600 dark:bg-azulw dark:text-gray-400', $attributes->get('class')]) }}>
+  <header id="AdminHeader" class="fixed top-0 left-0 w-full bg-gray-100 dark:bg-azulw shadow-md z-20 flex justify-between items-center">
+    <button class="btn btn-toggle-aside w-12 text-azul-600 dark:text-gray-200 text-center text-[22px] leading-12"><i class="fa-light fa-bars"></i></button>
 
     <div class="flex text-sm font-accent font-medium">
       <span class="p-2">Hola {{ !empty($user->fname) ? $user->fname : $user->name }}</span>
@@ -51,9 +52,10 @@
   </aside>
   <div id="AdminMainContainer" class="pt-16 px-3 pb-5 lg:pt-20 xl:pl-[170px]">
     {{ $slot }}
-  </div>
 
-  <x-alert-incontent></x-alert-incontent>
+    <x-colores></x-colores>
+  </div>
+  <x-layout-toast></x-layout-toast>
   @stack('scripts')
 </body>
 </html>

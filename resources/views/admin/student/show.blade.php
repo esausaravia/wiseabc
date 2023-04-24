@@ -3,22 +3,16 @@
 
   <section class="flex flex-wrap">
     <div class="rounded-lg shadow-md p-3 bg-gray-50 mb-5 md:mr-5">
-      <div class="flex">
-        <figure class="mr-4">
-          <img height="96" width="96" class="rounded-full object-contain w-20 h-20 md:w-24 md:h-24 bg-white border-gray-100" alt="{{$student->name}}" src="{{ asset('img/spacer.gif') }}" >
-        </figure>
-        <div>
-          <h3 class="font-medium mb-2">{{$student->name}}</h3>
-          <p class="mb-2">
-            <b class="block -mb-1 font-accent text-xs">e-mail</b>
-            {{$student->email}}
-          </p>
-          <p class="mb-2">
-            <b class="block -mb-1 font-accent text-xs">tel</b>
-            {{$student->tel}}
-          </p>
-        </div>
-      </div>
+
+      <h3 class="font-medium text-xl mb-2">{{$student->name}}</h3>
+      <p class="mb-2">
+        <b class="block -mb-1 font-accent text-xs">e-mail</b>
+        {{$student->email}}
+      </p>
+      <p class="mb-2">
+        <b class="block -mb-1 font-accent text-xs">tel</b>
+        {{$student->tel}}
+      </p>
 
       <div class="flex flex-wrap -mx-2">
         <p class="mb-2 px-2">
@@ -29,11 +23,21 @@
           <b class="block -mb-1 font-accent text-xs">nivel</b>
           {{$student->nivel_label }}
         </p>
+        <p class="mb-2 px-2">
+          <b class="block -mb-1 font-accent text-xs">Ritmo</b>
+          {{ $student->clase_tipo==1 ? 'Grupo' : 'Particular' }}
+          {{ $student->ritmo_label }}
+        </p>
+        <p class="mb-2 px-2">
+          <b class="block -mb-1 font-accent text-xs">nivel</b>
+          {{$student->nivel_label }}
+        </p>
 
         <p class="mb-2 px-2">
           <b class="block -mb-1 font-accent text-xs">registro</b>
           {{$student->created_at->isoFormat('D MMM Y')}}
         </p>
+
         @if (!empty($student->deleted_at))
         <p class="mb-2 px-2 text-rojo">
           <b class="block -mb-1 font-accent text-xs">eliminado</b>
@@ -53,15 +57,11 @@
       </div>
     </div>{{--/card--}}
 
-    @php $suscripcion = $student->suscription() @endphp
-    @if( !empty($suscripcion) )
+    @if( !empty($student->billingplans) && ( $billPlan = $student->billingplans->first() )!==null )
     <section class="rounded-lg shadow-md p-3 bg-gray-50 mb-5 md:mr-5">
-      <h3 class="font-bold font-accent text-xs">Suscripción: {{ $suscripcion->id }}</h3>
-      <p class="mb-2">{{$suscripcion->name}}</p>
-      <p class="text-sm">
-        {{ $suscripcion->tipo==1 ? 'Grupal' : 'Particular' }} | {{ $ritmo_labels[( $suscripcion->ritmo )] }}
-      </p>
-      <p>$@money($suscripcion->precio)</p>
+      <h3 class="font-bold font-accent text-xs">Suscripción:</h3>
+      <p class="mb-2">{{ $billPlan->name }}</p>
+      <p>$@money($billPlan->precio)</p>
     </section>
     @endif
 
@@ -101,7 +101,7 @@
       <h4 class="font-bold text-xs">Horarios</h4>
       <x-user-card-horarios class="flex flex-wrap" :horarios="$student->currentClassroom->getHorarioArray()"></x-user-card-horarios>
 
-    </section>{{--/card-suscripcion--}}
+    </section>{{--/card-currentClassroom--}}
     @endif
   </section>
 

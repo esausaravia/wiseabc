@@ -1,5 +1,58 @@
-<x-layout>
-  @if( !empty($clase) && is_a($clase,'App\Models\Classroom') )
+<x-layout class="student-home">
+
+  <section class="flex -mx-3">
+
+
+
+    <div class="w-full max-w-3xl lg:w-1/2 px-3">
+      <section class="shadow-md mb-8 rounded-xl border-[3px] p-4 border-azul-600 bg-white">
+        <h2 class="text-lg md:text-xl font-medium font-accent text-azul-600">¡Paga tu subscripción ahora!</h2>
+        <p class="my-4">Ahora que tienes profesor y clase asignados, el siguiente paso es acreditar el pago de tu subscripción.</p>
+
+        <div class="">
+          <div id="paypal-button-container-P-5UR330633P879011DMRCWHWY"></div>
+<script src="https://www.paypal.com/sdk/js?client-id=AUnc7UCRYV0e9qHJpt9JHmTPo_u8qzwZmu9xtG48fGB6an783RCa_W2Uo4jiUH1IrtBAy0OF8jLYdwSY&vault=true&intent=subscription" data-sdk-integration-source="button-factory"></script>
+<script>
+  paypal.Buttons({
+      style: {
+          shape: 'pill',
+          color: 'blue',
+          layout: 'vertical',
+          label: 'subscribe'
+      },
+      createSubscription: function(data, actions) {
+        return actions.subscription.create({
+          /* Creates the subscription */
+          plan_id: 'P-5UR330633P879011DMRCWHWY'
+        });
+      },
+      onApprove: function(data, actions) {
+        alert(data.subscriptionID); // You can add optional success message for the subscriber here
+        console.log(data);
+      }
+  }).render('#paypal-button-container-P-5UR330633P879011DMRCWHWY'); // Renders the PayPal button
+</script>
+        </div>
+      </section>
+    </div>
+
+    @if ( empty( $user->email_verified_at ) )
+    <div class="w-full max-w-3xl lg:w-1/2 px-3">
+      <section class="shadow-md mb-8 rounded-xl p-4 bg-amber-100 text-amber-600">
+        <h2 class="text-lg md:text-xl font-medium font-accent mb-4">Verificación de correo electrónico</h2>
+        <p class="text-sm mb-2">
+          Le enviamos un correo a su dirección {{$user->email}} para verificar su cuenta.
+        </p>
+        <p class="text-sm">
+          Por favor, revisé la bandeja de su correo electrónico o su carpeta de correo no deseado (spam).
+        </p>
+      </section>
+    </div>
+    @endif
+
+  </section>
+
+  @if( !empty($clase) && class_basename($clase)=='Classroom')
   <h1 class="mb-4 font-accent text-2xl lg:text-3xl">Próxima clase</h1>
   <section class="shadow-md rounded-xl bg-white dark:bg-white/5 grid grid-cols-1 lg:grid-cols-2">
 

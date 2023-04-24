@@ -15,10 +15,11 @@ return new class extends Migration
     {
         Schema::create('billing_plans', function (Blueprint $table) {
             $table->id();
-            $table->string('name');
             $table->unsignedSmallInteger('tipo')->index();
             $table->unsignedSmallInteger('ritmo')->index();
             $table->unsignedMediumInteger('price');
+            $table->string('status')->default('ACTIVE')->index();
+            $table->string('name');
             $table->timestamps();
             $table->softDeletes();
         });

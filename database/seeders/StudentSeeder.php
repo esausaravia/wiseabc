@@ -18,8 +18,10 @@ class StudentSeeder extends Seeder
         $Edades = collect( config('wiseabc.edad_labels') );
         $Edades = $Edades->slice(0,2);
 
-        $Suscripciones = collect( config('wiseabc.suscripciones') );
-        $arrSuscripciones = [2,5];
+        $arrBillingPlans = [
+            2=>['tipo'=>1,'ritmo'=>2],
+            5=>['tipo'=>2,'ritmo'=>1],
+        ];
 
         $arrHorarios = [10,12];
 
@@ -29,10 +31,7 @@ class StudentSeeder extends Seeder
             $Edades = array(6=>'6 años');
             foreach($Edades AS $edad=>$edad_label) {
 
-                foreach($arrSuscripciones AS $sid) {
-                    $Suscripcion = (object)$Suscripciones->first(function($item, $key) use ($sid){
-                        return $item['id']===$sid;
-                    });
+                foreach($arrBillingPlans AS $sid=>$billPlan) {
 
                     foreach( $arrHorarios AS $___hr ) {
 
@@ -49,9 +48,8 @@ class StudentSeeder extends Seeder
                                 'fname' => implode(' ', $arrName),
                                 'nivel'=>$nivel,
                                 'edad'=>$edad,
-                                'suscripcion'=>$sid,
-                                'clase_tipo' => $Suscripcion->tipo,
-                                'ritmo' => $Suscripcion->ritmo,
+                                'clase_tipo' => $billPlan['tipo'],
+                                'ritmo' => $billPlan['ritmo'],
                                 'timezone' => '-0600'
                             ]);
                             $student->saveHorarios([1=>[$___hr]]);
@@ -59,7 +57,7 @@ class StudentSeeder extends Seeder
 
                         }//END Students
                     }//END arrHorarios
-                }//END arrSuscripciones
+                }//END arrBillingPlans
             }//END Edades
         }//END nivel
 

@@ -7,6 +7,8 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Str;
 
 class Curso extends Model
 {
@@ -80,39 +82,52 @@ class Curso extends Model
 
         $userResult = $usersQuery->get();
 
-        $this->alumnos_sin_clase = \App\Models\User::whereIn('id', $userResult->pluck('user_id')->all())->get();
+        $alumnosSinClase = \App\Models\User::with(['usermetas'=>function($query){
+            $query->where(function($query){
+                return $query->where('metakey','ritmo')->orWhere('metakey','clase_tipo');
+            });
+        }])->whereIn('id', $userResult->pluck('user_id')->all() );
+        //$sql = vsprintf(str_replace(array('?'), array('\'%s\''), $alumnosSinClase->toSql()), $alumnosSinClase->getBindings()); dd($sql);
+        $this->alumnos_sin_clase = $alumnosSinClase->get();
 
         return $this->alumnos_sin_clase;
     }
 
-    public function alumnosSinClaseNums() {
+    public function alumnosSinClaseNums($refresh=false) {
 
-        $arrResult = array('grupal'=>0, 'particular'=>0,'suscripciones'=>[]);
+        if ( !$refresh && isset($this->alumnos_sin_clase_nums) && !empty($this->alumnos_sin_clase_nums) ) {
+            return $this->alumnos_sin_clase_nums;
+        }
+
+        $arrResult = array('grupo_subtotal'=>0, 'particular_subtotal'=>0, 't1'=>array(), 't2'=>[]);
 
         if ( !isset($this->alumnos_sin_clase) || empty($this->alumnos_sin_clase) ) {
             $this->alumnosSinClase();
         }
 
-        foreach( config('wiseabc.suscripcion_labels') AS $sid=>$label ) {
+        foreach( BillingPlan::all() AS $billPlan ) {
             //echo "sid: {$sid} \n";
-            $arrResult['suscripciones'][$sid] = array();
 
-            $_res = $this->alumnos_sin_clase->filter(function($item,$key) use($sid){
-                return $sid==$item->suscripcion;
+            $bpTipo = $billPlan->tipo;
+            $bpRitmo = $billPlan->ritmo;
+
+            $_res = $this->alumnos_sin_clase->filter(function($item, $key) use ($bpTipo, $bpRitmo){
+                return $bpTipo==$item->clase_tipo && $bpRitmo==$item->ritmo;
             });
 
-            $arrResult['suscripciones'][$sid] = $_res->count();
-        }
-
-        foreach( $arrResult['suscripciones'] AS $sid=>$count ) {
-            if ($sid<5) {
-                $arrResult['grupal'] = $arrResult['grupal'] + $count;
+            //if grupal
+            if ( $billPlan->tipo==1 )
+            {
+                $arrResult['t1'][( $billPlan->ritmo )] = $_res->count();
+                $arrResult['grupo_subtotal'] = $arrResult['grupo_subtotal'] + $_res->count();
             }
-            else {
-                $arrResult['particular'] = $arrResult['particular'] + $count;
+            else //individual
+            {
+                $arrResult['t2'][( $billPlan->ritmo )] = $_res->count();
+                $arrResult['particular_subtotal'] = $arrResult['particular_subtotal'] + $_res->count();
             }
         }
-
-        return $arrResult;
+        $this->alumnos_sin_clase_nums = $arrResult;
+        return $this->alumnos_sin_clase_nums;
     }
 }

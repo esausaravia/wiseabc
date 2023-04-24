@@ -2,6 +2,7 @@
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Str;
 
 /*
 |--------------------------------------------------------------------------
@@ -22,8 +23,7 @@ Route::middleware('auth:sanctum')->group(function(){
 
     Route::get('/token/create', function(Request $request){
 
-        $requser = $request->user();
-        if ( empty($requser) ) {
+        if ( empty($request->user()) ) {
             return response()->json([
                 'message'=>'Debe iniciar sesión'
             ],400);
@@ -39,5 +39,20 @@ Route::middleware('auth:sanctum')->group(function(){
 
     Route::get('/user',function(Request $request){
         return $request->user();
+    });
+
+
+});
+
+Route::group(['prefix'=>'admin','middleware' => ['auth:sanctum','admin']], function(){
+    Route::get('/curso/{id}/alumnos-sin-clase', function(Request $request, $id){
+        $curso = App\Models\Curso::find($id);
+
+        return response()->json( $curso->alumnosSinClase() );
+    });
+    Route::get('/curso/{id}/alumnos-sin-clase-nums', function(Request $request, $id){
+        $curso = App\Models\Curso::find($id);
+
+        return response()->json( $curso->alumnosSinClaseNums() );
     });
 });

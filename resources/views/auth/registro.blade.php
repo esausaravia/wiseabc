@@ -170,7 +170,7 @@
         <input type="hidden" name="clases" required value="" >
         <div class="md:flex justify-between font-medium font-accent text-sm">
           <button type="button" class="btn-back shadow-md rounded-full px-5 py-3 bg-white text-gray-600">Regresar</button>
-          <button id="btn-disponibilidad" type="button" class=" shadow-md rounded-full px-5 py-3 bg-azul text-white">Validar disponibilidad</button>
+          <button id="btn-disponibilidad" type="button" class=" shadow-md rounded-full px-5 py-3 bg-azulw text-white">Validar disponibilidad</button>
           <button type="submit" class="shadow-md rounded-full px-5 py-3 bg-rojo text-white">Continuar</button>
         </div>
       </section>
@@ -185,7 +185,7 @@
       </a>
       <p class="text-sm text-right mb-3">Sé parte de nuestro equipo de profesores y Únete a la familia de WiseABC English, regístrate como profesor aquí y ahora.</p>
       <p class="text-right">
-        <a href="{{ route('regprof') }}" class="inline-block rounded-lg bg-azul p-3 font-medium font-accent text-sm text-gray-100">Profesores</a>
+        <a href="{{ route('regprof') }}" class="inline-block rounded-lg bg-azulw p-3 font-medium font-accent text-sm text-gray-100">Profesores</a>
       </p>
     </div>
   </section>

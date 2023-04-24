@@ -19,8 +19,8 @@
     window.app.home = '{{ route('home') }}';
   </script>
 </head>
-<body class="bg-gray-100 text-gray-700 dark:bg-azul dark:text-gray-200 pt-14 md:pt-0">
-  <header id="HeaderMain" class="fixed md:relative top-0 left-0 w-full bg-gray-100 text-gray-700 dark:bg-azul dark:text-gray-200 shadow-md md:shadow-none z-10">
+<body class="bg-gray-100 text-gray-700 dark:bg-azulw dark:text-gray-200 pt-14 md:pt-0">
+  <header id="HeaderMain" class="fixed md:relative top-0 left-0 w-full bg-gray-100 text-gray-700 dark:bg-azulw dark:text-gray-200 shadow-md md:shadow-none z-10">
     <div class="container flex justify-between md:items-center py-[2px] px-3 xl:p-0">
 
       <a href="https://mezcalent.com/wiseabc">
@@ -28,7 +28,7 @@
         <img src="{{asset('img/wiseabc-logo-white.svg')}}" alt="" class="hidden dark:block w-auto h-[52px] md:h-[120px]" />
       </a>
 
-      <button class="btn btn-toggle-mobilemenu md:hidden w-12 text-azul dark:text-gray-200 text-center text-[22px] leading-none"><i class="fa-light fa-bars"></i></button>
+      <button class="btn btn-toggle-mobilemenu md:hidden w-12 text-azul-600 dark:text-gray-200 text-center text-[22px] leading-none"><i class="fa-light fa-bars"></i></button>
 
       <section id="MobileMenu" class="hidden bg-black/30 fixed top-0 right-0 z-20 flex h-[100vh] w-full">
         <div class="backdrop btn-toggle-mobilemenu flex-grow"></div>
@@ -48,7 +48,7 @@
               </span>
             </label>
 
-            <button class="btn btn-toggle-mobilemenu md:hidden w-12 text-azul dark:text-gray-200 text-center text-[22px] leading-12"><i class="fa-light fa-times"></i></button>
+            <button class="btn btn-toggle-mobilemenu md:hidden w-12 text-azul-600 dark:text-gray-200 text-center text-[22px] leading-12"><i class="fa-light fa-times"></i></button>
           </div>
           <nav class="flex-grow flex flex-col font-accent font-medium text-lg">
 
@@ -102,7 +102,7 @@
   <div class="container px-3 xl:px-0 {{ $attributes->get('container-class') }}" style="min-height: calc(100vh - 360px)">
     {{$slot}}
   </div>
-  <footer id="MainFooter" class="bg-azul text-gray-200 dark:bg-gray-900 dark:border-t dark:border-gray-900">
+  <footer id="MainFooter" class="bg-azulw text-gray-200 dark:bg-gray-900 dark:border-t dark:border-gray-900">
     <div class="container md:flex md:justify-between md:items-end py-5">
       <div class="hidden md:block">
         <nav class="border-b-2 border-gray-400 flex text-lg font-accent">
@@ -132,10 +132,12 @@
         </nav>
       </div>
     </div>
+    <x-colores></x-colores>
     <p class="text-center text-xs pb-2">
       &copy; 2022 Todos los derechos reservados
     </p>
   </footer>
+  <x-layout-toast></x-layout-toast>
   @stack('scripts')
 </body>
 </html>
