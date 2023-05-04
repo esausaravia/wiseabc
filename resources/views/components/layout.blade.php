@@ -8,9 +8,9 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>WiseABC</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com" crossorigin>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;700&family=Open+Sans:wght@400;500;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&family=Open+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 
   <link rel="stylesheet" href="{{ mix('css/app.css') }}">
   <script src="{{ mix('js/app.js') }}" defer></script>
@@ -21,7 +21,7 @@
   </script>
 </head>
 <body {{ $body->attributes->class(['bg-gray-100 text-gray-600 dark:bg-azulw dark:text-gray-400', $attributes->get('class')]) }}>
-  <header id="MainHeader" class="fixed top-0 left-0 w-full bg-gray-100 dark:bg-azulw shadow-md z-20 flex justify-between items-center">
+  <header id="MainHeader" class="fixed top-0 left-0 w-full bg-gray-50 dark:bg-azulw shadow-md z-20 flex justify-between items-center">
     <button class="btn btn-toggle-aside w-12 text-azul-600 dark:text-gray-200 text-center text-[22px] leading-12"><i class="fa-light fa-bars"></i></button>
 
     <div class="flex text-sm font-accent font-medium">
@@ -74,8 +74,10 @@
   <div id="MainContainer" class="p-3 pt-16 lg:pt-20 lg:pl-[130px] lg:pr-5 lg:pb-5">
     {{ $slot }}
 
-    <x-colores></x-colores>
   </div>
+  <footer>{{ __('All rights reserved.') }}</footer>
   <x-layout-toast></x-layout-toast>
+
+  @stack('scripts')
 </body>
 </html>

@@ -2,7 +2,9 @@
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\ClassroomController;
 use App\Http\Controllers\StudentController;
+use App\Http\Controllers\SubscriptionController;
 use App\Http\Controllers\TeacherController;
+use App\Http\Controllers\StripeController;
 use Illuminate\Foundation\Auth\EmailVerificationRequest;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
@@ -34,7 +36,8 @@ Route::get('test', function(Request $request){
 	ddd( ob_get_clean() );
 })->name('test');
 
-Route::get('/', function (Request $request) {
+Route::get('/', function (Request $request)
+{
 	$user = $request->user();
 
 	if ($user->user_type===1 ) {
@@ -74,6 +77,14 @@ Route::get('clases/disponibles', [ClassroomController::class, 'disponibles'])->n
 
 Route::resource('clases', ClassroomController::class);
 
+Route::get('/testerror', function(Request $request)
+{
+	$errMsg = "⚠️  Webhook error while parsing basic request.";
+
+	return $request->wantsJson() ? response(['error'=>$errMsg], 400)
+                : back()->withErrors(['message'=>$errMsg ]);
+});
+
 /**
  * Estudante
  */
@@ -81,13 +92,23 @@ Route::group(['prefix'=>'student','as'=>'student.','middleware' => ['auth','stud
 
 	Route::get('home', [StudentController::class, 'home'])->name('home');
 
-	Route::get('elegir-subscripcion', [StudentController::class, 'elegirSubscripcion'])->name('elegir-subscripcion');
+	Route::get('elegir-ritmo', [StudentController::class, 'elegirRitmo'])->name('elegir-ritmo');
 
-	Route::post('elegir-subscripcion', [StudentController::class, 'suscribe'])->name('suscribe');
+	Route::post('elegir-ritmo', [StudentController::class, 'postElegirRitmo'])->name('post-elegir-ritmo');
+
+	//Route::post('subscribe', [StudentController::class, 'subscribe']);
 
 	Route::get('pagos', [StudentController::class, 'pagos'])->name('pagos');
 
 	Route::get('perfil', [StudentController::class, 'perfil'])->name('perfil');
+
+	Route::post('/subscriptions/stripe/create-checkout-session', [StripeController::class, 'subscriptionCheckoutSession'])->name('subscriptions.stripe.create-checkout-session');
+
+	Route::get('/subscriptions/stripe/success', [StripeController::class, 'subscriptionCheckoutSuccess'])->name('subscriptions.stripe.success');
+
+	Route::post('/stripe/create-portal-session', [StripeController::class,'customerPortalSession'])->name('stripe.create-portal-session');
+
+	Route::resource('subscriptions', SubscriptionController::class);
 });
 
 /**
@@ -131,14 +152,12 @@ Route::group(['prefix'=>'admin','as'=>'admin.','middleware' => ['auth','admin']]
 
 	Route::post('student/{student}/assignclass', [\App\Http\Controllers\Admin\StudentController::class, 'assignClassroom2']);
 
-	Route::resource('classroom', \App\Http\Controllers\Admin\ClassroomController::class);
-
-	Route::resource('cursos', \App\Http\Controllers\Admin\CursoController::class);
-
-	Route::resource('pagos', \App\Http\Controllers\Admin\PayoutController::class);
-
-	Route::resource('student', \App\Http\Controllers\Admin\StudentController::class);
-
-	Route::resource('teacher', \App\Http\Controllers\Admin\TeacherController::class);
+	Route::resources([
+		'classroom' => \App\Http\Controllers\Admin\ClassroomController::class,
+		'cursos' => \App\Http\Controllers\Admin\CursoController::class,
+		'pagos' => \App\Http\Controllers\Admin\PayoutController::class,
+		'student' => \App\Http\Controllers\Admin\StudentController::class,
+		'teacher' => \App\Http\Controllers\Admin\TeacherController::class
+	]);
 
 });

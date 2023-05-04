@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Http;
+use Illuminate\Http\Client\RequestException;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 
@@ -11,28 +12,28 @@ class PayPalController extends Controller
 {
     public static $token = null;
 
-    public static function getFileToken(){
-
+    public static function getFileToken()
+    {
         $fileToken = Storage::get('PayPalToken.txt');
 
         if ( empty($fileToken) ) {
-            return null;
+            return false;
         }
 
         $fileToken = json_decode($fileToken);
 
-        if ( empty($fileToken) || !is_object($fileToken) || empty($fileToken->expires_at) ) {
-            return null;
+        if ( !is_object($fileToken) || empty($fileToken->expires_at) ) {
+            return false;
         }
 
         $expires_at = \Carbon\Carbon::parse($fileToken->expires_at);
 
         if ( !is_object($expires_at) ) {
-            return null;
+            return false;
         }
 
         if ( $expires_at->subSeconds(30)->lessThan( now() ) ) {
-            return null;
+            return false;
         }
 
         self::$token = $fileToken;
@@ -40,11 +41,12 @@ class PayPalController extends Controller
     }
 
     /**
-     *
+     * Obtiene el App Access Token
+     * @return Object|false
      */
-    public static function reqBearerToken(){
-        Log::info('PayPalController::reqBearerToken');
-
+    public static function reqBearerToken()
+    {
+        Log::debug(__METHOD__);
         $url = env('PAYPAL_API_BASE_URL').'/v1/oauth2/token';
         $authUser = env('PAYPAL_APP_CLIENT_ID');
         $authSecret = env('PAYPAL_APP_SECRET');
@@ -57,10 +59,29 @@ class PayPalController extends Controller
                 'grant_type' => 'client_credentials'
             ]);
         }
-        catch(\Exception $ex ) {
-            Log::error($ex->__toString());
+        catch(RequestException $ex ) {
+            Log::error(__METHOD__.' Http RequestException:', [
+                'response_stauts' => $ex->response->status(),
+                'response_headers'=>$ex->response->headers(),
+                'response_body'=>$ex->response->body()
+            ]);
             return false;
         }
+        /*
+        $response = Http::withBasicAuth( $authUser , $authSecret)->asForm()->post($url,[
+            'grant_type' => 'client_credentials'
+        ]);
+
+        if ( $response->failed() )
+        {
+            Log::error(__METHOD__.' Http RequestException:', [
+                'response_stauts' => $ex->response->status(),
+                'response_headers' => $ex->response->headers(),
+                'response_body' => $ex->response->body()
+            ]);
+            return false;
+        }
+        */
 
         /**
          * Response example:
@@ -71,21 +92,23 @@ class PayPalController extends Controller
          * "expires_in": 31668,
          * "nonce": "2020-04-03T15:35:36ZaYZlGvEkV4yVSz8g6bAKFoGSEzuy3CQcz3ljhibkOHg"}
          */
-        $filecontent = $response->body();
-        Storage::put('PayPalToken.txt', $filecontent );
+        //$filecontent = $response->body();
 
         self::$token = $response->object();
         self::$token->expires_at = now()->addSeconds( self::$token->expires_in )->format('Y-m-d H:i:s');
+        Storage::put('PayPalToken.txt', json_encode(self::$token) );
 
         return self::$token;
     }
 
 
-    public static function getAccessToken(){
+    public static function getAccessToken()
+    {
 
-        if ( empty(self::$token) || !is_object(self::$token) || empty(self::$token->access_token) )
+        if ( !is_object(self::$token) || empty(self::$token->access_token) )
         {
-            if ( self::getFileToken()==null ) {
+            if( self::getFileToken()===false )
+            {
                 self::reqBearerToken();
             }
         }
@@ -105,8 +128,12 @@ class PayPalController extends Controller
         try {
             $response = Http::throw()->withToken( self::getAccessToken() )->get($url, $queryParams);
         }
-        catch(\Exception $ex ) {
-            Log::error($ex->__toString());
+        catch(RequestException $ex ) {
+            Log::error(__METHOD__.' Http RequestException:', [
+                'response_stauts' => $ex->response->status(),
+                'response_headers'=>$ex->response->headers(),
+                'response_body'=>$ex->response->body()
+            ]);
             return false;
         }
         return $returnBody ? $response->body() : $response->object() ;
@@ -119,8 +146,12 @@ class PayPalController extends Controller
         try {
             $response = Http::throw()->withToken( self::getAccessToken() )->get($url);
         }
-        catch(\Exception $ex ) {
-            Log::error($ex->__toString());
+        catch(RequestException $ex ) {
+            Log::error(__METHOD__.' Http RequestException:', [
+                'response_stauts' => $ex->response->status(),
+                'response_headers'=>$ex->response->headers(),
+                'response_body'=>$ex->response->body()
+            ]);
             return false;
         }
         return $returnBody ? $response->body() : $response->object() ;
@@ -133,11 +164,16 @@ class PayPalController extends Controller
         try {
             $response = Http::throw()->withToken( self::getAccessToken() )->get($url);
         }
-        catch(\Exception $ex ) {
-            Log::error($ex->__toString());
+        catch(RequestException $ex ) {
+            Log::error(__METHOD__.' Http RequestException:', [
+                'response_stauts' => $ex->response->status(),
+                'response_headers'=>$ex->response->headers(),
+                'response_body'=>$ex->response->body()
+            ]);
             return false;
         }
-        return $returnBody ? $response->body() : $response->object() ;
+        $respBody = $response->body();
+        return $returnBody ? $respBody : $response->object() ;
     }
 
     public static function getListSubscriptionTransactions($id, $returnBody=false)
@@ -155,11 +191,202 @@ class PayPalController extends Controller
         try {
             $response = Http::throw()->withToken( self::getAccessToken() )->get($url, $data);
         }
-        catch(\Exception $ex ) {
-            Log::error($ex->__toString());
+        catch(RequestException $ex ) {
+            Log::error(__METHOD__.' Http RequestException:', [
+                'response_stauts' => $ex->response->status(),
+                'response_headers'=>$ex->response->headers(),
+                'response_body'=>$ex->response->body()
+            ]);
             return false;
         }
         return $returnBody ? $response->body() : $response->object() ;
+    }
+
+    public static function getOrderDetails($id, $returnBody=false)
+    {
+        $url = env('PAYPAL_API_BASE_URL')."/v2/checkout/orders/{$id}";
+
+        try {
+            $response = Http::throw()->withToken( self::getAccessToken() )->get($url);
+        }
+        catch(RequestException $ex ) {
+            Log::error(__METHOD__.' Http RequestException:', [
+                'response_stauts' => $ex->response->status(),
+                'response_headers'=>$ex->response->headers(),
+                'response_body'=>$ex->response->body()
+            ]);
+            return false;
+        }
+        return $returnBody ? $response->body() : $response->object() ;
+    }
+
+    public static function updSubscription($id="I-6E1X6ADN8HY6", $returnBody=false)
+    {
+        //I-6E1X6ADN8HY6
+        $url = env('PAYPAL_API_BASE_URL').'/v1/billing/subscriptions/'.$id;
+
+        try {
+            $response = Http::throw()->withToken( self::getAccessToken() )->patch($url, [
+                [
+                    "op"=>"replace",
+                ]
+            ]);
+        }
+        catch(RequestException $ex ) {
+            Log::error(__METHOD__.' Http RequestException:', [
+                'response_stauts' => $ex->response->status(),
+                'response_headers'=>$ex->response->headers(),
+                'response_body'=>$ex->response->body()
+            ]);
+            return false;
+        }
+        $respBody = $response->body();
+        return $returnBody ? $respBody : $response->object() ;
+    }
+
+    public static function getUserToken() {
+
+        $url = env('PAYPAL_API_BASE_URL').'/v1/oauth2/token';
+        $authUser = env('PAYPAL_APP_CLIENT_ID');
+        $authSecret = env('PAYPAL_APP_SECRET');
+
+        /**
+         * asForm = application/x-www-form-urlencoded
+         */
+        try {
+            $response = Http::throw()->withBasicAuth( $authUser , $authSecret)->asForm()->post($url,[
+                'grant_type' => 'client_credentials',
+                'response_type' => 'id_token'
+            ]);
+        }
+        catch(RequestException $ex ) {
+            Log::error(__METHOD__.' Http RequestException:', [
+                'response_stauts' => $ex->response->status(),
+                'response_headers'=>$ex->response->headers(),
+                'response_body'=>$ex->response->body()
+            ]);
+            return false;
+        }
+        $respBody = $response->body();
+        Log::debug(__METHOD__,[
+            'response_status' => $response->status(),
+            'response_headers' => $response->headers(),
+            'response_body' => $respBody
+        ]);
+
+        /**
+         * Response example:
+         * {"scope": "...",
+         * "access_token": "A21AAFEpH4PsADK7qSS7pSRsgzfENtu-Q1ysgEDVDESseMHBYXVJYE8ovjj68elIDy8nF26AwPhfXTIeWAZHSLIsQkSYz9ifg",
+         * "token_type": "Bearer",
+         * "app_id": "APP-80W284485P519543T",
+         * "expires_in": 31668,
+         * "nonce": "2020-04-03T15:35:36ZaYZlGvEkV4yVSz8g6bAKFoGSEzuy3CQcz3ljhibkOHg"}
+         */
+        //$filecontent = $response->body();
+        $return = $response->object();
+
+        return [
+            'token'=> $return->id_token,
+            'expires_in' => $return->expires_in
+        ];
+    }
+
+    public function createStudentOrder(Request $request)
+    {
+        $valid = $request->validate([
+            'source'=>'required'
+        ]);
+        $user = $request->user();
+
+        $url = env('PAYPAL_API_BASE_URL').'/v2/checkout/orders';
+
+        try {
+            $response = Http::throw()->withHeaders([
+                'PayPal-Request-Id' => uuid_create()
+                ])->withToken( self::getAccessToken() )->post($url,[
+                "intent" => "CAPTURE",
+                "application_context" => [
+                    "shipping_preference" => "NO_SHIPPING"
+                ],
+                "purchase_units"=> [[
+                    "description" => "Wise ABC English clases en linea",
+                    "items" => [[
+                        "name" => "Grupo relax",
+                        "quantity" => "4",
+                        "description" => "1 clase por semana",
+                        "category" => "DIGITAL_GOODS",
+                        "unit_amount" => [
+                            "currency_code"=> "USD",
+                            "value"=> "9.00"
+                        ],
+                        "tax" => [
+                            "currency_code"=> "USD",
+                            "value"=> "1.44"
+                        ]
+                    ]],
+                    "amount"=> [
+                        "currency_code"=> "USD",
+                        "value"=> "41.76",
+                        "breakdown" => [
+                            "item_total" => [
+                                "currency_code"=> "USD",
+                                "value"=> "36.00"
+                            ],
+                            "tax_total" => [
+                                "currency_code"=> "USD",
+                                "value"=> "5.76"
+                            ]
+                        ]
+                    ]
+                ]],
+                "payment_source"=> [
+                    "paypal" => [
+                        "attributes"=> [
+                            "vault"=> [
+                                "store_in_vault"=> "ON_SUCCESS",
+                                "usage_type"=> "MERCHANT",
+                                "customer_type"=> "CONSUMER"
+                            ]
+                        ],
+                        "experience_context"=> [
+                            "return_url"=> "https://wiseabcenglish.com//student/home",//https://example.com/cancelUrl?token=30D69261CE576650R
+                            "cancel_url"=> "https://wiseabcenglish.com//student/home" //https://example.com/cancelUrl?token=30D69261CE576650R
+                        ]
+                    ]
+                ]
+            ]);
+        }
+        catch(RequestException $ex ) {
+            Log::error(__METHOD__.' Http RequestException:', [
+                'response_stauts' => $ex->response->status(),
+                'response_headers' => $ex->response->headers(),
+                'response_body' => $ex->response->body()
+            ]);
+            return false;
+        }
+        return $response->object();
+    }
+
+    public function captureStudentOrder(Request $request, $id)
+    {
+        Log::debug(__METHOD__);
+        $user = $request->user();
+
+        $url = env('PAYPAL_API_BASE_URL')."/v2/checkout/orders/{$id}/capture";
+
+        try {
+            $response = Http::throw()->withToken( self::getAccessToken() )->withBody('{}','application/json')->post($url);
+        }
+        catch(RequestException $ex ) {
+            Log::error(__METHOD__.' Http RequestException:', [
+                'response_stauts' => $ex->response->status(),
+                'response_headers' => $ex->response->headers(),
+                'response_body' => $ex->response->body()
+            ]);
+            return false;
+        }
+        return $response->object();
     }
     /**
      * POST with headers
