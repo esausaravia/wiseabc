@@ -2,22 +2,60 @@
 
 namespace App\Models;
 
+use App\Http\Controllers\PayPalController;
+use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Support\Facades\Log;
 
 class Subscription extends Model
 {
     use HasFactory, SoftDeletes;
 
-    protected $fillable = ['user_id','billing_plan_id','status'];
+    protected $fillable = ['user_id','billing_plan_id','status','start','next_billing'];
+
+    protected $casts = [
+      'start'=>'datetime',
+      'next_billing'=>'datetime'
+    ];
 
     /**
      * Relationships
      */
-    public function paypal(){
-        return $this->morphOne(Paypalobj::class, 'paypalable');
+    public function user()
+    {
+      return $this->belongsTo(User::class);
     }
+
+    public function billingPlan()
+    {
+      //                     (BillingPlan::class, 'billing_plan_id', 'id');
+      return $this->belongsTo(BillingPlan::class);
+    }
+
+    public function paypal(){
+        return $this->morphOne(Paypalobj::class, 'paypalable')->ofMany([
+          'created_at'=>'max',
+          'id'=>'max'
+        ], function($query){
+          $query->where('api','like','paypal');
+        });
+    }
+
+    public function stripe(){
+        return $this->morphOne(Paypalobj::class, 'paypalable')->ofMany([
+          'created_at'=>'max',
+          'id'=>'max'
+        ], function($query){
+          $query->where('api','stripe');
+        });
+    }
+
+
+    /**
+     * Methods
+     */
 }
 /*
 Paypal Subscription details:

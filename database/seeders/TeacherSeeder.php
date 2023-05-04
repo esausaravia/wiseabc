@@ -16,7 +16,7 @@ class TeacherSeeder extends Seeder
     {
 
         //horarios lun mie vie 9-10 y 11-12
-        $horarios = [1 => [9, 10, 11, 12], 3 => [9, 10, 11, 12], 5 => [9, 10, 11, 12]];
+        $horarios = [1 => [12, 15, 16, 17], 3 => [12, 15, 16, 17], 5 => [12, 15, 16, 17]];
 
         $teacher = \App\Models\User::create([
             'user_type'=>3,

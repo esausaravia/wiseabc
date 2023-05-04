@@ -102,8 +102,36 @@ class User extends Authenticatable implements MustVerifyEmail
     //old metakey suscripcion
     public function billingplans()
     {
-        return $this->belongsToMany( BillingPlan::class, 'subscriptions', 'user_id', 'billing_plan_id' )->as('subscription')->withTimestamps()->withPivot('status')->orderByPivot('created_at', 'desc');
+        return $this->belongsToMany( BillingPlan::class, 'subscriptions', 'user_id', 'billing_plan_id' )->as('subscription')->withTimestamps()->withPivot('id','status')->orderByPivot('created_at', 'desc');
     }
+
+    public function subscriptions()
+    {
+        return $this->hasMany( Subscription::class )->orderBy('created_at','desc');
+    }
+
+    public function paypal()
+    {
+        return $this->morphOne(Paypalobj::class, 'paypalable')->ofMany([
+            'created_at'=>'max',
+            'id'=>'max'
+        ], function($query){
+            $query->where('api','paypal');
+        });
+
+        return $this->morphOne(Paypalobj::class, 'paypalable');
+    }
+
+    public function stripe()
+    {
+        return $this->morphOne(Paypalobj::class, 'paypalable')->ofMany([
+            'created_at'=>'max',
+            'id'=>'max'
+        ], function($query){
+            $query->where('api','stripe');
+        });
+    }
+
 
     /**
      * Accessors
@@ -378,6 +406,11 @@ class User extends Authenticatable implements MustVerifyEmail
         $fileName = preg_replace('/\-80x80\./', '-'.$size.'x'.$size.'.', $fileName);
 
         return asset( $filePath.'/'.$fileName );
+    }
+
+    public function activeSubscription()
+    {
+        return $this->subscriptions()->with(['paypal','billingPlan'])->where('status','ACTIVE')->first();
     }
 
 

@@ -39,8 +39,8 @@ class FortifyServiceProvider extends ServiceProvider
 
         if ($user->user_type===2 && $user->clase_tipo===null) {
           return $request->wantsJson()
-            ? response()->json(['redirect' => route('student.elegir-subscripcion') ])
-            : redirect()->route('student.elegir-subscripcion');
+            ? response()->json(['redirect' => route('student.elegir-ritmo') ])
+            : redirect()->route('student.elegir-ritmo');
         }
 
         return $request->wantsJson()

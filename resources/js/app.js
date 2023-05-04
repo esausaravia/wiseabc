@@ -17,6 +17,17 @@ window.addEventListener('DOMContentLoaded',function(){
   console.log('app.js DOMContentLoaded');
   const strTimeZone = Intl.DateTimeFormat().resolvedOptions().timeZone;
 
+  let searchParams = new URLSearchParams(window.location.search);
+  if (searchParams.has('session_id')) {
+    const session_id = searchParams.get('session_id')
+
+    document.querySelectorAll('[name="session_id"]').forEach(function(_input){
+      _input.setAttribute('value', session_id)
+      _input.value = session_id
+      console.log('input session_id', _input)
+    })
+  }
+
   if (localStorage.theme === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
     document.documentElement.classList.add('dark')
   } else {
@@ -413,6 +424,18 @@ window.addEventListener('DOMContentLoaded',function(){
     });
 
   })( document.getElementById('frmRegStudent') );
+
+
+  (function(scriptTags){
+    if ( !scriptTags || !scriptTags.length )  return false;
+
+    scriptTags.forEach(function(stag){
+      stag.src = stag.getAttribute('data-src');
+      stag.removeAttribute('data-src');
+    });
+
+  })(document.querySelectorAll('script[data-src]'));
+
 });//DOMContentLoaded END
 
 app.ajxUploadFile = async function(file) {

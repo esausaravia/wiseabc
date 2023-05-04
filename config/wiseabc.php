@@ -27,7 +27,7 @@ return [
   ],
 
   'weekdays' => [
-    '','lun','mar','mie','jue','vie','sab','dom'
+    '','lun.','mar.','mie.','jue.','vie.','sab.','dom.'
   ],
 
   'en_weekdays' => [

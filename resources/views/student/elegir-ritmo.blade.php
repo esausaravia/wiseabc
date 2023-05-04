@@ -26,7 +26,7 @@
               <li>Clase grupal de 40 min.</li>
               <li>Grupo de hasta 3 estudiantes</li>
             </ul>
-            <form action="{{ route('student.elegir-subscripcion') }}" method="post" class="mt-7">
+            <form action="{{ route('student.elegir-ritmo') }}" method="post" class="mt-7">
               @csrf
               <input type="hidden" name="clase_tipo" value="1" />
               <input type="hidden" name="ritmo" value="1" />
@@ -50,7 +50,7 @@
               <li>Clase grupal de 40 min.</li>
               <li>Grupo de hasta 3 estudiantes</li>
             </ul>
-            <form action="{{ route('student.elegir-subscripcion') }}" method="post" class="mt-7">
+            <form action="{{ route('student.elegir-ritmo') }}" method="post" class="mt-7">
               @csrf
               <input type="hidden" name="clase_tipo" value="1" />
               <input type="hidden" name="ritmo" value="2" />
@@ -74,7 +74,7 @@
               <li>Clase grupal de 40 min.</li>
               <li>Grupo de hasta 3 estudiantes</li>
             </ul>
-            <form action="{{ route('student.elegir-subscripcion') }}" method="post" class="mt-7">
+            <form action="{{ route('student.elegir-ritmo') }}" method="post" class="mt-7">
               @csrf
               <input type="hidden" name="clase_tipo" value="1" />
               <input type="hidden" name="ritmo" value="3" />
@@ -98,7 +98,7 @@
               <li>Clase grupal de 40 min.</li>
               <li>Grupo de hasta 3 estudiantes</li>
             </ul>
-            <form action="{{ route('student.elegir-subscripcion') }}" method="post" class="mt-7">
+            <form action="{{ route('student.elegir-ritmo') }}" method="post" class="mt-7">
               @csrf
               <input type="hidden" name="clase_tipo" value="1" />
               <input type="hidden" name="ritmo" value="5" />
@@ -128,7 +128,7 @@
               <li>Un solo estudiante</li>
               <li>1 clase por semana</li>
             </ul>
-            <form action="{{ route('student.elegir-subscripcion') }}" method="post" class="mt-7">
+            <form action="{{ route('student.elegir-ritmo') }}" method="post" class="mt-7">
               @csrf
               <input type="hidden" name="clase_tipo" value="2" />
               <input type="hidden" name="ritmo" value="1" />
@@ -152,7 +152,7 @@
               <li>Un solo estudiante</li>
               <li>2 clases por semana</li>
             </ul>
-            <form action="{{ route('student.elegir-subscripcion') }}" method="post" class="mt-7">
+            <form action="{{ route('student.elegir-ritmo') }}" method="post" class="mt-7">
               @csrf
               <input type="hidden" name="clase_tipo" value="2" />
               <input type="hidden" name="ritmo" value="2" />
@@ -176,7 +176,7 @@
               <li>Un solo estudiante</li>
               <li>3 clases por semana</li>
             </ul>
-            <form action="{{ route('student.elegir-subscripcion') }}" method="post" class="mt-7">
+            <form action="{{ route('student.elegir-ritmo') }}" method="post" class="mt-7">
               @csrf
               <input type="hidden" name="clase_tipo" value="2" />
               <input type="hidden" name="ritmo" value="3" />
@@ -200,7 +200,7 @@
               <li>Un solo estudiante</li>
               <li>5 clases por semana</li>
             </ul>
-            <form action="{{ route('student.elegir-subscripcion') }}" method="post" class="mt-7">
+            <form action="{{ route('student.elegir-ritmo') }}" method="post" class="mt-7">
               @csrf
               <input type="hidden" name="clase_tipo" value="2" />
               <input type="hidden" name="ritmo" value="5" />

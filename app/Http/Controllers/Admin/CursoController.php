@@ -58,9 +58,9 @@ class CursoController extends Controller
         $valid = $request->validate([
             'name' => 'required',
             'status' => 'required',
-            'edad' => 'required:integer',
-            'nivel' => 'required:integer',
-            'duracion' => 'required:integer'
+            'edad' => 'required|integer',
+            'nivel' => 'required|integer',
+            'duracion' => 'required|integer'
         ]);
 
         $curso = Curso::create([
@@ -112,9 +112,9 @@ class CursoController extends Controller
         $valid = $request->validate([
             'name' => 'required',
             'status' => 'required',
-            'edad' => 'required:integer',
-            'nivel' => 'required:integer',
-            'duracion' => 'required:integer'
+            'edad' => 'required|integer',
+            'nivel' => 'required|integer',
+            'duracion' => 'required|integer'
         ]);
 
         $curso->update([

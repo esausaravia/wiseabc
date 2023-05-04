@@ -173,25 +173,51 @@ class Classroom extends Model
         return $this->horarios;
     }
 
-    public function sigFechaHora($offset='') {
+    /**
+     * Calcula la fecha y hora de la siguiente clase con base en los horarios
+     * @param Carbon::class|string $offset
+     * @return Carbon::class
+     */
+    public function sigFechaHora($offset='')
+    {
         $enWeekdays = config('wiseabc.en_weekdays');
 
-        if ( is_object($offset) && class_basename($offset)==='Carbon' ) {
+        if ( is_object($offset) && class_basename($offset)==='Carbon' )
+        {
             $hoy = $offset->setTimezone('-0600');
         }
-        else if ( is_string($offset) ) {
+        else if ( is_string($offset) )
+        {
             $hoy = new Carbon($offset, '-0600');
         }
         else {
             $hoy = now('-0600');
         }
 
+        $this->horarios->transform(function($horario,$hkey) use($enWeekdays, $hoy)
+        {
+            //Horario->dia(lunes) === hoy(lunes)
+            if ( $horario->dia == $hoy->isoFormat('d') )
+            {
+                $nextStr = $horario->hr.':00';
+            }
+            else {
+                $nextStr = $enWeekdays[( $horario->dia )] . ' '.$horario->hr.':00';
+            }
+
+            $horario->next = $hoy->copy()->subMinutes(40)->next( $nextStr );
+
+            return $horario;
+        });
+
+        return $this->horarios->sortBy('next')->first()->next;
+        /*
         $hoy_diasem = (int)$hoy->isoFormat('d');
         $hr_actual = (int)$hoy->isoFormat('H');
         $min_actual = (int)$hoy->isoFormat('m');
 
         foreach($this->horarios AS $horario) {
-
+            //Horario->dia(lunes) === hoy(lunes)
             if ( $horario->dia===$hoy_diasem ) {
 
                 if ( $horario->hr>$hr_actual ) {
@@ -204,10 +230,10 @@ class Classroom extends Model
                 }
             }
 
-
             $horario->next = $hoy->copy()->next( $enWeekdays[($horario->dia)] )->hour($horario->hr)->minute(0);
             //echo print_r($horario->next, true).PHP_EOL;
         }
         return $this->horarios->sortBy('next')->first()->next;
+        */
     }
 }

@@ -27,11 +27,12 @@ class BillingPlansSeeder extends Seeder
             'name'=>'Grupo Relax',
             'tipo'=>1,
             'ritmo'=>1,
-            'price'=>3600
+            'price'=>3600,
+            'status'=>'PAUSED'
         ]);
         $bplan->paypal()->create([
-            'paypal_id'=>'P-5KC55244YB7673813MRCYHTQ',
-            'object'=>'{"id":"P-5KC55244YB7673813MRCYHTQ"}'
+            'api_id'=>'P-9GW89184CA640501YMRGHN5Y',
+            'api_object' => '{}'
         ]);
 
 
@@ -42,8 +43,8 @@ class BillingPlansSeeder extends Seeder
             'price'=>7200
         ]);
         $bplan->paypal()->create([
-            'paypal_id'=>'P-5UR330633P879011DMRCWHWY',
-            'object'=>'{"id":"P-5UR330633P879011DMRCWHWY"}'
+            'api_id'=>'P-5UR330633P879011DMRCWHWY',
+            'api_object' => '{}'
         ]);
 
 
@@ -54,8 +55,8 @@ class BillingPlansSeeder extends Seeder
             'price'=>9600
         ]);
         $bplan->paypal()->create([
-            'paypal_id'=>'P-05S84175CY603144AMRCWJPI',
-            'object'=>'{"id":"P-05S84175CY603144AMRCWJPI"}'
+            'api_id'=>'P-05S84175CY603144AMRCWJPI',
+            'api_object' => '{}'
         ]);
 
 
@@ -66,8 +67,8 @@ class BillingPlansSeeder extends Seeder
             'price'=>14000
         ]);
         $bplan->paypal()->create([
-            'paypal_id'=>'P-123PAYPALID456',
-            'object'=>'{"id":"P-123PAYPALID456"}'
+            'api_id'=>'P-123PAYPALID456',
+            'api_object' => '{}'
         ]);
 
 
@@ -78,8 +79,8 @@ class BillingPlansSeeder extends Seeder
             'price'=>8000
         ]);
         $bplan->paypal()->create([
-            'paypal_id'=>'P-9AA85697EP853700NMRCWMEQ',
-            'object'=>'{"id":"P-9AA85697EP853700NMRCWMEQ"}'
+            'api_id'=>'P-9AA85697EP853700NMRCWMEQ',
+            'api_object' => '{}'
         ]);
 
 
@@ -90,8 +91,8 @@ class BillingPlansSeeder extends Seeder
             'price'=>16000
         ]);
         $bplan->paypal()->create([
-            'paypal_id'=>'P-24X8949020932182VMRCWNIQ',
-            'object'=>'{"id":"P-24X8949020932182VMRCWNIQ"}'
+            'api_id'=>'P-24X8949020932182VMRCWNIQ',
+            'api_object' => '{}'
         ]);
 
 
@@ -102,8 +103,8 @@ class BillingPlansSeeder extends Seeder
             'price'=>21600
         ]);
         $bplan->paypal()->create([
-            'paypal_id'=>'P-15241040HF231240CMRCWODA',
-            'object'=>'{"id":"P-15241040HF231240CMRCWODA"}'
+            'api_id'=>'P-15241040HF231240CMRCWODA',
+            'api_object' => '{}'
         ]);
 
 
@@ -114,8 +115,26 @@ class BillingPlansSeeder extends Seeder
             'price'=>32000
         ]);
         $bplan->paypal()->create([
-            'paypal_id'=>'P-123PAYPALID456',
-            'object'=>'{"id":"P-123PAYPALID456"}'
+            'api_id'=>'P-123PAYPALID456',
+            'api_object' => '{}'
+        ]);
+
+
+        $bplan = \App\Models\BillingPlan::create([
+            'tipo'=>1,
+            'ritmo'=>1,
+            'price' => 300,
+            'status'=>'ACTIVE',
+            'name' => 'GrupoRelax 3 días'
+        ]);
+        $bplan->paypal()->create([
+            'api_id' => 'P-48D69303M08841545MRGYN4I',
+            'api_object' => '{}'
+        ]);
+        $bplan->stripe()->create([
+            'api'=>'stripe',
+            'api_id' => 'price_1N2T7fKYG3qD2MysWHM4Gig9',
+            'api_object' => '{}'
         ]);
     }
 }

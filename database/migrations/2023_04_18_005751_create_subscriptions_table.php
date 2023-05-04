@@ -22,6 +22,8 @@ return new class extends Migration
             $table->foreign('billing_plan_id')->references('id')->on('billing_plans')->onUpdate('cascade')->onDelete('cascade');
 
             $table->string('status')->index();
+            $table->dateTime('start');
+            $table->dateTime('next_billing');
             $table->timestamps();
             $table->softDeletes();
         });

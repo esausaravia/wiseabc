@@ -39,11 +39,14 @@ class DatabaseSeeder extends Seeder
     DB::table('class_horarios')->truncate();
     DB::table('class_student')->truncate();
     DB::table('cursos')->truncate();
+    DB::table('password_resets')->truncate();
     DB::table('payments')->truncate();
     DB::table('payment_concepts')->truncate();
     DB::table('payouts')->truncate();
     DB::table('paypalobjs')->truncate();
+    DB::table('personal_access_tokens')->truncate();
     DB::table('schedules')->truncate();
+    DB::table('subscriptions')->truncate();
     DB::table('teams_infos')->truncate();
     DB::table('usermetas')->truncate();
     DB::table('users')->truncate();
@@ -111,7 +114,7 @@ class DatabaseSeeder extends Seeder
     $profesores = \App\Models\User::where('user_type',3)->take(2)->get();
 
     foreach( $profesores AS $profe ) {
-      $horarios = [1 => [9, 11], 3 => [9, 11], 5 => [9, 11]];
+      $horarios = [1 => [15, 16], 3 => [15, 16], 5 => [15, 16]];
 
       foreach ($cursos AS $curso) {
         $dia = array_key_first($horarios);
@@ -173,10 +176,18 @@ class DatabaseSeeder extends Seeder
          * CREAR SCHEDULE CON HORARIO DE CLASE
          * $fechahora = $classroom->sigFechaHora()
          */
-        echo '    next schedule: '.$classroom->sigFechaHora()->format('Y-m-d H:i O').PHP_EOL;
+        $nextSchedule = $classroom->sigFechaHora();
+        echo '    next schedule: '.$nextSchedule->format('Y-m-d H:i O').PHP_EOL;
         $schedule = Schedule::create([
           'class_id' => $classroom->id,
-          'fechahora' => $classroom->sigFechaHora()->copy()->setTimezone('UTC'),
+          'fechahora' => $nextSchedule->setTimezone('UTC'),
+        ]);
+
+        $nextSchedule = $classroom->sigFechaHora($nextSchedule);
+        echo '    next schedule: '.$nextSchedule->format('Y-m-d H:i O').PHP_EOL;
+        $schedule = Schedule::create([
+          'class_id' => $classroom->id,
+          'fechahora' => $nextSchedule->setTimezone('UTC'),
         ]);
 
         /**

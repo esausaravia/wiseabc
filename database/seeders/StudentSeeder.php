@@ -23,7 +23,7 @@ class StudentSeeder extends Seeder
             5=>['tipo'=>2,'ritmo'=>1],
         ];
 
-        $arrHorarios = [10,12];
+        $arrHorarios = [12,17];
 
         $students_count = 0;
 
