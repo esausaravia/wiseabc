@@ -1,15 +1,16 @@
 @props([
-  'label',
   'name',
+  'label'=>null,
   'type'=>'radio',
   'required'=>false,
   'value'=>array(),
   'options'=>array(),
   'readonly'=>array(),
-  'id',
-  'optcont',
-  'helper'=>'',
-  'fullwidth'=>false
+  'id'=>null,
+  'optcont'=>null,
+  'helper'=>null,
+  'fullwidth'=>false,
+  'center'=>false,
 ])
 @php
   $id = !empty($id) ? $id : 'i'.(preg_replace('/\[.*\]/i', '', $name) );
@@ -23,7 +24,7 @@
     $readonly = array($readonly);
   }
 @endphp
-<div {{ $attributes->class(['fieldset'])}} >
+<div {{ $attributes->class(['fieldset','text-center'=>$center])}} >
 
   @if ( !empty($label) )
 
@@ -37,18 +38,18 @@
   @endif
 
   @unless($fullwidth)
-    <div class="flex">
+    <div class="flex @if($center) justify-center @endif">
   @endunless
 
-    @if ( !empty($optcont) && is_object($optcont) )
+    @if ( is_object($optcont) )
       <div {{$optcont->attributes->class(['options-container'])}} >
     @else
-      <div class="options-container flex flex-wrap rounded-lg shadow-md bg-white text-gray-500 leading-12 xl:leading-8 text-center">
+      <div class="options-container flex flex-wrap shadow-md rounded-lg overflow-clip bg-white text-gray-500 leading-12 xl:leading-8 text-center @if($center) justify-center @endif" >
     @endif
 
       @foreach ( $options as $_ok=>$_option )
         @php $_readonly = in_array($_ok, $readonly) @endphp
-        <div class="border-r border-black/5">
+        <div class="border-r border-black/5 last:border-r-0 @if($fullwidth) flex-grow @endif">
 
           <input class="peer sr-only" type="{{$type}}" name="{{$name}}" id="{{$id.$_ok}}" value="{{$_ok}}" @required($required) @checked( in_array($_ok, $value) )  @if( $_readonly ) readonly aria-readonly="true" onclick="return false;" @endif  />
 

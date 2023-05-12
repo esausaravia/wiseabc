@@ -87,7 +87,7 @@ class Classroom extends Model
     }
 
     public function attendances() {
-        return $this->hasMany(Attendance::class, 'class_id')->orderBy('fechahora');
+        return $this->hasMany(Attendance::class, 'class_id')->orderBy('fechahora','desc');
     }
 
     /**
@@ -235,5 +235,24 @@ class Classroom extends Model
         }
         return $this->horarios->sortBy('next')->first()->next;
         */
+    }//sigFechaHora
+
+    /**
+     * @param Carbon::class|string $offset
+     * @return App\Models\Schedule
+     */
+    public function nextSchedule($offset=null)
+    {
+        if ( !is_object($offset) )
+        {
+            if ( is_string($offset) )
+            {
+                $offset = Carbon::parse($offset);
+            }
+            else {
+                $offset = now();
+            }
+        }
+        return $this->schedules()->where('fechahora', '>', $offset->subMinutes(6) )->first();
     }
 }

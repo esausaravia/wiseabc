@@ -90,7 +90,7 @@ Route::get('/testerror', function(Request $request)
  */
 Route::group(['prefix'=>'student','as'=>'student.','middleware' => ['auth','student']], function(){
 
-	Route::get('home', [StudentController::class, 'home'])->name('home');
+	Route::get('', [StudentController::class, 'home'])->name('home');
 
 	Route::get('elegir-ritmo', [StudentController::class, 'elegirRitmo'])->name('elegir-ritmo');
 
@@ -102,13 +102,17 @@ Route::group(['prefix'=>'student','as'=>'student.','middleware' => ['auth','stud
 
 	Route::get('perfil', [StudentController::class, 'perfil'])->name('perfil');
 
+	Route::match(['PUT','PATCH'], 'perfil', [StudentController::class, 'update'])->name('update');
+
+	Route::resource('subscriptions', SubscriptionController::class);
+
+	/*
 	Route::post('/subscriptions/stripe/create-checkout-session', [StripeController::class, 'subscriptionCheckoutSession'])->name('subscriptions.stripe.create-checkout-session');
 
 	Route::get('/subscriptions/stripe/success', [StripeController::class, 'subscriptionCheckoutSuccess'])->name('subscriptions.stripe.success');
 
 	Route::post('/stripe/create-portal-session', [StripeController::class,'customerPortalSession'])->name('stripe.create-portal-session');
-
-	Route::resource('subscriptions', SubscriptionController::class);
+	*/
 });
 
 /**

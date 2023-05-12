@@ -2,8 +2,11 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Carbon;
+use Illuminate\Support\Facades\Log;
 
 class Schedule extends Model
 {
@@ -26,5 +29,17 @@ class Schedule extends Model
 
     public function teamsInfo(){
         return $this->belongsTo(Teamsinfo::class, 'teams_id', 'id');
+    }
+
+    /**
+     * Accesors
+     */
+    public function endsAt(): Attribute
+    {
+        return Attribute::make(
+            get:function($value,$attributes){
+                return is_object($value) && class_basename($value)=='Carbon' ? $value : $this->fechahora->copy()->addMinutes(40);
+            }
+        );
     }
 }

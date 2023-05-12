@@ -23,10 +23,21 @@ Route::get('/', function(Request $request){
     /*
     $str = json_encode(['id'=>1,'name'=>"exa"]);
     return ($json = json_decode($str) )!==null ? ['json3'=>$json] : ['str'=>$str];
+
+    $student = \App\Models\User::find(7);
+    $classroom = $student->currentClassroom;
+
+    return \Illuminate\Support\Facades\Mail::to( 'esau.saravia@gmail.com' )->send( new \App\Mail\Student\ClaseAsignada($student, $classroom) );
     */
+
+    $student = \App\Models\User::find(7);
+    $classroom = $student->currentClassroom;
+
+    return \Illuminate\Support\Facades\Mail::to( 'esau.saravia@gmail.com' )->send( new \App\Mail\Student\ClaseAsignada($student, $classroom) );
+
     ob_start();
 
-    $ritmo = 2;
+    $ritmo = 3;
     echo "Ritmo: {$ritmo} clases por semana\n";
     echo "  curso de ".(48 / $ritmo)."semanas\n";
 
@@ -77,10 +88,6 @@ Route::get('/cursos', function(Request $request){
     return \App\Models\Curso::all();
 });
 
-Route::group(['prefix'=>'stripe','as'=>'api.stripe.'], function(){
-    Route::any('/webhooks',[StripeController::class, 'webhooks'])->name('webhooks');
-});
-
 Route::middleware('auth:sanctum')->group(function(){
 
     Route::get('/token/create', function(Request $request){
@@ -102,7 +109,6 @@ Route::middleware('auth:sanctum')->group(function(){
     Route::get('/user',function(Request $request){
         return $request->user();
     });
-
 
     Route::get('/paypal/order-details/{id}', [PayPalController::class, 'getOrderDetails']);
 
@@ -148,4 +154,15 @@ Route::group(['prefix'=>'admin','as'=>'api.admin.','middleware' => ['auth:sanctu
 
         return response()->json( $curso->alumnosSinClaseNums() );
     });
+});
+
+/**
+ * Webhooks
+ */
+Route::group(['prefix'=>'stripe','as'=>'api.stripe.'], function(){
+    Route::any('/webhooks',[StripeController::class, 'webhooks'])->name('webhooks');
+});
+
+Route::group(['prefix'=>'webhooks','as'=>'webhooks.'],function(){
+    Route::any('paypal', [PayPalController::class, 'webhooks'])->name('paypal');
 });
