@@ -13,6 +13,8 @@ window.app.toggleDarkTheme = function(){
   document.documentElement.classList.toggle('dark');
 };
 
+window.app.paypalDateRegex = /^[0-9]{4}-(0[1-9]|1[0-2])-(0[1-9]|[1-2][0-9]|3[0-1])[T,t]([0-1][0-9]|2[0-3]):[0-5][0-9]:([0-5][0-9]|60)([.][0-9]+)?([Zz]|[+-][0-9]{2}:[0-9]{2})$/i
+
 window.addEventListener('DOMContentLoaded',function(){
   console.log('app.js DOMContentLoaded');
   const strTimeZone = Intl.DateTimeFormat().resolvedOptions().timeZone;
@@ -72,6 +74,19 @@ window.addEventListener('DOMContentLoaded',function(){
       });
     });
   })(document.querySelectorAll('.alert .btn-close'));
+
+  (function(elements){
+    if (!elements || !elements.forEach)  return false;
+
+    elements.forEach(function(toappend){
+      let target = document.getElementById(toappend.dataset.appendTo)
+
+      if (!target || !target.append)  return false;
+
+      target.appendChild( toappend )
+    })
+
+  })(document.querySelectorAll('[data-append-to]'));
 
   const evTabShow = new Event('tabshow');
   const evTabVisible = new Event('tabvisible');
@@ -151,6 +166,37 @@ window.addEventListener('DOMContentLoaded',function(){
   document.querySelectorAll('.display-timezone').forEach(function(el){
     el.innerText = strTimeZone
   });
+
+
+  /**
+   * FORMS ALL FORMS
+   */
+  const evFormSuccess = new Event('formsuccess');
+  const evFormError = new Event('formerror');
+
+  (function(forms){
+    if (!forms || !forms.forEach)  return false;
+
+    forms.forEach(function(form){
+      /**
+       * disable submit btn
+       */
+      form.addEventListener('submit', function(ev){
+        this.querySelectorAll('[type="submit"]').forEach(function(btn){
+          btn.disabled = true
+          btn.setAttribute('data-submit-disabled','true')
+        });
+      });
+      form.addEventListener('formerror', function(ev){
+        this.querySelectorAll('[data-submit-disabled]').forEach(function(btn){
+          btn.disabled = false
+          btn.removeAttribute('data-submit-disabled')
+        })
+      })
+    })
+
+  })(document.querySelectorAll('form'));
+
   /**
    * Forms Inputs
    */
@@ -189,6 +235,23 @@ window.addEventListener('DOMContentLoaded',function(){
     });
   });
 
+  (function(input){
+    document.querySelectorAll('input[name^="horarios\["]').forEach(function(input){
+      input.addEventListener('change', function(ev){
+
+        const _first = input.form.querySelector('input[name^="horarios"]')
+        const _checked = input.form.querySelector('input[name^="horarios"]:checked')
+        _first.setCustomValidity('')
+
+        if ( !_checked || !_checked.value )
+        {
+          _first.setCustomValidity('Debe elegir al menos un horario disponible')
+          input.reportValidity()
+        }
+      })
+    })
+  })( document.querySelector('input[name^="horarios\["]') || document.querySelector('input[name^="horarios["]') );
+
   /**
    * Append timezone input
    */
@@ -214,44 +277,14 @@ window.addEventListener('DOMContentLoaded',function(){
     });
   })(document.querySelectorAll('form'));
 
-
-  /**
-   * FORMS
-   */
-  const evFormSuccess = new Event('formsuccess');
-  const evFormError = new Event('formerror');
-
-  (function(forms){
-    if (!forms || !forms.forEach)  return false;
-
-    forms.forEach(function(form){
-
-      /**
-       * disable submit btn
-       */
-      form.addEventListener('submit', function(ev){
-        this.querySelectorAll('[type="submit"]').forEach(function(btn){
-          btn.disabled = true
-          btn.setAttribute('data-submit-disabled','true')
-        });
-      });
-      form.addEventListener('formerror', function(ev){
-        this.querySelectorAll('[type="submit"][data-submit-disabled]').forEach(function(btn){
-          btn.disabled = false
-        });
-      });
-    });
-
-  })(document.querySelectorAll('form'));
-
   /**
    * form.ajx-form
    */
   (function(forms){
-    if (!forms || !forms.forEach) return false;
+    if (!forms || !forms.forEach)  return false;
 
     forms.forEach( function(form){
-      if ( !form || !form.action ) return false;
+      if ( !form || !form.action )  return false;
 
       form.addEventListener('submit', function(ev) {
         if (ev && ev.preventDefault) ev.preventDefault();
@@ -263,7 +296,7 @@ window.addEventListener('DOMContentLoaded',function(){
 
         axios({
           url:form.action,
-          method: form.method ? form.method : 'get',
+          method: form.method || 'get',
           data: new FormData(form)
         })
         .then(function(resp){
@@ -286,14 +319,10 @@ window.addEventListener('DOMContentLoaded',function(){
         .catch(function(resp){
           console.log('ajx-form catch', resp);
 
-          form.querySelectorAll('[type="submit"]').forEach(function(btn){
-            btn.disabled = false;
-          });
-
           let resp2 = resp.response || null,
-            rd = resp2 && resp2.data ? resp2.data : null,
-            rerr = rd && rd.errors ? rd.errors: null,
-            rmsg = rd && rd.message ? rd.message : null,
+            respData = resp2 && resp2.data ? resp2.data : null,
+            rerr = respData && respData.errors ? respData.errors: null,
+            rmsg = respData && respData.message ? respData.message : null,
             errel2 = errel && errel.querySelector ? errel.querySelector(".alert-msg") : null;
 
           rmsg && errel2 ? (errel2.innerText = rmsg, errel.classList.remove('hidden') )
@@ -302,8 +331,9 @@ window.addEventListener('DOMContentLoaded',function(){
                 : null;
 
           if (rerr) {
+            console.log('axios.response.data.errors', rerr);
             for(let _key in rerr) {
-              console.log('resp.response.data.errors', _key, rerr[_key]);
+              //console.log('resp.response.data.errors', _key, rerr[_key]);
             }
           }
         });
@@ -312,8 +342,11 @@ window.addEventListener('DOMContentLoaded',function(){
     });
   })(document.querySelectorAll('form.ajx-form'));
 
+  /**
+   * Stepped Forms
+   */
   (function(forms){
-    if (!forms || !forms.forEach) return false;
+    if (!forms || !forms.forEach)  return false;
 
     forms.forEach(function(form){
       let c = form.querySelector('.form-step:not(.hidden)');

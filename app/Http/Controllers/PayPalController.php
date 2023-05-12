@@ -244,7 +244,8 @@ class PayPalController extends Controller
         return $returnBody ? $respBody : $response->object() ;
     }
 
-    public static function getUserToken() {
+    public static function getUserToken()
+    {
 
         $url = env('PAYPAL_API_BASE_URL').'/v1/oauth2/token';
         $authUser = env('PAYPAL_APP_CLIENT_ID');
@@ -350,8 +351,8 @@ class PayPalController extends Controller
                             ]
                         ],
                         "experience_context"=> [
-                            "return_url"=> "https://wiseabcenglish.com//student/home",//https://example.com/cancelUrl?token=30D69261CE576650R
-                            "cancel_url"=> "https://wiseabcenglish.com//student/home" //https://example.com/cancelUrl?token=30D69261CE576650R
+                            "return_url"=> "https://wiseabcenglish.com/student", //https://example.com/cancelUrl?token=30D69261CE576650R
+                            "cancel_url"=> "https://wiseabcenglish.com/student" //https://example.com/cancelUrl?token=30D69261CE576650R
                         ]
                     ]
                 ]

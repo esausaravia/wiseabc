@@ -1,158 +1,264 @@
-<x-layout class="student-home text-lg">
+<x-layout class="student-home text-lg ">
 @push('scripts')
 <script defer src="{{ asset('./js/students.js') }}"></script>
 @endpush
 
-  <section class="flex -mx-3">
+  <div class="flex flex-wrap -mx-2 md:-mx-3">
+
     @if ( empty( $user->email_verified_at ) )
-    <div class="w-full max-w-3xl lg:w-1/2 px-3">
-      <section class="shadow-md mb-8 rounded-xl p-4 bg-amber-100 text-amber-600">
-        <h2 class=" md:text-xl font-medium font-accent mb-4">Verificación de correo electrónico</h2>
-        <p class="mb-2">
+    <div class="w-full max-w-3xl lg:w-1/2 px-3 mb-8">
+      <section class="shadow-md rounded-xl p-4 bg-amber-100 text-amber-600">
+        <h2 class=" md:text-xl font-medium font-accent mb-4">Verificación de correo electrónico pendiente</h2>
+        <p class="mb-2 text-gray-700">
           Le enviamos un correo a su dirección {{$user->email}} para verificar su cuenta.
         </p>
-        <p class="">
+        <p class="text-base text-gray-500">
           Por favor, revisé la bandeja de su correo electrónico o su carpeta de correo no deseado (spam).
         </p>
       </section>
     </div>
     @endif {{--/email_verified_at --}}
-  </section>
 
-  @if( is_object($classroom) )
-    <section class="mb-8 shadow-md rounded-xl overflow-hidden md:grid md:grid-cols-2 xl:grid-cols-4 ">
-      <div class="bg-green-100 text-green-800 p-3 flex">
-        <figure class="text-5xl mr-3 flex items-center justify-center text-green-700">
-          <i class="fa-light fa-person-chalkboard"></i>
-        </figure>
-        <div>
-          <strong class="block text-sm">Curso:</strong>
-          <h4>{{$classroom->curso->name}}</h4>
-          <strong class="block text-sm">Teacher:</strong>
-          <h4>{{$classroom->teacher->name}}</h4>
+    @if( is_object($classroom) )
+    <div class="w-full px-3 mb-8 ">
+      <section class="shadow-md rounded-xl overflow-hidden md:grid md:grid-cols-2 xl:grid-cols-4 ">
+        <div class="bg-green-100 text-green-800 p-3 flex">
+          <figure class="text-5xl mr-3 flex items-center justify-center text-green-700">
+            <i class="fa-light fa-person-chalkboard"></i>
+          </figure>
+          <div>
+            <strong class="block text-sm">Curso:</strong>
+            <h4>{{$classroom->curso->name}}</h4>
+            <strong class="block text-sm">Teacher:</strong>
+            <h4>{{$classroom->teacher->name}}</h4>
+          </div>
         </div>
-      </div>
-      <div class="flex p-3 bg-yellow-100 text-amber-800">
-        <figure class="text-5xl mr-3 flex items-center justify-center text-amber-600">
-          <i class="fa-light fa-calendars"></i>
-        </figure>
-        <div>
+        <div class="flex p-3 bg-yellow-100 text-amber-800">
+          <figure class="text-5xl mr-3 flex items-center justify-center text-amber-600">
+            <i class="fa-light fa-calendars"></i>
+          </figure>
+          <div>
 
-          <ul class="">
-            <li class="mr-2"><strong>Inicio</strong>: {{ $classroom->start->isoFormat('D MMM Y') }} </li>
-            <li class="mr-2"><strong>Fin</strong>: {{ $classroom->ends_at->isoFormat('D MMM Y') }} </li>
-            <!-- <li class="mr-2">( {{ $classroom->endsInWeeks() }} sem. )</li> -->
-          </ul>
+            <ul class="">
+              <li class="mr-2"><strong>Inicio</strong>: {{ $classroom->start->isoFormat('D MMM Y') }} </li>
+              <li class="mr-2"><strong>Fin</strong>: {{ $classroom->ends_at->isoFormat('D MMM Y') }} </li>
+              <!-- <li class="mr-2">( {{ $classroom->endsInWeeks() }} sem. )</li> -->
+            </ul>
 
-          <ul class="flex flex-wrap">
-            @foreach ( $classroom->getHorarioArray() as $dia=>$arrHr )
-            <li class="mr-2">
-              <strong class="capitalize">{{ !empty($weekdays[( $dia )]) ? $weekdays[( $dia )] : $dia }}</strong>:
-              @foreach ($arrHr as $hr )
-                {{$hr}}:00,
+            <ul class="flex flex-wrap">
+              @foreach ( $classroom->getHorarioArray() as $dia=>$arrHr )
+              <li class="mr-2">
+                <strong class="capitalize">{{ !empty($weekdays[( $dia )]) ? $weekdays[( $dia )] : $dia }}</strong>:
+                @foreach ($arrHr as $hr )
+                  {{$hr}}:00,
+                @endforeach
+              </li>
               @endforeach
-            </li>
-            @endforeach
+            </ul>
+          </div>
+        </div>
+        <div class="flex items-center p-3 bg-violet-200 text-violet-800">
+
+          <figure class="text-5xl mr-3 flex items-center justify-center">
+            @if ($classroom->tipo==1)
+            <i class="fa-light fa-screen-users"></i>
+            @else
+            <i class="fa-light fa-screen-users"></i>
+            @endif
+          </figure>
+
+          <div>
+            <p class="font-bold text-sm">Tipo:</p>
+            <p class="">Clase {{$classroom->tipoLabel}}</p>
+          </div>
+        </div>
+        <div class="p-3 bg-blue-200 text-center">
+          <p class="font-bold text-sm">Ritmo:</p>
+          <p class="mb-3">{{$classroom->ritmoLabel}}</p>
+          <ul class="flex justify-around">
+            <li class="rounded-full border-4 h-5 w-5 border-azul-600"></li>
+            @switch($classroom->ritmo)
+              @case(1)
+              <li class="rounded-full border-4 h-5 w-5 border-azul-600"></li>
+              <li class="rounded-full border-4 h-5 w-5 border-azul-600 bg-azul-600"></li>
+              <li class="rounded-full border-4 h-5 w-5 border-azul-600"></li>
+                @break
+
+              @case(2)
+              <li class="rounded-full border-4 h-5 w-5 border-azul-600 bg-azul-600"></li>
+              <li class="rounded-full border-4 h-5 w-5 border-azul-600"></li>
+              <li class="rounded-full border-4 h-5 w-5 border-azul-600 bg-azul-600"></li>
+
+                @break
+
+              @case(3)
+              <li class="rounded-full border-4 h-5 w-5 border-azul-600 bg-azul-600"></li>
+              <li class="rounded-full border-4 h-5 w-5 border-azul-600 bg-azul-600"></li>
+              <li class="rounded-full border-4 h-5 w-5 border-azul-600 bg-azul-600"></li>
+
+                @break
+
+              @case(5)
+              <li class="rounded-full border-4 h-5 w-5 border-azul-600 bg-azul-600"></li>
+              <li class="rounded-full border-4 h-5 w-5 border-azul-600 bg-azul-600"></li>
+              <li class="rounded-full border-4 h-5 w-5 border-azul-600 bg-azul-600"></li>
+              <li class="rounded-full border-4 h-5 w-5 border-azul-600 bg-azul-600"></li>
+              <li class="rounded-full border-4 h-5 w-5 border-azul-600 bg-azul-600"></li>
+
+                @break
+
+              @default
+
+            @endswitch
+            <li class="rounded-full border-4 h-5 w-5 border-azul-600"></li>
           </ul>
         </div>
-      </div>
-      <div class="flex items-center p-3 bg-violet-200 text-violet-800">
+      </section>
+    </div>
+    @else {{-- SIN CLASE --}}
+    <h2 class="w-full my-8 px-3 text-xl lg:text-2xl font-accent font-semibold ">Aun no tiene una clase asignada.</h2>
+    <div class="w-full max-w-3xl lg:w-1/2 px-3 mb-8">
+      <section id="divSinClassroom" class="shadow-md rounded-xl overflow-clip bg-gray-50 dark:bg-white/10 p-4">
+        <p class="mb-5">Nuestro personal evaluará su perfil de estudiante para asignar un profesor y una clase con base en las opciones que eligió durante su registro. Mismas que puede modificar antes de tener su clase asignada, con el formulario a continuación:</p>
 
-        <figure class="text-5xl mr-3 flex items-center justify-center">
-          @if ($classroom->tipo==1)
-          <i class="fa-light fa-screen-users"></i>
-          @else
-          <i class="fa-light fa-screen-users"></i>
+        <form action="{{ route('student.update') }}" method="POST" class=" text-center">
+          @csrf
+          @method('PATCH')
+
+          <x-forms.option-group name="edad" label="Edad" :options="config('wiseabc.edad_labels')" :value="$user->edad" class="mb-5" center></x-forms.option-group>
+
+          <h4 class="font-accent font-semibold">Nivel de inglés</h4>
+          <div class="mb-5 grid grid-cols-1 gap-4 md:grid-cols-3">
+            <x-forms.option-group name="nivel" label="Principiante" :options="['1'=>'1','2'=>'2','3'=>'3']" :fullwidth="true" :value="$user->nivel" class=""></x-forms.option-group>
+            <x-forms.option-group name="nivel" label="Intermedio" :options="[4=>4,5=>5,6=>6]" :fullwidth="true" :value="$user->nivel" class=""></x-forms.option-group>
+            <x-forms.option-group name="nivel" label="Avanzado" :options="[7=>7,8=>8,9=>9]" :fullwidth="true" :value="$user->nivel" class=""></x-forms.option-group>
+          </div>
+
+          <x-forms.option-group class="mb-5" label="Disponibilidad de horarios" type="checkbox" name="horarios[1]" :options="config('wiseabc.horarios_labels')" :value="$user->getHorarioArray(1)" center>
+            <x-slot:optcont class="rounded-lg shadow-md grid grid-cols-4 md:grid-cols-8 bg-white text-gray-500 leading-12 xl:leading-8"></x-slot>
+          </x-option-group>
+
+          <div class="mb-5 text-left">
+            <div>
+              <label class="text-base font-accent">{{ __('Tipo de clase') }}:</label>
+              <span class="font-semibold text-rojo" >{{ __( config('wiseabc.clase_tipo_labels.'.$user->clase_tipo) ) }}</span>
+            </div>
+            <div>
+              <label class="text-base font-accent">{{ __('Ritmo') }}:</label>
+              <span class="font-semibold text-rojo" >{{ __( config('wiseabc.ritmo_labels.'.$user->ritmo) ) }}</span>
+              <span>({{$user->ritmo}} clases por semana)</span>
+            </div>
+            <div class="text-base">Para modificar el tipo de clase y/o ritmo deberá elegir otro tipo de subscripción en la siguiente sección.</div>
+          </div>
+          <div class="flex justify-around font-accent font-medium leading-12 xl:leading-8">
+            <button type="submit" class="btn shadow-md rounded-full px-4 bg-rojo text-white ">Guardar</button>
+          </div>
+        </form>
+      </section>
+    </div>
+    @endif {{-- endif clase --}}
+
+    @if ( is_object($subscripcion) )
+    <div class="w-full max-w-3xl lg:w-2/3 xl:w-1/2 px-3 mb-8">
+
+      <section class="shadow-md rounded-xl overflow-clip bg-gray-50 dark:bg-white/5" data-subscription-id="{{ $subscripcion->id }}" >
+        <div class="bg-blue-100 p-3">
+          <h4 class="mb-5 font-accent font-semibold text-2xl ">Subscripción</h4>
+
+          <div class="my-1 -mx-3 py-1 md:flex md:flex-wrap">
+            <div class="px-3 border-b md:border-b-0 md:border-r border-r-black/10">
+              <span class="text-sm leading-7">ID Subscripción:</span>
+
+              @if ( !empty($subscripcion->paypal) )
+              <span class="font-semibold">{{ $subscripcion->paypal->api_id }}</span>
+              @elseif( !empty($subscripcion->stripe) )
+              <span class="font-semibold">{{ $subscripcion->stripe->api_id }}</span>
+              @endif
+
+            </div>
+            <div class="px-3">
+              <span class="text-sm leading-7">Estatus:</span>
+              <span class="font-bold text-green-600">{{ __($subscripcion->status.'a') }}</span>
+            </div>
+          </div>
+
+          <div class="my-1 py-1 border-t border-black/10 flex items-center justify-center bg-gray-50 ">
+            <span class="mr-2 text-sm leading-7">Siguiente pago:</span>
+            <span class="font-semibold">{{ $subscripcion->next_billing->setTimezone('-0600')->locale('es')->isoFormat('MMMM DD, Y') }}</span>
+          </div>
+        </div>{{--/bg-blue --}}
+
+        <div class="card-body px-3">
+          <div class="flex my-1 py-1 border-b border-black/10">
+            <span class="w-1/3 text-sm leading-7">Plataforma:</span>
+            <span class="w-2/3 whitespace-nowrap">{{ !empty($subscripcion->paypal) ? 'PayPal' : 'Stripe' }}</span>
+          </div>
+
+          @if ( !empty($subscripcion->paypal) )
+          <div class="flex my-1 py-1 border-b border-black/10">
+            <span class="w-1/3 text-sm leading-7">PayPal Account:</span>
+            <span class="w-2/3 whitespace-nowrap">{{ $subscripcion->paypal->api_object->subscriber->email_address }}</span>
+          </div>
           @endif
-        </figure>
 
-        <div>
-          <p class="font-bold text-sm">Tipo:</p>
-          <p class="">Clase {{$classroom->tipoLabel}}</p>
+          <div class="flex my-1 py-1 border-b border-black/10">
+            <span class="w-1/3 text-sm leading-7">Inicio:</span>
+            <span class="w-2/3">{{ $subscripcion->start->setTimezone('-0600')->locale('es')->isoFormat('MMMM DD, Y') }}</span>
+          </div>
+
+          <div class="flex my-1 py-1 border-b border-black/10">
+            <span class="w-1/3 text-sm leading-7">Ciclo:</span>
+            <span class="w-2/3">cada 4 semanas</span>
+          </div>
+
         </div>
-      </div>
-      <div class="p-3 bg-blue-200 text-center">
-        <p class="font-bold text-sm">Ritmo:</p>
-        <p class="mb-3">{{$classroom->ritmoLabel}}</p>
-        <ul class="flex justify-around">
-          <li class="rounded-full border-4 h-5 w-5 border-azul-600"></li>
-          @switch($classroom->ritmo)
-            @case(1)
-            <li class="rounded-full border-4 h-5 w-5 border-azul-600"></li>
-            <li class="rounded-full border-4 h-5 w-5 border-azul-600 bg-azul-600"></li>
-            <li class="rounded-full border-4 h-5 w-5 border-azul-600"></li>
-              @break
+      </section>
+    </div>
 
-            @case(2)
-            <li class="rounded-full border-4 h-5 w-5 border-azul-600 bg-azul-600"></li>
-            <li class="rounded-full border-4 h-5 w-5 border-azul-600"></li>
-            <li class="rounded-full border-4 h-5 w-5 border-azul-600 bg-azul-600"></li>
-
-              @break
-
-            @case(3)
-            <li class="rounded-full border-4 h-5 w-5 border-azul-600 bg-azul-600"></li>
-            <li class="rounded-full border-4 h-5 w-5 border-azul-600 bg-azul-600"></li>
-            <li class="rounded-full border-4 h-5 w-5 border-azul-600 bg-azul-600"></li>
-
-              @break
-
-            @case(5)
-            <li class="rounded-full border-4 h-5 w-5 border-azul-600 bg-azul-600"></li>
-            <li class="rounded-full border-4 h-5 w-5 border-azul-600 bg-azul-600"></li>
-            <li class="rounded-full border-4 h-5 w-5 border-azul-600 bg-azul-600"></li>
-            <li class="rounded-full border-4 h-5 w-5 border-azul-600 bg-azul-600"></li>
-            <li class="rounded-full border-4 h-5 w-5 border-azul-600 bg-azul-600"></li>
-
-              @break
-
-            @default
-
-          @endswitch
-          <li class="rounded-full border-4 h-5 w-5 border-azul-600"></li>
-        </ul>
-      </div>
-    </section>
-
-    @if( !is_object($subscripcion) && is_object($billPlan) )
-      <div class="w-full max-w-3xl lg:w-2/3 xl:w-1/2 mb-8">
-        <section class="shadow-md mb-8 rounded-xl border-[3px] p-4 border-azul-600 bg-white">
-          <h2 class=" md:text-xl font-medium font-accent text-azul-600">¡Paga tu subscripción ahora!</h2>
-          <p class="my-4">Ahora que tienes profesor y clase asignados, el siguiente paso es acreditar el pago de tu subscripción.</p>
-
-          <div class="md:flex md:-mx-3">
-            <div class="md:w-1/2 md:px-3 text-center">
-              <h3 class="mb-3 text-2xl font-accent font-medium">{{ $billPlan->name }}</h3>
-              {{--<p class="font-bold text-base">{{ ($billPlan->ritmo *4) }} clases</p> --}}
-              <div class="flex items-top justify-center">
-                <span class="font-bold">$</span>
-                <span class="font-accent font-bold text-5xl">{{ $billPlan->price/100 }}</span>
-              </div>
-              <p>cada 4 semanas</p>
+    @elseif( is_object($billPlan) )
+    <div class="w-full max-w-3xl lg:w-2/3 xl:w-1/2 px-3 mb-8">
+      <section class="shadow-md mb-8 rounded-xl border-[3px] p-4 border-azul-600 bg-white">
+        <h3 class="mb-5 text-center text-xl md:text-2xl font-semibold font-accent text-azul-600">¡Paga tu subscripción ahora!</h3>
+        @empty($classroom)
+        <p class="my-4">Activa tu subscripción y recibirás el cargo cuando comiencen las clases.</p>
+        @else
+        <p class="my-4">Ahora que tienes profesor y clase asignados, el siguiente paso es acreditar el pago de tu subscripción.</p>
+        @endempty
+        <div class="md:flex md:-mx-3">
+          <div class="md:w-1/2 md:px-3 text-center">
+            <h3 class="mb-2 text-xl font-accent font-medium">{{ $billPlan->name }}</h3>
+            {{--<p class="font-bold text-base">{{ ($billPlan->ritmo *4) }} clases</p> --}}
+            <div class="flex items-top justify-center">
+              <span class="font-bold">$</span>
+              <span class="font-accent font-bold text-5xl">{{ $billPlan->price/100 }}</span>
             </div>
-            <div class="md:w-1/2 md:px-3">
-              <ul class="mx-5 pl-5 list-disc text-left text-base">
-                <li class="">$9 usd por clase</li>
-                <li>1 clase por semana</li>
-                <li>Clase grupal de 40 min.</li>
-                <li>Grupo de hasta 3 estudiantes</li>
-              </ul>
-            </div>
+            <p>cada 4 semanas</p>
           </div>
-
-
-          <div id="paypal-subscription-button-container" class="paypal-subscription-button-container max-w-sm my-5 mx-auto text-center" data-billing-plan-id="{{ $billPlan->id }}" data-billing-plan-api-id="{{ $billPlan->paypal->api_id }}" >
-            <button class="btn-load leading-8 px-3 bg-azul-700 text-white" type="button" onclick="loadPaypalSDKforSubscription()">Cargar PayPal Subscriptions</button>
+          <div class="md:w-1/2 md:px-3">
+            <ul class="mx-5 pl-5 list-disc text-left text-base">
+              <li class="">$9 usd por clase</li>
+              <li>1 clase por semana</li>
+              <li>Clase grupal de 40 min.</li>
+              <li>Grupo de hasta 3 estudiantes</li>
+            </ul>
           </div>
+        </div>
 
-          <form id="frmCreateCheckoutSession" action="{{ route('student.subscriptions.stripe.create-checkout-session') }}" method="POST" class="max-w-sm mx-auto text-center">
-            @csrf
-            <input type="hidden" name="billing_plan_id" value="{{ $billPlan->id }}" />
-            <button type="submit" class="rounded-full px-3 leading-12 font-accent bg-azul-600 text-white">Stripe</button>
-          </form>
+        <div class="paypal paypal-container max-w-sm my-5 mx-auto loading" data-paypal-plan-id="{{ $billPlan->paypal->api_id }}" data-billing-plan-id="{{ $billPlan->id }}" data-quantity="{{ $paypalSubscriptionQty }}" data-start="{{ $paypalSubscriptionStartDate }}" >
+        </div>
+        {{--STRIPE CHECKOUT
+        <form id="frmCreateCheckoutSession" action="{{ route('student.subscriptions.stripe.create-checkout-session') }}" method="POST" class="max-w-sm my-8 mx-auto text-center">
+          @csrf
+          <input type="hidden" name="billing_plan_id" value="{{ $billPlan->id }}" />
+          <button type="submit" class="rounded-full px-3 leading-12 font-accent bg-azul-600 text-white">Stripe</button>
+        </form>
+        --}}
+        <div class="text-center">
+          <a href="{{ route('student.elegir-ritmo') }}" class="btn rounded-full border-2 py-2 px-4 leading-7 font-accent font-medium text-base text-rojo border-rojo">{{__('Cambiar subscripción')}}</a>
+        </div>
 
-        </section>
-      </div>
+      </section>
+    </div>
     @endif{{--/falta-pago --}}
 
     @if( !empty($nextSchedule) && is_object($nextSchedule) )
@@ -184,69 +290,6 @@
     </section>
     @endif {{--/nextSchedule--}}
 
-  @else {{-- SIN CLASE --}}
-  <h1 class="text-2xl lg:text-3xl font-accent">
-    Aun no tiene una clase asignada.
-  </h1>
-  @endif {{-- endif clase --}}
-
-  @if ( is_object($subscripcion) )
-  <section class="flex">
-    <div data-subscription-id="{{ $subscripcion->id }}" class="shadow-md rounded-xl overflow-clip bg-gray-50 dark:bg-white/5">
-      <div class="bg-blue-100 p-3">
-        <h4 class="mb-5 font-accent font-semibold text-2xl ">Subscripción</h4>
-
-        <div class="my-1 -mx-3 py-1 md:flex md:flex-wrap">
-          <div class="px-3 border-b md:border-b-0 md:border-r border-r-black/10">
-            <span class="text-sm leading-7">ID Subscripción:</span>
-
-            @if ( !empty($subscripcion->paypal) )
-            <span class="font-semibold">{{ $subscripcion->paypal->api_id }}</span>
-            @elseif( !empty($subscripcion->stripe) )
-            <span class="font-semibold">{{ $subscripcion->stripe->api_id }}</span>
-            @endif
-
-          </div>
-          <div class="px-3">
-            <span class="text-sm leading-7">Estatus:</span>
-            <span class="font-bold text-green-600">{{ __($subscripcion->status.'a') }}</span>
-          </div>
-        </div>
-
-        <div class="my-1 py-1 border-t border-black/10 flex items-center justify-center bg-gray-50 ">
-          <span class="mr-2 text-sm leading-7">Siguiente pago:</span>
-          <span class="font-semibold">{{ $subscripcion->next_billing->setTimezone('-0600')->locale('es')->isoFormat('MMMM DD, Y') }}</span>
-        </div>
-      </div>{{--/bg-blue --}}
-
-      <div class="card-body px-3">
-        <div class="flex my-1 py-1 border-b border-black/10">
-          <span class="w-1/3 text-sm leading-7">Plataforma:</span>
-          <span class="w-2/3 whitespace-nowrap">{{ !empty($subscripcion->paypal) ? 'PayPal' : 'Stripe' }}</span>
-        </div>
-
-        @if ( !empty($subscripcion->paypal) )
-        <div class="flex my-1 py-1 border-b border-black/10">
-          <span class="w-1/3 text-sm leading-7">PayPal Account:</span>
-          <span class="w-2/3 whitespace-nowrap">{{ $subscripcion->paypal->api_object->subscriber->email_address }}</span>
-        </div>
-        @endif
-
-        <div class="flex my-1 py-1 border-b border-black/10">
-          <span class="w-1/3 text-sm leading-7">Inicio:</span>
-          <span class="w-2/3">{{ $subscripcion->start->setTimezone('-0600')->locale('es')->isoFormat('MMMM DD, Y') }}</span>
-        </div>
-
-        <div class="flex my-1 py-1 border-b border-black/10">
-          <span class="w-1/3 text-sm leading-7">Ciclo:</span>
-          <span class="w-2/3">cada 4 semanas</span>
-        </div>
-
-      </div>
-
-
-
-    </div>
-  </section>
-  @endif
+    <div class="w-full px-3"></div>
+  </div>
 </x-layout>

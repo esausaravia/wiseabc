@@ -56,7 +56,7 @@ class DatabaseSeeder extends Seeder
      * Admin User
      */
     \App\Models\User::create([
-      'status' => 'active',
+      'status' => 'ACTIVE',
       'user_type' => 1,
       'name' => 'Esau Saravia',
       'email' => 'esau@mediaurea.com',
@@ -133,7 +133,7 @@ class DatabaseSeeder extends Seeder
         $classroom = Classroom::create([
           'teacher_id' => $profe->id,
           'curso_id' => $curso->id,
-          'status' => 'active',
+          'status' => 'ACTIVE',
           'tipo' => 1,
           'ritmo' => 1,
           'start' => $cursoStart->copy()->setTimezone('UTC')

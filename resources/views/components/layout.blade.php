@@ -20,7 +20,7 @@
     window.app.home = '{{ route('home') }}';
   </script>
 </head>
-<body {{ $body->attributes->class(['bg-gray-100 text-gray-600 dark:bg-azulw dark:text-gray-400', $attributes->get('class')]) }}>
+<body {{ $body->attributes->class(['bg-gray-200 text-gray-600 dark:bg-azulw dark:text-gray-400', $attributes->get('class')]) }}>
   <header id="MainHeader" class="fixed top-0 left-0 w-full bg-gray-50 dark:bg-azulw shadow-md z-20 flex justify-between items-center">
     <button class="btn btn-toggle-aside w-12 text-azul-600 dark:text-gray-200 text-center text-[22px] leading-12"><i class="fa-light fa-bars"></i></button>
 
@@ -75,7 +75,7 @@
     {{ $slot }}
 
   </div>
-  <footer>{{ __('All rights reserved.') }}</footer>
+  <footer class="text-center">{{ __('All rights reserved.') }}</footer>
   <x-layout-toast></x-layout-toast>
 
   @stack('scripts')

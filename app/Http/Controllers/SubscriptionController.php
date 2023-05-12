@@ -37,52 +37,66 @@ class SubscriptionController extends Controller
      */
     public function store(Request $request)
     {
-
+        /*
+        {
+            "orderID": "71X44664741365155",
+            "subscriptionID": "I-9RC8P1B1PBVJ",
+            "facilitatorAccessToken": "A21AALpirqsqznz1f1O8BpA4-M4FVG6xk3LarfRV86_bIWubLHvUKoSJ3viSs4aZXGA2WxYxXrwf2tS_4y2UVjlYKd7e9kzQw",
+            "paymentSource": "paypal"
+        }
+        */
         $student = $request->user();
         if ( empty($student ) || !is_object($student) )
         {
-            return $request->wantsJson() ? response(['message'=>'sin sesión de usuario'], 400) : redirect()->back()->withErrors(['message'=>'sin sesión de usuario']);
+            return $request->wantsJson() ? response(['message'=>'sin sesión de usuario'], 400)
+                    : back()->withErrors(['alert'=>'sin sesión de usuario']);
         }
 
         $valid = $request->validate([
             'subscriptionID'=>'required'
         ]);
 
-        $paypal_subscription = PayPalController::getSubscriptionDetails($valid['subscriptionID']);
+        $paypalSubscription = PayPalController::getSubscriptionDetails($valid['subscriptionID']);
 
-        if ( empty($paypal_subscription) || !is_object($paypal_subscription) )
+        if ( !is_object($paypalSubscription) )
         {
             $errorMsg = 'Ocurrio un problema verificando la subscripción con PayPal. Por favor, contáctenos con su ID de Subscripción: '.$valid['subscriptionID'];
 
             return $request->wantsJson() ? response(['error'=>$errorMsg], 400)
-                : back()->withErrors(['error'=>$errorMsg]);
+                : back()->withErrors(['alert'=>$errorMsg]);
         }
 
-        $bplan = \App\Models\BillingPlan::whereHas('paypal',function($query){
-            $query->where('api_id','P-48D69303M08841545MRGYN4I');
+        $bplan = \App\Models\BillingPlan::whereHas('paypal',function($query) use ($paypalSubscription){
+            $query->where('api_id', $paypalSubscription->plan_id);
         })->first();
 
-        if ( empty($bplan) || !is_object($bplan) )
+        if ( !is_object($bplan) )
         {
-            $errorMsg = 'Ocurrio un problema verificando la subscripción con PayPal. Por favor, contáctenos con su ID de Subscripción: '.$valid['subscriptionID'];
+            $errorMsg = 'Ocurrio un problema verificando la subscripción con PayPal. Por favor, contáctenos con su ID de Subscripción: '.$paypalSubscription->id;
 
             return $request->wantsJson() ? response(['error'=>$errorMsg], 400)
-                : back()->withErrors(['error'=>$errorMsg]);
+                : back()->withErrors(['alert'=>$errorMsg]);
         }
+
+        $student->saveMetas([
+            'clase_tipo' => $bplan->tipo,
+            'ritmo' => $bplan->ritmo
+        ]);
 
         $subscription = $student->subscriptions()->create([
             'billing_plan_id' => $bplan->id,
-            'status' => $paypal_subscription->status,
-            'start' => now(),
-            'next_billing' => $bplan->id==10 ? now()->addDays(3) : now()->addWeeks(4)
+            'status' => $paypalSubscription->status,
+            'start' => Carbon::parse( $paypalSubscription->start_time ),
+            'next_billing' => Carbon::parse( $paypalSubscription->billing_info->next_billing_time )
         ]);
 
         $subscription->paypal()->create([
-            'api_id'=>$valid['subscriptionID'],
-            'api_object'=>json_encode( $paypal_subscription )
+            'api_id'=>$paypalSubscription->id,
+            'api_object'=>$paypalSubscription
         ]);
 
-        return $request->wantsJson() ? response()->json(['id'=>$subscription->id,"status"=>$subscription->status,"paypal"=>$paypal_subscription]) : back()->with('success','Suscrpción registrada con éxito');
+        return $request->wantsJson() ? response()->json(['id'=>$subscription->id,"status"=>$subscription->status,"paypal"=>$paypalSubscription])
+            : back()->with('success','Subscrpción registrada con éxito');
     }
 
     /**
@@ -151,8 +165,8 @@ class SubscriptionController extends Controller
             return false;
         }
 
-        $paypal_subscription = PayPalController::getSubscriptionDetails($subscription->paypal->api_id);
-        if ( empty($paypal_subscription) || !is_object($paypal_subscription) )
+        $paypalSubscription = PayPalController::getSubscriptionDetails($subscription->paypal->api_id);
+        if ( empty($paypalSubscription) || !is_object($paypalSubscription) )
         {
             $errorMsg = 'Ocurrio un problema consultando la información de subscripción #'.$subscription->paypal->api_id;
 
@@ -160,17 +174,17 @@ class SubscriptionController extends Controller
                 : back()->withErrors(['error'=>$errorMsg]);
         }
 
-        if ( !empty($paypal_subscription->billing_info) && is_object($paypal_subscription->billing_info) && !empty($paypal_subscription->billing_info->next_billing_time) )
+        if ( !empty($paypalSubscription->billing_info) && is_object($paypalSubscription->billing_info) && !empty($paypalSubscription->billing_info->next_billing_time) )
         {
-            $subscription->next_billing = Carbon::parse($paypal_subscription->billing_info->next_billing_time) ;
+            $subscription->next_billing = Carbon::parse($paypalSubscription->billing_info->next_billing_time) ;
         }
 
-        $subscription->status = $paypal_subscription->status;
+        $subscription->status = $paypalSubscription->status;
         $subscription->save();
 
-        $subscription->paypal->api_object = $paypal_subscription;
+        $subscription->paypal->api_object = $paypalSubscription;
         $subscription->paypal->save();
 
-        return $paypal_subscription;
+        return $paypalSubscription;
     }
 }

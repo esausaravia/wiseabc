@@ -19,6 +19,11 @@ return [
     9=>'D3'
   ],
 
+  'clase_tipo_labels'=>[
+    '1' => 'Grupal',
+    '2' => 'Particular',
+  ],
+
   'ritmo_labels' => [
     '1' => 'Relax',
     '2' => 'Medio',
@@ -54,26 +59,21 @@ return [
   ],
 
   'status_labels'=>[
-    'disabled'=>'Desactivado',
-    'active'=>'Activo',
+    'DISABLED'=>'Desactivado',
+    'ACTIVE'=>'Activo',
   ],
   'user_status_labels' =>[
-    'disabled'=>'Desactivado',
-    'active'=>'Activo',
-    'suscribed'=>'Suscrito',
+    'DISABLED'=>'Desactivado',
+    'ACTIVE'=>'Activo',
   ],
   'pago_status_labels'=>[
-    'pending'=>'Pendiente',
-    'paid'=>'Pagado',
-    'failed'=>'Fallido'
+    'PENDING'=>'Pendiente',
+    'PAID'=>'Pagado',
+    'FAILED'=>'Fallido'
   ],
   'classrooms_exist' => [
     '2' => 'Sin clases',
     '1' => 'Con clases',
-  ],
-  'type_classroom' => [
-    '1' => 'Grupal',
-    '2' => 'Individual',
   ],
 
 ];

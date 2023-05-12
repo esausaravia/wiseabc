@@ -1,41 +1,37 @@
 
 
-<h3>Option group</h3>
-<div class="fieldset">
-  <label class="block after:content-['*'] after:text-rose-700 after:pl-1 ">Principante</label>
-  <label class="font-medium text-sm ">Principante</label>
-
-  <div class="flex">
-    <div class="flex flex-wrap rounded-lg shadow-md bg-white text-gray-500 leading-12 xl:leading-8">
-
-      <div class="border-r border-black/5">
-        <input class="peer sr-only" type="radio" name="nivel" id="inivel1" value="1" required="">
-        <label for="inivel1" class="cursor-pointer block px-3 peer-checked:font-bold peer-checked:text-rojo">
-          1
-        </label>
-      </div>
-      <div class="border-r border-black/5">
-        <input class="peer sr-only" type="radio" name="nivel" id="inivel2" value="2" required="">
-        <label for="inivel2" class="cursor-pointer block px-3 peer-checked:font-bold peer-checked:text-rojo">
-          2
-        </label>
-      </div>
-      <div class="border-r border-black/5">
-        <input class="peer sr-only" type="radio" name="nivel" id="inivel3" value="3" required="">
-        <label for="inivel3" class="cursor-pointer block px-3 peer-checked:font-bold peer-checked:text-rojo">
-          3
-        </label>
-      </div>
-
-    </div>
-  </div>
-  <small class="text-xs">Marque su edad dando clic.</small>
-</div>
-<div class="overflow-hidden"></div>
-
 <input type="text" class="w-full" />
 <input type="date" class="w-[10rem]" />
 <input type="datetime" class="w-[13rem]" />
+
+<h4>Option group</h4>
+<div class="fieldset">
+  <label for="inivel" class="block font-medium text-sm  after:content-['*'] after:text-rose-700 after:pl-1 ">Principiante </label>
+  <div class="flex flex-wrap options-container rounded-lg shadow-md bg-white text-gray-500 leading-12 xl:leading-8 text-center">
+
+    <div class="border-r border-black/5 last:border-r-0  flex-grow ">
+      <input class="peer sr-only" type="radio" name="nivel" id="inivel0" value="0" required="">
+      <label for="inivel0" class="cursor-pointer block px-3 peer-checked:bg-blue-500 peer-checked:text-gray-100 peer-aria-readonly:bg-orange-500 peer-aria-readonly:text-gray-100">
+        1
+      </label>
+    </div>
+
+    <div class="border-r border-black/5 last:border-r-0  flex-grow ">
+      <input class="peer sr-only" type="radio" name="nivel" id="inivel1" value="1" required="">
+      <label for="inivel1" class="cursor-pointer block px-3 peer-checked:bg-blue-500 peer-checked:text-gray-100 peer-aria-readonly:bg-orange-500 peer-aria-readonly:text-gray-100">
+        2
+      </label>
+    </div>
+
+    <div class="border-r border-black/5 last:border-r-0  flex-grow ">
+      <input class="peer sr-only" type="radio" name="nivel" id="inivel2" value="2" required="">
+      <label for="inivel2" class="cursor-pointer block px-3 peer-checked:bg-blue-500 peer-checked:text-gray-100 peer-aria-readonly:bg-orange-500 peer-aria-readonly:text-gray-100">
+        3
+      </label>
+    </div>
+
+  </div>
+</div>
 
 <section class="flex justify-around font-accent font-medium text-sm leading-7">
   <a href="#" class="btn inline-block rounded-full border-2 py-2 xl:py-0 px-4 border-white bg-white text-gray-600 shadow-md">Regresar</a>
