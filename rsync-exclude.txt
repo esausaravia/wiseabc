@@ -1,0 +1,13 @@
+.git
+.editorconfig
+.env
+.env.example
+package-lock.json
+*.map
+.DS_Store
+vendor
+node_modules
+storage/framework/cache/*
+storage/framework/sessions/*
+storage/framework/views/*
+storage/logs/laravel.log

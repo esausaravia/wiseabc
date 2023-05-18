@@ -404,4 +404,47 @@ class PayPalController extends Controller
      * POST with Bearer Tokens
      * $response = Http::withToken('token')->post([...]);
      */
+    public function webhooks(Request $request)
+    {
+        $event = $request->json()->all();
+
+        if ( !is_object($event) )
+        {
+            $payload = @file_get_contents('php://input');
+            $event = json_decode($payload);
+        }
+
+        if ( !is_object($event) )
+        {
+            return response(['message'=>'No JSON body'], 400);
+        }
+
+        switch( $event->event_type )
+        {
+            case 'BILLING.SUBSCRIPTION.ACTIVATED': //A subscription is activated.
+                //
+                break;
+
+            case 'BILLING.SUBSCRIPTION.UPDATED': //A subscription is updated.
+                //
+                break;
+
+            case 'BILLING.SUBSCRIPTION.EXPIRED': //A subscription expires.
+                //
+                break;
+
+            case 'BILLING.SUBSCRIPTION.CANCELLED': //A subscription is cancelled.
+                //
+                break;
+
+            case 'BILLING.SUBSCRIPTION.SUSPENDED': //A subscription is suspended.
+                //
+                break;
+
+            case 'BILLING.SUBSCRIPTION.PAYMENT.FAILED': //Payment failed on subscription.
+                //
+                break;
+        }
+        return $event;
+    }
 }

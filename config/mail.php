@@ -78,6 +78,16 @@ return [
                 'array',
             ],
         ],
+        'microsoft-graph' => [
+            'transport' => 'microsoft-graph',
+            'client_id' => env('MICROSOFT_GRAPH_CLIENT_ID'),
+            'client_secret' => env('MICROSOFT_GRAPH_CLIENT_SECRET'),
+            'tenant_id' => env('MICROSOFT_GRAPH_TENANT_ID'),
+            'from' => [
+                'address' => env('MAIL_USERNAME', 'web@wiseabcenglish.com'),
+                'name' => env('MAIL_FROM_NAME', 'WiseABC English'),
+            ],
+        ],
     ],
 
     /*

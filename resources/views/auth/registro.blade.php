@@ -41,8 +41,8 @@
         <x-forms.input label="Correo electrónico" name="email" required></x-forms.input>
         <x-forms.input label="Teléfono" name="tel" required></x-forms.input>
 
-        <x-forms.input label="Contraseña" name="password" type="password" required></x-forms.input>
-        <x-forms.input label="Confirmar contraseña" name="password_confirmation" type="password" required></x-forms.input>
+        <x-forms.input label="{{__('Password')}}" name="password" type="password" required></x-forms.input>
+        <x-forms.input label="{{__('Confirm Password')}}" name="password_confirmation" type="password" required></x-forms.input>
 
         <span></span>
         <div class="text-right">
@@ -141,7 +141,7 @@
       </section>
 
       {{-- Horarios --}}
-      <section class="form-step grid grid-cols-1 gap-5 hidden" data-toggle-display="grid">
+      <section class="form-step grid grid-cols-1 gap-5" data-toggle-display="grid">
         <h4 class="text-lg font-accent font-medium">Disponibilidad de horario</h4>
 
         <div>
@@ -149,9 +149,9 @@
           <div class="inline-block rounded-lg border border-gray-500 bg-gray-100 text-gray-600 px-3 py-2 display-timezone"></div>
         </div>
 
-        <p>Clic en los horarios que puede tomar clase.</p>
+        <p>Clic en todos los horarios que puede tomar clase.</p>
 
-        <x-forms.option-group type="checkbox" name="horarios" :options="config('wiseabc.horarios_labels')">
+        <x-forms.option-group type="checkbox" name="horarios" :options="$horarios">
           <x-slot:optcont class="rounded-lg shadow-md grid grid-cols-4 md:grid-cols-8 bg-white text-gray-500 leading-12 xl:leading-8 text-center"></x-slot>
         </x-option-group>
 

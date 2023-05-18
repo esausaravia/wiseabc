@@ -1,11 +1,11 @@
 <x-layoutreg container-class="py-12">
   <div class="mx-auto max-w-[520px]">
-    <form class="grid grid-cols-1 gap-5 ajx-form" id="frmLogin" name="frmLogin" action="{{ route('login') }}" method="post">
+    <form class="grid grid-cols-1 gap-5 ajx-form" id="frmLogin" name="frmLogin" action="{{ route('login') }}" method="post" data-redirect="{{ route('home') }}">
       @csrf
       <h2 class="text-2xl font-bold font-accent">Acceso</h2>
       <p class="">Al iniciar sesión o crear una cuenta, aceptas las <a href="#">Condiciones de servicio</a> y la <a href="#">Política de privacidad</a> de WiseABC.</p>
 
-      <p class="alert-error hidden bg-rose-300 p-3"><span class="alert-msg"></span></p>
+      <p class="alert-error hidden p-3 bg-rose-200 text-rose-700"><span class="alert-msg"></span></p>
 
       <div class="">
         <label for="iemail" class="block">Email <span class="text-rojo">*</span></label>

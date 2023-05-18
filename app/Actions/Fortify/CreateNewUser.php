@@ -44,8 +44,8 @@ class CreateNewUser implements CreatesNewUsers
 
         $temp = array(1=>$input['horarios']);
 
-        $user->saveHorarios($temp);
         $user->saveMetas($input);
+        $user->saveHorarios($temp);
 
         return $user;
     }

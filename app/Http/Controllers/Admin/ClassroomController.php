@@ -193,7 +193,8 @@ class ClassroomController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function createForCurso(\App\Models\Curso $curso) {
+    public function createForCurso(\App\Models\Curso $curso)
+    {
 
         $weekdays = config('wiseabc.weekdays');
         $BillPlans = \App\Models\BillingPlan::where('status','ACTIVE')->get();
@@ -234,7 +235,8 @@ class ClassroomController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function createForTeacher(User $teacher) {
+    public function createForTeacher(User $teacher)
+    {
         $arrHorarios = $teacher->horariosDisponibles();
         $arrHorariosDias = array_keys($arrHorarios);
         $weekdays = config('wiseabc.weekdays');
@@ -248,7 +250,8 @@ class ClassroomController extends Controller
         ]);
     }
 
-    public function assignStudents($id) {
+    public function assignStudents($id)
+    {
         ob_start();
         $Classroom = Classroom::find($id);
         $weekdays = config('wiseabc.weekdays');
@@ -305,7 +308,8 @@ class ClassroomController extends Controller
             'StudentSinClase'=>$StudentSinClase
         ]);
     }
-    public function assignStudents2($id, Request $request) {
+    public function assignStudents2($id, Request $request)
+    {
         $input = $request->input();
 
         $Classroom = Classroom::find($id);
@@ -322,6 +326,12 @@ class ClassroomController extends Controller
         $Classroom->students()->sync($input['students']);
         $Classroom->refresh();
 
+        $Students = \App\Models\User::whereIn('id',$input['students'])->get();
+        foreach($Students AS $student)
+        {
+            $mailable = new \App\Mail\Student\ClaseAsignada($student, $Classroom);
+	        $result = \Illuminate\Support\Facades\Mail::to( $student )->queue($mailable);
+        }
         /*
         ddd([
             'id'=>$id,
@@ -329,7 +339,8 @@ class ClassroomController extends Controller
             'class'=>$Classroom,
             'students'=>$Students,
             'class_students'=>$Classroom->students
-        ]);*/
+        ]);
+        */
         return $request->wantsJson()
             ? response()->json(['message'=>'Alumnos actualizados'])
             : redirect()->route('admin.classroom.index')->with('success','Alumnos actualizados');

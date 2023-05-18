@@ -17,6 +17,14 @@ class BillingPlan extends Model
     /**
      * Relationships
      */
+    public function billRegion()
+    {
+        return $this->belongsTo( billRegion::class );
+    }
+    public function region()
+    {
+        return $this->billRegion();
+    }
     public function users()
     {
         return $this->belongsToMany( User::class, 'subscriptions', 'billing_plan_id', 'user_id' )->as('subscription')->withTimestamps()->withPivot('status')->orderByPivot('created_at', 'desc');

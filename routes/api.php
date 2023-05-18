@@ -20,68 +20,17 @@ use Illuminate\Support\Str;
 */
 
 Route::get('/', function(Request $request){
-    /*
-    $str = json_encode(['id'=>1,'name'=>"exa"]);
-    return ($json = json_decode($str) )!==null ? ['json3'=>$json] : ['str'=>$str];
 
-    $student = \App\Models\User::find(7);
-    $classroom = $student->currentClassroom;
+    return base_path('public/img/wiseabc-logo-375x.png');
+});
 
-    return \Illuminate\Support\Facades\Mail::to( 'esau.saravia@gmail.com' )->send( new \App\Mail\Student\ClaseAsignada($student, $classroom) );
-    */
+Route::get('client-ip', function(Request $request){
 
-    $student = \App\Models\User::find(7);
-    $classroom = $student->currentClassroom;
+    $_SERVER['HTTP_X_FORWARDED_FOR'];
+    $_SERVER['HTTP_CF_CONNECTING_IP'];
 
-    return \Illuminate\Support\Facades\Mail::to( 'esau.saravia@gmail.com' )->send( new \App\Mail\Student\ClaseAsignada($student, $classroom) );
-
-    ob_start();
-
-    $ritmo = 3;
-    echo "Ritmo: {$ritmo} clases por semana\n";
-    echo "  curso de ".(48 / $ritmo)."semanas\n";
-
-
-    $inicio = Carbon::parse('2023-06-05','-0600');
-    echo "inicio: ".$inicio->isoFormat("ddd DD MMMM Y")."\n";
-
-    $fin = $inicio->copy()->addWeeks(48 / $ritmo);
-    echo "fin: ".$fin->isoFormat("ddd DD MMMM Y")."\n\n";
-
-    echo "ingreso: ".$inicio->isoFormat("DD MMMM Y")."\n";
-
-    $period = \Carbon\CarbonPeriod::create( $inicio , '4 weeks', $fin->format("Y-m-d"));
-    $period->excludeEndDate();
-
-    $billings = $period->count();
-    echo "billings: {$billings}\n";
-
-    $lastBillingDate = $period->last();
-    echo "last biling: ".$lastBillingDate->isoFormat("DD MMMM Y")."\n";
-
-
-    echo PHP_EOL.PHP_EOL."**** IRREGULAR ****".PHP_EOL;
-
-    $ingreso = Carbon::parse('2023-07-23','-0600');
-    echo "ingreso: ".$ingreso->isoFormat("DD MMMM Y")."\n";
-
-    $period = \Carbon\CarbonPeriod::create( $ingreso , '4 weeks', $fin->format("Y-m-d"));
-    $period->excludeEndDate();
-
-    $billings = $period->count();
-    echo "billings: {$billings}\n";
-
-    $lastBillingDate = $period->last();
-    echo "last biling: ".$lastBillingDate->isoFormat("DD MMMM Y")."\n";
-
-    $includedEndDate = $period->getIncludedEndDate();
-    echo "endDate: ".$includedEndDate->isoFormat("DD MMMM Y")."\n";
-
-    $endDatesDiff = $includedEndDate->diffInDays( $lastBillingDate );
-    echo "diff days {$endDatesDiff}\n";
-
-    ddd( ob_get_clean() );
-    return true;
+    $ip = !empty( $_SERVER['HTTP_CF_CONNECTING_IP'] ) ? $_SERVER['HTTP_CF_CONNECTING_IP'] : ( !empty($_SERVER['HTTP_X_FORWARDED_FOR']) ? $_SERVER['HTTP_X_FORWARDED_FOR'] : $_SERVER['REMOTE_ADDR'] );
+    return ['ip' => $ip];
 });
 
 Route::get('/cursos', function(Request $request){

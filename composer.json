@@ -7,17 +7,14 @@
     "require": {
         "php": "^8.0.2",
         "guzzlehttp/guzzle": "^7.2",
+        "innoge/laravel-msgraph-mail": "^1.0",
         "intervention/image": "^2.7",
         "laravel/fortify": "^1.13",
         "laravel/framework": "^9.19",
         "laravel/sanctum": "^3.0",
-        "laravel/socialite": "^5.6",
         "laravel/tinker": "^2.7",
         "laraveles/spanish": "^1.5",
-        "league/oauth2-client": "^2.6",
         "microsoft/microsoft-graph": "^1.88",
-        "socialiteproviders/microsoft": "^4.2",
-        "socialiteproviders/microsoft-graph": "^4.1",
         "stripe/stripe-php": "^10.12"
     },
     "require-dev": {
