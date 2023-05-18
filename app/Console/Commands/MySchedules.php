@@ -33,15 +33,14 @@ class MySchedules extends Command
     {
       $paraSemanas = 2; //cuantas semanas hacia adelante
       $enWeekdays = config('wiseabc.en_weekdays');//monday,tuesday,etc.
-      $hoy = now('-0600');
-      $hoy_utc = $hoy->copy()->setTimezone('UTC');
-      $hastaFecha = $hoy_utc->copy()->addWeeks($paraSemanas)->addHour();
+      $hoy_utc = now();
+      $hastaFecha = now()->addWeeks($paraSemanas)->addHour();
 
       $msApi = new MsApiController();
-      $Clases =  Classroom::with(['curso'])->where('status','active')
-                    ->where('ends_at','>=', $hoy->format('Y-m-d') )->get();
+      $Classrooms = Classroom::with(['teacher','curso'])->where('status','ACTIVE')
+                    ->where('ends_at','>=', $hoy_utc->format('Y-m-d') )->get();
 
-      foreach($Clases as $clase) {
+      foreach($Classrooms as $clase) {
         echo "Schedules for Classroom #{$clase->id}\n";
 
         /**
@@ -52,18 +51,20 @@ class MySchedules extends Command
         {
           echo '  schedule->fechahora: '.$schedule->fechahora->format('Y-m-d H:i O').PHP_EOL;
 
-          $data = $msApi->createOnlineMeeting($clase->curso->name, $schedule->fechahora);
+          $data = $msApi->createOnlineMeeting($clase->teacher->email, $clase->curso->name, $schedule->fechahora);
 
-          $teamsInfo = TeamsInfo::create([
-            'msid'=>$data['id'],
-            'link'=>$data['onlineMeeting']['joinUrl'],
-            'info'=>json_encode($data),
-            'report'=>""
-          ]);
-
-          $schedule->teams_id = $teamsInfo->id;
-          $schedule->save();
-          echo "  schedule->teams_id: {$schedule->teams_id}".PHP_EOL;
+          if ( is_object($data) )
+          {
+            $teamsInfo = TeamsInfo::create([
+              'msid'=>$data['id'],
+              'link'=>$data['onlineMeeting']['joinUrl'],
+              'info'=>json_encode($data),
+              'report'=>""
+            ]);
+            $schedule->teams_id = $teamsInfo->id;
+            $schedule->save();
+            echo "  schedule->teams_id: {$schedule->teams_id}".PHP_EOL;
+          }
         }
 
         /**
@@ -78,30 +79,37 @@ class MySchedules extends Command
         echo "  schedules_need: {$schedules_need}\n";
 
         $lastSchedule = $schedules->last();
-        if ( !empty($lastSchedule) ) {
+        if ( is_object($lastSchedule) )
+        {
           $lastSchedule = $lastSchedule->fechahora->copy();
+          $lastSchedule->setTimezone('-0600');
+          echo '  lastSchedule: '.$lastSchedule->format('Y-m-d H:i O').PHP_EOL;
         }
-
-        $lastSchedule->setTimezone('-0600');
-        echo '  lastSchedule: '.$lastSchedule->format('Y-m-d H:i O').PHP_EOL;
+        else
+        {
+          $lastSchedule = $hoy_utc;
+        }
 
         while( $schedules_count < $schedules_need ) {
 
           $nextClass = $clase->sigFechaHora( $lastSchedule->addHour() );
           echo '  nextClass: '.$nextClass->format('Y-m-d H:i O').PHP_EOL;
 
+          $teamsInfo = null;
+
+          /*
           $data = $msApi->createOnlineMeeting($clase->curso->name, $nextClass);
 
-          $teamsInfo = new TeamsInfo();
-          $teamsInfo->msid = $data['id'];
-          $teamsInfo->link = $data['onlineMeeting']['joinUrl'] ;
-          $teamsInfo->info = json_encode($data);
-          $teamsInfo->report = "";
-          $teamsInfo->save();
+          $teamsInfo = TeamsInfo::create([
+            'msid' => $data['id'],
+            'link' => $data['onlineMeeting']['joinUrl'],
+            'info' => json_encode($data),
+            'report' => ""
+          ]);*/
 
           $schedule = new Schedule();
           $schedule->class_id = $clase->id;
-          $schedule->teams_id = $teamsInfo->id;
+          $schedule->teams_id = is_object($teamsInfo) ? $teamsInfo->id : null;
           $schedule->fechahora = $nextClass->copy()->setTimezone('UTC');
           $schedule->save();
 
