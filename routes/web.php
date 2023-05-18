@@ -9,6 +9,7 @@ use Illuminate\Foundation\Auth\EmailVerificationRequest;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -23,18 +24,138 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::get('test', function(Request $request){
-	$authuser = Auth::user();
-	return [
-			'auth_user'=>$authuser,
-			'request_user'=>$request->user(),
-			'now'=>now()
-	];
-
 	ob_start();
-	//$hoy = now('-0600')->locale('es');
+
+	$ritmo = 3;
+	echo "Ritmo: {$ritmo} clases por semana\n";
+	echo "  curso de ".(48 / $ritmo)."semanas\n";
+
+	$inicio = Carbon::parse('2023-06-05','-0600');
+	echo "inicio: ".$inicio->isoFormat("ddd DD MMMM Y")."\n";
+
+	$fin = $inicio->copy()->addWeeks(48 / $ritmo);
+	echo "fin: ".$fin->isoFormat("ddd DD MMMM Y")."\n\n";
+
+	echo "ingreso: ".$inicio->isoFormat("DD MMMM Y")."\n";
+
+	$period = \Carbon\CarbonPeriod::create( $inicio , '4 weeks', $fin->format("Y-m-d"));
+	$period->excludeEndDate();
+
+	$billings = $period->count();
+	echo "billings: {$billings}\n";
+
+	$lastBillingDate = $period->last();
+	echo "last biling: ".$lastBillingDate->isoFormat("DD MMMM Y")."\n";
+
+
+	echo PHP_EOL.PHP_EOL."**** IRREGULAR ****".PHP_EOL;
+
+	$ingreso = Carbon::parse('2023-07-23','-0600');
+	echo "ingreso: ".$ingreso->isoFormat("DD MMMM Y")."\n";
+
+	$period = \Carbon\CarbonPeriod::create( $ingreso , '4 weeks', $fin->format("Y-m-d"));
+	$period->excludeEndDate();
+
+	$billings = $period->count();
+	echo "billings: {$billings}\n";
+
+	$lastBillingDate = $period->last();
+	echo "last biling: ".$lastBillingDate->isoFormat("DD MMMM Y")."\n";
+
+	$includedEndDate = $period->getIncludedEndDate();
+	echo "endDate: ".$includedEndDate->isoFormat("DD MMMM Y")."\n";
+
+	$endDatesDiff = $includedEndDate->diffInDays( $lastBillingDate );
+	echo "diff days {$endDatesDiff}\n";
 
 	ddd( ob_get_clean() );
 })->name('test');
+
+Route::get('country', function(Request $request){
+	$tz = $request->input('tz');
+	$arrUStz = ['America/Adak',
+	'America/Anchorage',
+	'America/Atka',
+	'America/Boise',
+	'America/Chicago',
+	'America/Denver',
+	'America/Detroit',
+	'America/Fort_Wayne',
+	'America/Indiana/Indianapolis',
+	'America/Indiana/Knox',
+	'America/Indiana/Marengo',
+	'America/Indiana/Petersburg',
+	'America/Indiana/Tell_City',
+	'America/Indiana/Vevay',
+	'America/Indiana/Vincennes',
+	'America/Indiana/Winamac',
+	'America/Indianapolis',
+	'America/Juneau',
+	'America/Kentucky/Louisville',
+	'America/Kentucky/Monticello',
+	'America/Knox_IN',
+	'America/Los_Angeles',
+	'America/Louisville',
+	'America/Menominee',
+	'America/Metlakatla',
+	'America/New_York',
+	'America/Nome',
+	'America/North_Dakota/Beulah',
+	'America/North_Dakota/Center',
+	'America/North_Dakota/New_Salem',
+	'America/Phoenix',
+	'America/Shiprock',
+	'America/Sitka',
+	'America/Yakutat'];
+	if ( !empty($tz) && in_array($tz, $arrUStz) )
+	{
+		$countryCode = 'US';
+	}
+	else
+	{
+		$countryCode = 'MX';
+	}
+
+	$exists = $request->session()->get('ip-api');
+
+	if ( is_array($exists) && !empty($exists['countryCode']) && !empty($exists['ttl']) )
+	{
+		if ( now()->lessThan( Carbon::parse($exists['ttl']) ) )
+		{
+			return ['status'=>'session','countryCode'=>$countryCode];
+		}
+		else
+		{
+			$request->session()->forget('ip-api');
+		}
+	}
+
+	$request->session()->put( 'ip-api', ['countryCode'=>$countryCode] );
+	return ['status'=>'ok','countryCode'=>$countryCode];
+});
+
+Route::get('ip-api', function(Request $request){
+
+	$return = $request->session()->get('ip-api');
+	return !empty($return) ? ['type'=>gettype($return), 'return'=>$return] : response(['message'=>'Error'], 400);
+});
+Route::post('ip-api', function(Request $request) {
+
+	$exists = $request->session()->get('ip-api');
+
+	if ( is_array($exists) && !empty($exists['countryCode']) && !empty($exists['ttl']) )
+	{
+		if ( now()->lessThan( Carbon::parse($exists['ttl']) ) )
+		{
+			return ['status'=>'session'];
+		}
+	}
+
+	$data = $request->input();
+	$request->session()->put( 'ip-api', $data );
+	return ['status'=>'ok'];
+});
+
 
 Route::get('/', function (Request $request)
 {
@@ -43,6 +164,9 @@ Route::get('/', function (Request $request)
 	if ($user->user_type===1 ) {
 		return redirect()->route('admin.home');
 	}
+	elseif ($user->user_type===2 && ($user->clase_tipo===null || $user->ritmo===null) ) {
+		return redirect()->route('student.elegir-ritmo');
+	}
 	elseif ($user->user_type===2 ) {
 		return redirect()->route('student.home');
 	}
@@ -50,6 +174,7 @@ Route::get('/', function (Request $request)
 		return redirect()->route('teacher.home');
 	}
 })->middleware(['auth'])->name('home');
+
 
 Route::get('registro-profesor', function () {
 	return view('teacher.registro');

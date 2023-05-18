@@ -17,8 +17,55 @@ window.app.paypalDateRegex = /^[0-9]{4}-(0[1-9]|1[0-2])-(0[1-9]|[1-2][0-9]|3[0-1
 
 window.addEventListener('DOMContentLoaded',function(){
   console.log('app.js DOMContentLoaded');
-  const strTimeZone = Intl.DateTimeFormat().resolvedOptions().timeZone;
 
+  let mydate = new Date(), mydatematch = mydate.toString().match(/([-\+][0-9]+)\s/)
+
+  const strTimezoneOffset = mydatematch && mydatematch.length>0 ? mydatematch[1] : null
+
+  const strTimezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
+
+
+  (async function(){
+    window.app.ipapi = await (async function(){
+      if ( localStorage && localStorage.ipapi)
+      {
+        let ipapi = JSON.parse( localStorage.ipapi ),
+            ttl = ipapi && ipapi.ttl ? new Date( ipapi.ttl ) : null;
+
+        if ( ttl && ttl.getTime && ttl.getTime() > mydate.getTime() )
+        {
+          console.log('localStorage', ipapi );
+          return ipapi
+        }
+      }
+
+      let resp = null
+      try
+      {
+        resp = await axios.get( window.app.home + '/country?tz='+strTimezone)
+      }
+      catch(e)
+      {
+        console.log('catch',e)
+      }
+      resp.data.ttl = ( new Date( mydate.getTime() + ( 60*60*1000 ) ) ).toJSON()
+
+      resp.data.timezone = strTimezoneOffset ? strTimezoneOffset : strTimezone
+
+      if ( localStorage && localStorage.setItem)
+      {
+        localStorage.setItem('ipapi', JSON.stringify(resp.data));
+      }
+      console.log('/country', resp.data );
+
+      return resp.data
+    })();
+    return window.app.ipapi
+  })();
+
+
+  /*
+  //Stripe Helper
   let searchParams = new URLSearchParams(window.location.search);
   if (searchParams.has('session_id')) {
     const session_id = searchParams.get('session_id')
@@ -29,7 +76,21 @@ window.addEventListener('DOMContentLoaded',function(){
       console.log('input session_id', _input)
     })
   }
+  */
 
+  (function(scriptTags){
+    if ( !scriptTags || !scriptTags.length )  return false;
+
+    scriptTags.forEach(function(stag){
+      stag.src = stag.getAttribute('data-src');
+      stag.removeAttribute('data-src');
+    });
+
+  })(document.querySelectorAll('script[data-src]'));
+
+  /**
+   * Dark Theme toggler
+   */
   if (localStorage.theme === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
     document.documentElement.classList.add('dark')
   } else {
@@ -53,6 +114,10 @@ window.addEventListener('DOMContentLoaded',function(){
     });
   })( document.querySelectorAll('.darkmode-toggler') );
 
+
+  /**
+   * Global elements
+   */
   (function(btns){
     if (!btns || !btns.forEach) return false;
 
@@ -164,7 +229,7 @@ window.addEventListener('DOMContentLoaded',function(){
   })(document.querySelectorAll('.tabs-widget'));
 
   document.querySelectorAll('.display-timezone').forEach(function(el){
-    el.innerText = strTimeZone
+    el.innerText = strTimezone
   });
 
 
@@ -235,6 +300,9 @@ window.addEventListener('DOMContentLoaded',function(){
     });
   });
 
+  /**
+   * Validar que siempre hay 1 horario seleccionado
+   */
   (function(input){
     document.querySelectorAll('input[name^="horarios\["]').forEach(function(input){
       input.addEventListener('change', function(ev){
@@ -273,7 +341,7 @@ window.addEventListener('DOMContentLoaded',function(){
         form.appendChild(timeZoneInput)
       }
 
-      timeZoneInput.value = strTimeZone
+      timeZoneInput.value = strTimezoneOffset || strTimezone
     });
   })(document.querySelectorAll('form'));
 
@@ -287,7 +355,7 @@ window.addEventListener('DOMContentLoaded',function(){
       if ( !form || !form.action )  return false;
 
       form.addEventListener('submit', function(ev) {
-        if (ev && ev.preventDefault) ev.preventDefault();
+        if (ev && ev.preventDefault)  ev.preventDefault();
 
         let errel = form.querySelector('.alert-error');
         if (errel && errel.classList) {
@@ -318,21 +386,19 @@ window.addEventListener('DOMContentLoaded',function(){
         })
         .catch(function(resp){
           console.log('ajx-form catch', resp);
+          form.dispatchEvent(evFormError);
 
-          let resp2 = resp.response || null,
-            respData = resp2 && resp2.data ? resp2.data : null,
-            rerr = respData && respData.errors ? respData.errors: null,
-            rmsg = respData && respData.message ? respData.message : null,
+          let respData = resp && resp.response && resp.response.data ? resp.response.data : null,
             errel2 = errel && errel.querySelector ? errel.querySelector(".alert-msg") : null;
 
-          rmsg && errel2 ? (errel2.innerText = rmsg, errel.classList.remove('hidden') )
-            : rmsg && errel ? ( errel.innerText=rmsg, errel.classList.remove('hidden') )
-              : rmsg ? console.log('response.data.message', rmsg)
+          respData.message && errel2 ? (errel2.innerText = respData.message, errel.classList.remove('hidden') )
+            : respData.message && errel ? ( errel.innerText = respData.message, errel.classList.remove('hidden') )
+              : respData.message ? alert(respData.message)
                 : null;
 
-          if (rerr) {
-            console.log('axios.response.data.errors', rerr);
-            for(let _key in rerr) {
+          if (respData && respData.errors) {
+            console.log('axios.response.data.errors', respData.errors);
+            for(let _key in respData.errors) {
               //console.log('resp.response.data.errors', _key, rerr[_key]);
             }
           }
@@ -457,17 +523,6 @@ window.addEventListener('DOMContentLoaded',function(){
     });
 
   })( document.getElementById('frmRegStudent') );
-
-
-  (function(scriptTags){
-    if ( !scriptTags || !scriptTags.length )  return false;
-
-    scriptTags.forEach(function(stag){
-      stag.src = stag.getAttribute('data-src');
-      stag.removeAttribute('data-src');
-    });
-
-  })(document.querySelectorAll('script[data-src]'));
 
 });//DOMContentLoaded END
 

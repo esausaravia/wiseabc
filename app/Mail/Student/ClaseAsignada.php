@@ -6,6 +6,7 @@ use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Mail\Mailable;
 use Illuminate\Mail\Mailables\Address;
+use Illuminate\Mail\Mailables\Attachment;
 use Illuminate\Mail\Mailables\Content;
 use Illuminate\Mail\Mailables\Envelope;
 use Illuminate\Queue\SerializesModels;
@@ -35,7 +36,7 @@ class ClaseAsignada extends Mailable
     public function envelope()
     {
         return new Envelope(
-            //from: new Address('jeffrey@example.com', 'Jeffrey Way'),
+            //from: new Address('web@wiseabcenglish.com', 'Wise ABC English'),
             //    replyTo: [new Address('taylor@example.com', 'Taylor Otwell'),],
             subject: 'Clase Asignada',
         );
@@ -62,6 +63,8 @@ class ClaseAsignada extends Mailable
      */
     public function attachments()
     {
-        return [];
+        return [
+            Attachment::fromPath( base_path('public/img/wiseabc-logo-128x.png') )->as('logo.png'),
+        ];
     }
 }

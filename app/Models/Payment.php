@@ -13,14 +13,6 @@ class Payment extends Model
 
     protected $fillable = ['user_id','status','amount'];
 
-    protected function amount(): Attribute
-    {
-        return Attribute::make(
-            get: fn ($value) => $value/100,
-            set: fn ($value) => floor($value*100),
-        );
-    }
-
     /**
      * Relationships
      */

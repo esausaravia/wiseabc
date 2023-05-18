@@ -297,7 +297,8 @@ class StudentController extends Controller
     ]);
   }
 
-  public function assignClassroom2(Request $request, User $student) {
+  public function assignClassroom2(Request $request, User $student)
+  {
     $valid = $request->validate([
       'user_id'=>'required|integer',
       'class_id'=>'required|integer'
@@ -309,6 +310,9 @@ class StudentController extends Controller
     }
 
     $student->classrooms()->attach($valid['class_id']);
+
+    $mailable = new \App\Mail\Student\ClaseAsignada($student, $clase);
+    $result = \Illuminate\Support\Facades\Mail::to( $student )->send($mailable);
 
     return redirect()->route('admin.student.index')->with('success','Se ha agregado a la clase');
   }

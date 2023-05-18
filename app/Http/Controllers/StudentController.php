@@ -2,9 +2,13 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Validation\Rule;
+use Illuminate\Validation\Rules\Password;
 
 class StudentController extends Controller
 {
@@ -21,8 +25,20 @@ class StudentController extends Controller
     $classroom = null;
     $nextSchedule = null;
     $paypalSubscriptionQty = 4;
-    $paypalSubscriptionStartDate = Carbon::parse('2023-06-05 06:00:00');
+    $paypalSubscriptionStartDate = Carbon::parse('2024-06-05 06:00:00');
     $subscripcion = $user->activeSubscription();
+
+    $countryCode = 'US';
+    $ipApi = session('ip-api');
+
+    if ( is_array($ipApi) && !empty($ipApi['countryCode']) )
+    {
+      $countryCode = $ipApi['countryCode'];
+    }
+    else if( !empty($request->input('countryCode')) )
+    {
+      $countryCode = $request->input('countryCode');
+    }
 
     $classroom = $user->currentClassroom;
 
@@ -33,7 +49,14 @@ class StudentController extends Controller
 
     if ( !is_object($subscripcion) )
     {
-      $billPlan = \App\Models\BillingPlan::where('status','ACTIVE')->where('tipo', $user->clase_tipo)->where('ritmo', $user->ritmo)->orderBy('created_at','desc')->first();
+
+      $billPlan = \App\Models\BillingPlan::where('status','ACTIVE')
+          ->where('tipo', $user->clase_tipo)
+          ->where('ritmo', $user->ritmo)
+          ->whereHas('region', function($query) use ($countryCode){
+            $query->where('countries','LIKE',"%{$countryCode},%");
+          })
+          ->orderBy('created_at','desc')->first();
 
       if ( is_object($billPlan) )
       {
@@ -74,8 +97,35 @@ class StudentController extends Controller
     ]);
   }
 
-  public function elegirRitmo(Request $request) {
-    return view('student.elegir-ritmo');
+  public function elegirRitmo(Request $request)
+  {
+
+    $countryCode = 'US';
+
+    $ipApi = session('ip-api');
+
+    if ( is_array($ipApi) && !empty($ipApi['countryCode']) )
+    {
+      $countryCode = $ipApi['countryCode'];
+    }
+    else if( !empty($request->input('countryCode')) )
+    {
+      $countryCode = $request->input('countryCode');
+    }
+
+    $region = \App\Models\billRegion::where('countries','LIKE',"%{$countryCode},%")->first();
+    if ( !is_object($region) )
+    {
+      $region = \App\Models\billRegion::find(1);
+    }
+
+    /*
+    $billingPlans = \App\Models\BillingPlan::whereHas()
+    */
+    return view('student.elegir-ritmo',[
+      'region' => $region,
+      'ipApiCountry' => session('ip-api')
+    ]);
   }
 
   public function postElegirRitmo(Request $request)
@@ -102,10 +152,67 @@ class StudentController extends Controller
     return redirect()->route('student.home');
   }
 
-  public function pagos(Request $request) {
+  public function pagos(Request $request)
+  {
+    $user = $request->user();
+
+    $billPlan = null;
+    $classroom = null;
+    $paypalSubscriptionQty = 4;
+    $paypalSubscriptionStartDate = Carbon::parse('2024-06-05 06:00:00');
+    $subscripcion = $user->activeSubscription();
+
+    $countryCode = 'US';
+    $ipApi = session('ip-api');
+
+    if ( is_array($ipApi) && !empty($ipApi['countryCode']) )
+    {
+      $countryCode = $ipApi['countryCode'];
+    }
+    else if( !empty($request->input('countryCode')) )
+    {
+      $countryCode = $request->input('countryCode');
+    }
+
+    if ( is_object($subscripcion) )
+    {
+      $billPlan = &$subscripcion->billingPlan;
+    }
+    else {
+      $billPlan = \App\Models\BillingPlan::where('status','ACTIVE')
+          ->where('tipo', $user->clase_tipo)
+          ->where('ritmo', $user->ritmo)
+          ->whereHas('region', function($query) use ($countryCode){
+            $query->where('countries','LIKE',"%{$countryCode},%");
+          })
+          ->orderBy('created_at','desc')->first();
+    }
+
+    if ( is_object($billPlan) )
+    {
+      $classroom = $user->currentClassroom;
+
+      $paypalSubscriptionQty = $billPlan->ritmo *4;
+
+      if ( is_object($classroom) && now()->lessThan($classroom->start) )
+      {
+        $paypalSubscriptionStartDate = $classroom->start->format('Y-m-d\TH:00:00\Z');
+      }
+      else {
+        //$paypalSubscriptionStartDate = now()->addWeeks(4)->format('Y-m-d\TH:00:00\Z');
+        $paypalSubscriptionStartDate = $paypalSubscriptionStartDate->format('Y-m-d\TH:00:00\Z');
+      }
+    }//endif billPlan
 
     return view('student.pagos',[
-      'user'=>$request->user()
+      'billPlan'=>$billPlan,
+      'classroom'=>$classroom,
+      'hoy'=>now('-0600')->locale('es'),
+      'paypalSubscriptionQty'=> $paypalSubscriptionQty,
+      'paypalSubscriptionStartDate' => $paypalSubscriptionStartDate,
+      'subscripcion'=>$subscripcion,
+      'user'=>$user,
+      'weekdays'=>config('wiseabc.weekdays'),
     ]);
   }
 
@@ -118,18 +225,49 @@ class StudentController extends Controller
   {
     $student = $request->user();
 
-    if ($student->currentClassroom!==null)
+    $valid = $request->validate([
+      'fname' => 'required',
+      'lname' => 'required',
+      'email' => [
+        'required',
+        'email',
+        'max:255',
+        Rule::unique(User::class)->ignore($student->id),
+      ],
+      'tel' => [
+        'required','min:10','max:30'
+      ],
+      'password' => [
+        'sometimes','nullable', Password::defaults()
+      ],
+      'password_confirmation' => [
+        'sometimes','nullable','same:password'
+      ]
+    ]);//,
+
+    $student->name = $valid['fname'].' '.$valid['lname'];
+    $student->email = $valid['email'];
+
+    if ( !empty($valid['password']) && $valid['password']===$valid['password_confirmation'] )
+    {
+      $student->password = Hash::make($valid['password']);
+    }
+    $student->save();
+
+    $input = $request->input();
+
+    $inputColl = collect($input);
+
+    if ($student->currentClassroom!==null && $inputColl->hasAny(['edad','nivel','ritmo','clase_tipo','horarios']) )
     {
       $errorMsg = 'Ya tiene una clase asignada, contáctenos para actualizar su perfil.';
       return $request->wantsJson() ? response(['error'=>$errorMsg], 400)
         : back()->withErrors(['alert'=>$errorMsg]);
     }
 
-    $input = $request->input();
-
     $student->saveMetas($input);
 
-    if ( is_array($input['horarios']) && !empty($input['horarios'][1]) )
+    if ( !empty($input['horarios']) && is_array($input['horarios']) && !empty($input['horarios'][1]) )
     {
       $student->saveHorarios($input['horarios']);
     }

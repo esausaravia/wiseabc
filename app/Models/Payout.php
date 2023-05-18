@@ -13,14 +13,6 @@ class Payout extends Model
 
     protected $fillable = ['user_id','status','reference','amount'];
 
-    protected function amount(): Attribute
-    {
-        return Attribute::make(
-            get: fn ($value) => $value/100,
-            set: fn ($value) => floor($value*100),
-        );
-    }
-
     /**
      * Relationships
      */

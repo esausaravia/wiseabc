@@ -9,6 +9,7 @@ use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Support\Carbon;
 use Intervention\Image\Facades\Image;
 use Laravel\Sanctum\HasApiTokens;
 use Illuminate\Support\Facades\Log;
@@ -176,7 +177,7 @@ class User extends Authenticatable implements MustVerifyEmail
     {
         return Attribute::make(
             get: function($value, $attributes){
-                return $this->classrooms()->where('status','active')->where('ends_at','>=', now() )->first();
+                return $this->classrooms()->with(['curso','teacher','horarios'])->where('status','active')->where('ends_at','>=', now() )->first();
             }
         );
     }
@@ -195,11 +196,9 @@ class User extends Authenticatable implements MustVerifyEmail
         {
 			return NULL;
 		}
-
-        $usermetas = $this->usermetas;
         $return = '';
 
-		foreach( $usermetas AS $meta )
+		foreach( $this->usermetas AS $meta )
 		{
 			if ($meta->metakey===$mkey || $meta->id===$mkey)
 			{
@@ -252,11 +251,42 @@ class User extends Authenticatable implements MustVerifyEmail
     }
 
     /**
+     * Actualiza los horarios eliminando todos los anteriores
+     * @param array $horarios [1=>[9,10,11]]
+     * @return array
+     */
+    public function saveHorarios($horarios=[]) {
+        if ( empty($horarios) || !is_array($horarios) ){
+            return false;
+        }
+
+        $deleted = \Illuminate\Support\Facades\DB::delete('DELETE FROM user_horarios WHERE user_id='.$this->id);
+
+        $horarios = \App\Http\Controllers\WiseabcController::transformHorariosTimezone($horarios, '-0600', $this->getMeta('timezone') );
+
+        foreach( $horarios AS $dia=>$arrHrs ) {
+            if ( !is_array($arrHrs) ) {
+                continue;
+            }
+
+            foreach( $arrHrs AS $hr ) {
+                $this->horarios()->create([
+                    'dia'=>$dia,
+                    'hr' => $hr
+                ]);
+            }
+        }
+        $this->refresh();
+        return $this->horarios;
+    }
+
+    /**
      * Devuelve los horarios del usuario como Array
      * @param int $dia
      * @return array
      */
-    public function getHorarioArray($dia=0){
+    public function getHorariosArray($dia=0): array
+    {
         $arrHorarios = array();
         foreach($this->horarios AS $horario) {
             if (empty($arrHorarios[( $horario->dia )]) || !is_array($arrHorarios[( $horario->dia )])) {
@@ -266,8 +296,26 @@ class User extends Authenticatable implements MustVerifyEmail
         }
         return empty($dia) ? $arrHorarios : ( !empty($arrHorarios[($dia)]) ? $arrHorarios[($dia)] : [] );
     }
-    public function getHorariosArray($dia=0) {
-        $this->getHorarioArray($dia);
+    public function getHorarioArray($dia=0): array
+    {
+        return $this->getHorariosArray($dia);
+    }
+    public function getHorariosArrayTimezoned($dia=0)
+    {
+        return $this->transformHorariosTimezone( $this->getHorariosArray($dia) );
+    }
+
+    public function transformHorariosTimezone($horarios=null, $timezone=null, $fromTz='-0600')
+    {
+        if (empty($horarios) || !is_array($horarios) )
+        {
+            $horarios = $this->getHorariosArray();
+        }
+        if ( !is_string($timezone) )
+        {
+            $timezone = $this->getMeta('timezone');
+        }
+        return \App\Http\Controllers\WiseabcController::transformHorariosTimezone($horarios,$timezone,$fromTz);
     }
 
     public function horariosOcupados($dia=0) {
@@ -306,34 +354,6 @@ class User extends Authenticatable implements MustVerifyEmail
             }
         }
         return empty($dia) ? $arrHorarios : ( !empty($arrHorarios[( $dia )]) ? $arrHorarios[( $dia )] : [] );
-    }
-
-    /**
-     * Actualiza los horarios eliminando todos los anteriores
-     * @param array horarios
-     * @return array
-     */
-    public function saveHorarios($horarios) {
-        if (empty($horarios) || !is_array($horarios) ){
-            return false;
-        }
-
-        $deleted = \Illuminate\Support\Facades\DB::delete('DELETE FROM user_horarios WHERE user_id='.$this->id);
-
-        foreach( $horarios AS $dia=>$arrHrs ) {
-            if ( !is_array($arrHrs) ) {
-                continue;
-            }
-
-            foreach( $arrHrs AS $hr ) {
-                $this->horarios()->create([
-                    'dia'=>$dia,
-                    'hr' => $hr
-                ]);
-            }
-        }
-        $this->refresh();
-        return $this->horarios;
     }
 
     /**

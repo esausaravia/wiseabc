@@ -24,11 +24,11 @@ class Schedule extends Model
      * Relationships
      */
     public function classroom(){
-        return $this->belongsTo(Classroom::class);
+        return $this->belongsTo(Classroom::class,'class_id');
     }
 
     public function teamsInfo(){
-        return $this->belongsTo(Teamsinfo::class, 'teams_id', 'id');
+        return $this->belongsTo(Teamsinfo::class, 'teams_id');
     }
 
     /**

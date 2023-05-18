@@ -48,13 +48,13 @@ class MsApiController extends Controller
     Log::info('MsApiController::reqBearerToken');
 
     $guzzle = new \GuzzleHttp\Client();
-    $url = env('OAUTH_APP_TOKEN_ENDPOINT');
+    $url = "https://login.microsoftonline.com/".env('MICROSOFT_GRAPH_TENANT_ID')."/oauth2/v2.0/token";
 
     $response = $guzzle->post( $url, [
       'form_params' => [
-        'client_id' => env('OAUTH_APP_ID'),
-        'client_secret' => env('OAUTH_CLIENT_ID'),
-        'scope' => env('OAUTH_SCOPES'),
+        'client_id' => env('MICROSOFT_GRAPH_CLIENT_ID'),
+        'client_secret' => env('MICROSOFT_GRAPH_CLIENT_SECRET'),
+        'scope' => "https://graph.microsoft.com/.default",
         'grant_type' => 'client_credentials',
       ],
     ]);
@@ -82,7 +82,7 @@ class MsApiController extends Controller
     return self::$token->access_token;
   }
 
-  public function createOnlineMeeting( $subject, $fecha, $reqBody=array() )
+  public function createOnlineMeeting( string $userADid="admin@wiseabcenglish.com", string $subject="WiseABC Clase en línea", $fecha, array $reqBody=array() )
   {
     if ( empty($subject) || empty($fecha) ) {
       return false;
@@ -92,7 +92,7 @@ class MsApiController extends Controller
     {
       $fecha = $fecha->copy();
     }
-    else if ( is_string($fecha) && !empty($fecha) )
+    else if ( is_string($fecha) && trim($fecha)!=="" )
     {
       $fecha = \Carbon\Carbon::parse($fecha);
     }
@@ -100,12 +100,10 @@ class MsApiController extends Controller
       return false;
     }
 
-    $token = self::getAccessToken();
-
     $client = new \GuzzleHttp\Client([
-      'base_uri' => 'https://graph.microsoft.com/v1.0/',
+      'base_uri' => 'https://graph.microsoft.com/v1.0',
       'headers' => [
-        'Authorization' => 'Bearer ' . self::$token->access_token,
+        'Authorization' => 'Bearer ' . self::getAccessToken(),
         'Content-Type' => 'application/json'
       ]
     ]);
@@ -142,7 +140,7 @@ class MsApiController extends Controller
       ]
     ] );
 
-    $response = $client->post('users/esau@wiseabcenglish.com/calendar/events', [
+    $response = $client->post("/users/{$userADid}/calendar/events", [
       'body' => json_encode($body)
     ]);
     return json_decode( $response->getBody()->getContents(), true);

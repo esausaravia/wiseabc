@@ -33,31 +33,34 @@ class MyReceipts extends Command
      */
     public function handle()
     {
-      $hoy = now('-0600');
+      $hoy = now();
 
       $Attendances = \App\Models\Attendance::with(['user','classroom'])
 			    ->whereDoesntHave('pconcepts')
-          ->where('fechahora', '<', $hoy->copy()->subHour() )
           ->get();
 
-      $base = PaymentConcept::where('concept', 'LIKE', 'base')->first();
+      $base = PaymentConcept::where('concept', 'LIKE', 'Base')->first();
       $puntualidad = PaymentConcept::where('concept', 'LIKE', 'Puntualidad')->first();
       $grupal = PaymentConcept::where('concept', 'LIKE', 'Grupal')->first();
       $lealtad = PaymentConcept::where('concept', 'LIKE', 'Lealtad')->first();
 
-      foreach ($Attendances as $attendance) {
-        $hasGroup = $attendance->classroom->students->count() > 1;
+      foreach ($Attendances as $attendance)
+      {
+        $attendance->classroom->loadCount('students');
+
         $hasLoyalty = $attendance->user->created_at->diffInMonths( $hoy ) >= 3;
 
         $attendance->pconcepts()->attach( $base->id, ['amount' => $base->amount] );
 
-        if ($attendance->puntual) {
+        if ( $attendance->puntual )
+        {
           $attendance->pconcepts()->attach($puntualidad->id, ['amount' => $puntualidad->amount]);
         }
-        if ($hasGroup) {
+        if ( $attendance->classroom->students_count > 1 )
+        {
           $attendance->conceptos()->attach($grupal->id, ['amount' => $grupal->amount ]);
         }
-        if ($hasLoyalty) {
+        if ( $hasLoyalty ) {
           $attendance->pconcepts()->attach($lealtad->id, ['amount' => $lealtad->amount]);
         }
       }

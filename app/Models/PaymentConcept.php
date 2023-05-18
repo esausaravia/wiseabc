@@ -13,14 +13,6 @@ class PaymentConcept extends Model
 
     protected $fillable = ['concept','amount'];
 
-    protected function amount(): Attribute
-    {
-        return Attribute::make(
-            get: fn ($value) => $value/100,
-            set: fn ($value) => floor($value*100),
-        );
-    }
-
     public function attendances(){
         //     $this->belongsToMany(Model::class, 'table', 'current_model_id', 'related_model_id');
         return $this->belongsToMany(Attendance::class, 'attendance_pconcept', 'pconcept_id', 'attendance_id' )->withPivot('amount');

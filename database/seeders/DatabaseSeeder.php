@@ -35,6 +35,7 @@ class DatabaseSeeder extends Seeder
     DB::table('attendances')->truncate();
     DB::table('attendance_pconcept')->truncate();
     DB::table('billing_plans')->truncate();
+    DB::table('bill_regions')->truncate();
     DB::table('classrooms')->truncate();
     DB::table('class_horarios')->truncate();
     DB::table('class_student')->truncate();

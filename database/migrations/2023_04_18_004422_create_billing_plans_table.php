@@ -15,6 +15,9 @@ return new class extends Migration
     {
         Schema::create('billing_plans', function (Blueprint $table) {
             $table->id();
+            $table->unsignedBigInteger('bill_region_id')->default(1)->nullable()->index();
+            $table->foreign('bill_region_id')->references('id')->on('bill_regions')->onUpdate('cascade')->onDelete('set null');
+
             $table->unsignedSmallInteger('tipo')->index();
             $table->unsignedSmallInteger('ritmo')->index();
             $table->unsignedMediumInteger('price');

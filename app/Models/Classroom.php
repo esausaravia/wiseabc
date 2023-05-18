@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Carbon;
+use Illuminate\Support\Facades\Log;
 
 class Classroom extends Model
 {
@@ -96,7 +97,10 @@ class Classroom extends Model
     protected function tipoLabel(): Attribute
     {
         return Attribute::make(
-            get: fn($value, $attributes) => !empty( self::$arrTipos[( $attributes['tipo'] )] ) ? self::$arrTipos[( $attributes['tipo'] )] : $attributes['tipo'],
+            get: function($value, $attributes) {
+                $config = config('wiseabc.clase_tipo_labels');
+                return !empty( $config[( $attributes['tipo'] )] ) ? $config[( $attributes['tipo'] )] : $attributes['tipo'];
+            },
         );
     }
     protected function ritmoLabel(): Attribute
@@ -105,6 +109,34 @@ class Classroom extends Model
             get: function($value, $attributes) {
                 $config = config('wiseabc.ritmo_labels');
                 return !empty( $config[( $attributes['ritmo'] )] ) ? $config[( $attributes['ritmo'] )] : $attributes['ritmo'];
+            },
+        );
+    }
+    protected function edadLabel(): Attribute
+    {
+        return Attribute::make(
+            get: function($value, $attributes) {
+                if( !is_object($this->curso) || empty($this->curso->edad) )
+                {
+                    return null;
+                }
+
+                $config = config('wiseabc.edad_labels');
+                return !empty( $config[( $this->curso->edad )] ) ? $config[( $this->curso->edad )] : $this->curso->edad;
+            },
+        );
+    }
+    protected function nivelLabel(): Attribute
+    {
+        return Attribute::make(
+            get: function($value, $attributes) {
+                if( !is_object($this->curso) || empty($this->curso->nivel) )
+                {
+                    return null;
+                }
+
+                $config = config('wiseabc.nivel_labels');
+                return !empty( $config[( $this->curso->nivel )] ) ? $config[( $this->curso->nivel )] : $this->curso->nivel;
             },
         );
     }
@@ -133,15 +165,15 @@ class Classroom extends Model
      * Devuelve los horarios de la clase como Array
      * @return array
      */
-    public function getHorarioArray(){
+    public function getHorariosArray(){
         $arrHorarios = array();
         foreach($this->horarios AS $horario) {
             $arrHorarios[( $horario->dia )][] = $horario->hr;
         }
         return $arrHorarios;
     }
-    public function getHorariosArray(){
-        return $this->getHorarioArray();
+    public function getHorarioArray(){
+        return $this->getHorariosArray();
     }
 
     /**
@@ -190,6 +222,10 @@ class Classroom extends Model
         {
             $hoy = new Carbon($offset, '-0600');
         }
+        else if ( now()->lessThan($this->start)  )
+        {
+            $hoy = $this->start->copy()->setTimezone('-0600');
+        }
         else {
             $hoy = now('-0600');
         }
@@ -211,30 +247,6 @@ class Classroom extends Model
         });
 
         return $this->horarios->sortBy('next')->first()->next;
-        /*
-        $hoy_diasem = (int)$hoy->isoFormat('d');
-        $hr_actual = (int)$hoy->isoFormat('H');
-        $min_actual = (int)$hoy->isoFormat('m');
-
-        foreach($this->horarios AS $horario) {
-            //Horario->dia(lunes) === hoy(lunes)
-            if ( $horario->dia===$hoy_diasem ) {
-
-                if ( $horario->hr>$hr_actual ) {
-                    $horario->next = $hoy->copy()->hour($horario->hr)->minute(0);
-                    continue;
-                }
-                else if ( $horario->hr===$hr_actual && $min_actual<40 ) {
-                    $horario->next = $hoy->copy()->hour($horario->hr)->minute(0);
-                    continue;
-                }
-            }
-
-            $horario->next = $hoy->copy()->next( $enWeekdays[($horario->dia)] )->hour($horario->hr)->minute(0);
-            //echo print_r($horario->next, true).PHP_EOL;
-        }
-        return $this->horarios->sortBy('next')->first()->next;
-        */
     }//sigFechaHora
 
     /**
