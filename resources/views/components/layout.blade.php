@@ -1,31 +1,14 @@
-@php
-  $user = \Illuminate\Support\Facades\Auth::user();
-@endphp
-<!DOCTYPE html>
-<html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
-<head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>WiseABC</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com" crossorigin>
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;700&family=Open+Sans:wght@400;500;700&display=swap" rel="stylesheet">
-
-  <link rel="stylesheet" href="{{ mix('css/app.css') }}">
-  <script src="{{ mix('js/app.js') }}" defer></script>
-  <script src="https://kit.fontawesome.com/161bce774c.js" crossorigin="anonymous" defer></script>
-  <script>
-    window.app = window.app || {};
-    window.app.home = '{{ route('home') }}';
-  </script>
-</head>
-<body class="bg-gray-100 text-gray-600 dark:bg-azul dark:text-gray-200">
-  <header id="MainHeader" class="fixed top-0 left-0 w-full bg-gray-100 dark:bg-azul shadow-md z-20 flex justify-between items-center">
-    <button class="btn btn-toggle-aside w-12 text-azul dark:text-gray-200 text-center text-[22px] leading-12"><i class="fa-light fa-bars"></i></button>
+@props([
+  'user'=>\Illuminate\Support\Facades\Auth::user(),
+  'body'=>null
+])
+<x-document :body=$body>
+  <header id="MainHeader" class="fixed top-0 left-0 w-full bg-gray-50 dark:bg-azulw shadow-md z-20 flex justify-between items-center">
+    <button class="btn btn-toggle-aside w-12 text-azul-600 dark:text-gray-200 text-center text-[22px] leading-12"><i class="fa-light fa-bars"></i></button>
 
     <div class="flex text-sm font-accent font-medium">
       <span class="p-2">Hola {{ !empty($user->fname) ? $user->fname : $user->name }}</span>
-      <a href="{{ route('logout') }}" class="p-2">Salir</a>
+      <a href="{{ route('salir') }}" class="p-2">Salir</a>
 
       <label for="darkmode-toggler1" class="inline-flex relative items-center cursor-pointer ml-2">
         <span class="mr-2">
@@ -41,7 +24,7 @@
       </label>
     </div>
   </header>
-  <aside id="MainAside" class="fixed top-0 left-0 -translate-x-full lg:translate-x-0 h-full shadow-md pt-[68px] px-5 pb-6 bg-azul dark:bg-slate-900 text-white font-accent font-medium z-10">
+  <aside id="MainAside" class="fixed top-0 left-0 -translate-x-full lg:translate-x-0 h-full shadow-md pt-[68px] px-5 pb-6 bg-azulw dark:bg-black/20 text-gray-400 font-accent font-medium z-10">
     <nav class="flex flex-col font-accent text-center uppercase text-[10px]">
       @php
         $route_group = $user->user_type==2 ? 'student' : 'teacher';
@@ -64,7 +47,7 @@
         <span class="ico text-2xl"><i class="fa-light fa-user-gear"></i></span>
         <span class="">Perfil</span>
       </a>
-      <a href="{{ route('logout') }}" class="flex flex-col py-4">
+      <a href="{{ route('salir') }}" class="flex flex-col py-4">
         <span class="ico text-2xl"><i class="fa-light fa-arrow-right-from-arc"></i></span>
         <span class="">SALIR</span>
       </a>
@@ -72,7 +55,7 @@
   </aside>
   <div id="MainContainer" class="p-3 pt-16 lg:pt-20 lg:pl-[130px] lg:pr-5 lg:pb-5">
     {{ $slot }}
-    <x-alert-incontent></x-alert-incontent>
+
   </div>
-</body>
-</html>
+  <footer class="text-center">{{ __('All rights reserved.') }}</footer>
+</x-document>

@@ -6,6 +6,8 @@ use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Support\Carbon;
+use Illuminate\Support\Facades\Log;
 
 class Classroom extends Model
 {
@@ -13,15 +15,31 @@ class Classroom extends Model
 
     protected $fillable = ['curso_id','teacher_id', 'status', 'tipo', 'ritmo', 'start'];
 
-    public static $arrTipo = [
+    protected $casts = [
+        'start'=>'date:Y-m-d',
+        'ends_at'=>'date:Y-m-d',
+    ];
+
+    public static $arrTipos = [
         1 => 'Grupal',
-        2 => 'Individual'
+        2 => 'Particular'
     ];
 
     protected static function booted() {
         static::saving(function($clase){
+
             $semanas = ceil($clase->curso->duracion / $clase->ritmo);
-            $clase->ends_at = \Illuminate\Support\Carbon::parse($clase->start)->addWeek($semanas)->format('Y-m-d');
+
+            if ( is_object($clase->start) && class_basename($clase->start)==='Carbon' )
+            {
+                $clase->start->setTimezone('UTC');
+                $clase->ends_at = $clase->start->copy()->addWeek($semanas);
+            }
+            else if ( is_string($clase->start) )
+            {
+                $fecha = \Carbon\Carbon::parse( $clase->start );
+                $clase->ends_at = $fecha->addWeek($semanas);
+            }
         });
     }
 
@@ -30,13 +48,7 @@ class Classroom extends Model
      */
 
     /**
-     * @return Illuminate\Database\Eloquent\Collection
-     */
-    public function horarios() {
-        return $this->hasMany(ClassHorario::class, 'class_id')->orderBy('dia');
-    }
-
-    /**
+     * Devuelve el Curso correspondiente
      * @return App\Models\Curso
      */
     public function curso(){
@@ -44,14 +56,39 @@ class Classroom extends Model
     }
 
     /**
+     * Devuelve profesor asignado a la clase
      * @return App\Models\User
      */
     public function teacher(){
         return $this->belongsTo(User::class, 'teacher_id', 'id');
     }
 
+    /**
+     * Devuelve estudiantes asignados a la clase
+     * @return Illuminate\Database\Eloquent\Collection
+     */
     public function students() {
         return $this->belongsToMany(User::class, 'class_student', 'class_id', 'user_id')->withTimestamps();
+    }
+
+    /**
+     * Devuelve los horarios de la clase
+     * @return Illuminate\Database\Eloquent\Collection
+     */
+    public function horarios() {
+        return $this->hasMany(ClassHorario::class, 'class_id')->orderBy('dia');
+    }
+
+    /**
+     * Devuelve las siguientes agendas
+     * @return Illuminate\Database\Eloquent\Collection
+     */
+    public function schedules() {
+        return $this->hasMany(Schedule::class, 'class_id')->orderBy('fechahora');
+    }
+
+    public function attendances() {
+        return $this->hasMany(Attendance::class, 'class_id')->orderBy('fechahora','desc');
     }
 
     /**
@@ -60,7 +97,10 @@ class Classroom extends Model
     protected function tipoLabel(): Attribute
     {
         return Attribute::make(
-            get: fn($value, $attributes) => !empty( self::$arrTipo[( $attributes['tipo'] )] ) ? self::$arrTipo[( $attributes['tipo'] )] : $attributes['tipo'],
+            get: function($value, $attributes) {
+                $config = config('wiseabc.clase_tipo_labels');
+                return !empty( $config[( $attributes['tipo'] )] ) ? $config[( $attributes['tipo'] )] : $attributes['tipo'];
+            },
         );
     }
     protected function ritmoLabel(): Attribute
@@ -72,11 +112,39 @@ class Classroom extends Model
             },
         );
     }
+    protected function edadLabel(): Attribute
+    {
+        return Attribute::make(
+            get: function($value, $attributes) {
+                if( !is_object($this->curso) || empty($this->curso->edad) )
+                {
+                    return null;
+                }
+
+                $config = config('wiseabc.edad_labels');
+                return !empty( $config[( $this->curso->edad )] ) ? $config[( $this->curso->edad )] : $this->curso->edad;
+            },
+        );
+    }
+    protected function nivelLabel(): Attribute
+    {
+        return Attribute::make(
+            get: function($value, $attributes) {
+                if( !is_object($this->curso) || empty($this->curso->nivel) )
+                {
+                    return null;
+                }
+
+                $config = config('wiseabc.nivel_labels');
+                return !empty( $config[( $this->curso->nivel )] ) ? $config[( $this->curso->nivel )] : $this->curso->nivel;
+            },
+        );
+    }
     /*
     protected function start(): Attribute
     {
         return Attribute::make(
-            get: fn($value, $attributes) => \Illuminate\Support\Carbon::create($value),
+            get: fn($value, $attributes) => Carbon::create($value),
         );
     }*/
 
@@ -89,28 +157,32 @@ class Classroom extends Model
      * @return int
      */
     public function endsInWeeks() {
-        $start = \Illuminate\Support\Carbon::now();
-        return \Illuminate\Support\Carbon::parse($this->ends_at)->diffInWeeks( $start );
+        $start = Carbon::now();
+        return Carbon::parse($this->ends_at)->diffInWeeks( $start );
     }
 
     /**
      * Devuelve los horarios de la clase como Array
      * @return array
      */
-    public function getHorarioArray(){
+    public function getHorariosArray(){
         $arrHorarios = array();
         foreach($this->horarios AS $horario) {
             $arrHorarios[( $horario->dia )][] = $horario->hr;
         }
         return $arrHorarios;
     }
+    public function getHorarioArray(){
+        return $this->getHorariosArray();
+    }
 
     /**
      * Actualiza los horarios eliminando todos los anteriores
-     * @param array horarios
+     * @param array horarios [1=>[13,14], 3=>[13,14], 5=>[13,14] ]
      * @return array
      */
     public function saveHorarios($horarios) {
+
         if (empty($horarios) || !is_array($horarios) ){
             return false;
         }
@@ -133,29 +205,66 @@ class Classroom extends Model
         return $this->horarios;
     }
 
-    public function nextSchedule() {
+    /**
+     * Calcula la fecha y hora de la siguiente clase con base en los horarios
+     * @param Carbon::class|string $offset
+     * @return Carbon::class
+     */
+    public function sigFechaHora($offset='')
+    {
+        $enWeekdays = config('wiseabc.en_weekdays');
 
-        $today = now('America/Mexico_City')->locale('es');
+        if ( is_object($offset) && class_basename($offset)==='Carbon' )
+        {
+            $hoy = $offset->setTimezone('-0600');
+        }
+        else if ( is_string($offset) )
+        {
+            $hoy = new Carbon($offset, '-0600');
+        }
+        else if ( now()->lessThan($this->start)  )
+        {
+            $hoy = $this->start->copy()->setTimezone('-0600');
+        }
+        else {
+            $hoy = now('-0600');
+        }
 
-        foreach($this->horarios AS $horario) {
-
-            if ( $horario->dia===(int)$today->isoFormat('d') ) {
-
-                if ( $horario->hr>(int)$today->isoFormat('H') ) {
-                    $horario->next = $today->copy()->hour($horario->hr)->minute(0);
-                    continue;
-                }
-                else if ( $horario->hr===(int)$today->isoFormat('H') && (int)$today->isoFormat('m')<41 ) {
-                    $horario->next = $today->copy()->hour($horario->hr)->minute(0);
-                    continue;
-                }
+        $this->horarios->transform(function($horario,$hkey) use($enWeekdays, $hoy)
+        {
+            //Horario->dia(lunes) === hoy(lunes)
+            if ( $horario->dia == $hoy->isoFormat('d') )
+            {
+                $nextStr = $horario->hr.':00';
+            }
+            else {
+                $nextStr = $enWeekdays[( $horario->dia )] . ' '.$horario->hr.':00';
             }
 
-            $enWeekdays = config('wiseabc.en_weekdays');
-            $horario->next = $today->copy()->next( $enWeekdays[($horario->dia)] );
-            $horario->next->hour = $horario->hr;
-            //echo print_r($horario->next, true).PHP_EOL;
-        }
+            $horario->next = $hoy->copy()->subMinutes(40)->next( $nextStr );
+
+            return $horario;
+        });
+
         return $this->horarios->sortBy('next')->first()->next;
+    }//sigFechaHora
+
+    /**
+     * @param Carbon::class|string $offset
+     * @return App\Models\Schedule
+     */
+    public function nextSchedule($offset=null)
+    {
+        if ( !is_object($offset) )
+        {
+            if ( is_string($offset) )
+            {
+                $offset = Carbon::parse($offset);
+            }
+            else {
+                $offset = now();
+            }
+        }
+        return $this->schedules()->where('fechahora', '>', $offset->subMinutes(6) )->first();
     }
 }

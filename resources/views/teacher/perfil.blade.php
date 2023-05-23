@@ -4,11 +4,10 @@
 
   <form id="frmProfileCard" action="{{ route('teacher.update') }}" method="POST" enctype="multipart/form-data" class="my-5">
     @csrf
-    <input type="hidden" name="jstimezone" value="" />
     <div class="grid gap-5 grid-cols-1 xl:grid-cols-2 my-5">
 
       <section class="rounded-xl py-3 px-4 bg-white text-gray-600">
-        <h3 class="mb-2 font-accent font-medium text-sm text-azul dark:text-gray-600">Visible para todos</h3>
+        <h3 class="mb-2 font-accent font-medium text-sm text-azul-600 dark:text-gray-600">Visible para todos</h3>
 
         <div class="md:flex">
           <div class="mb-4 md:mb-0 md:mr-4 flex-grow-0 flex-shrink-0">
@@ -47,7 +46,7 @@
       </section>
 
       <section class="rounded-xl py-3 px-4 bg-white dark:bg-white/10">
-        <h3 class="mb-2 font-accent font-medium text-sm text-azul dark:text-inherit">Datos de acceso</h3>
+        <h3 class="mb-2 font-accent font-medium text-sm text-azul-600 dark:text-inherit">Datos de acceso</h3>
 
         <div class="mb-5 grid grid-cols-1 gap-3 md:grid-cols-2 ">
 
@@ -64,7 +63,7 @@
 
       <section class="">
         <div class="rounded-xl py-3 px-4 bg-white dark:bg-white/10">
-          <h3 class="mb-2 font-accent font-medium text-sm text-azul dark:text-inherit">Información adicional</h3>
+          <h3 class="mb-2 font-accent font-medium text-sm text-azul-600 dark:text-inherit">Información adicional</h3>
 
           <div class="mb-5 grid grid-cols-1 gap-3 md:grid-cols-2 ">
 
@@ -80,7 +79,7 @@
       </section>
 
       <section class="rounded-xl py-3 px-4 bg-white dark:bg-white/10">
-        <h3 class="mb-2 font-accent font-medium text-sm text-azul dark:text-inherit">Disponibilidad de horario</h3>
+        <h3 class="mb-2 font-accent font-medium text-sm text-azul-600 dark:text-inherit">Disponibilidad de horario</h3>
 
         <div class="grid grid-cols-4 md:grid-cols-7 gap-3 text-center leading-12 xl:leading-8">
 

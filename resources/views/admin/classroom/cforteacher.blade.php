@@ -2,7 +2,7 @@
   <div class="max-w-[1200px]">
     <h1 class="text-2xl font-accent font-bold mb-5">Crear classroom para profesor</h1>
 
-    <form method="POST" class="grid grid-cols-1 lg:grid-cols-2 gap-5">
+    <form id="frm-classroom-cforteacher" action="{{ route('admin.classroom.store') }}" method="POST" class="grid grid-cols-1 lg:grid-cols-2 gap-5">
       @csrf
       <input type="hidden" name="teacher_id" value="{{$profe->id}}">
 
@@ -22,7 +22,7 @@
 
       <section>
 
-        <x-forms.option-group name="tipo" label="Tipo" required :options="\App\Models\Classroom::$arrTipo" class="mb-5"></x-forms.option-group>
+        <x-forms.option-group name="tipo" label="Tipo" required :options="\App\Models\Classroom::$arrTipos" class="mb-5"></x-forms.option-group>
 
         <x-forms.option-group name="ritmo" label="Intensidad" required :options="config('wiseabc.ritmo_labels')" class="mb-5"></x-forms.option-group>
 
@@ -61,7 +61,7 @@
             @foreach ($arrHorarios[($dia)] as $hr)
             <label for="idia{{$dia}}hr{{$hr}}" class="cursor-pointer block border-b border-gray-400 last:border-b-0">
               <input type="checkbox" id="idia{{$dia}}hr{{$hr}}" name="horarios[{{$dia}}][]" value="{{$hr}}" class="sr-only peer" @checked( !empty($oldHorarios[( $dia )]) && in_array($hr, $oldHorarios[( $dia )] ) ) />
-              <div class="px-2 peer-checked:bg-azul peer-checked:text-white leading-12 xl:leading-8">{{$hr}}:00</div>
+              <div class="px-2 peer-checked:bg-azulw peer-checked:text-white leading-12 xl:leading-8">{{$hr}}:00</div>
             </label>
             @endforeach
           </div>

@@ -15,7 +15,7 @@ return new class extends Migration
     {
         Schema::create('users', function (Blueprint $table) {
             $table->id();
-            $table->string('status')->default('active')->index();
+            $table->string('status')->default('ACTIVE')->index();
             $table->unsignedInteger('user_type')->default(2)->index();
             $table->string('name');
             $table->string('email')->unique();

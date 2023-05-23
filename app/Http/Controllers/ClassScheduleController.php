@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\ClassSchedule;
+use App\Models\Schedule;
 use Illuminate\Http\Request;
 
 class ClassScheduleController extends Controller
@@ -41,10 +41,10 @@ class ClassScheduleController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  \App\Models\ClassSchedule  $classSchedule
+     * @param  \App\Models\Schedule  $classSchedule
      * @return \Illuminate\Http\Response
      */
-    public function show(ClassSchedule $classSchedule)
+    public function show(Schedule $classSchedule)
     {
         //
     }
@@ -52,10 +52,10 @@ class ClassScheduleController extends Controller
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  \App\Models\ClassSchedule  $classSchedule
+     * @param  \App\Models\Schedule  $classSchedule
      * @return \Illuminate\Http\Response
      */
-    public function edit(ClassSchedule $classSchedule)
+    public function edit(Schedule $classSchedule)
     {
         //
     }
@@ -64,10 +64,10 @@ class ClassScheduleController extends Controller
      * Update the specified resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Models\ClassSchedule  $classSchedule
+     * @param  \App\Models\Schedule  $classSchedule
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, ClassSchedule $classSchedule)
+    public function update(Request $request, Schedule $classSchedule)
     {
         //
     }
@@ -75,10 +75,10 @@ class ClassScheduleController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\Models\ClassSchedule  $classSchedule
+     * @param  \App\Models\Schedule  $classSchedule
      * @return \Illuminate\Http\Response
      */
-    public function destroy(ClassSchedule $classSchedule)
+    public function destroy(Schedule $classSchedule)
     {
         //
     }

@@ -9,7 +9,8 @@ use Illuminate\Validation\Rule;
 
 class TeacherController extends Controller
 {
-  public function registro(Request $request) {
+  public function registro(Request $request)
+  {
     $validated = $request->validate([
       'fname' => 'required',
       'lname' => 'required',
@@ -48,27 +49,36 @@ class TeacherController extends Controller
     return redirect()->route('gracias-profesor');
   }
 
-  public function home(Request $request) {
+  public function home(Request $request)
+  {
     $user = $request->user();
 
-    $today = now('America/Mexico_City')->locale('es');
+    $hoy = now();
 
-    $clases = $user->teachclasses()->with(['horarios','students'])->withCount('students')->where('ends_at','>=', $today->format('Y-m-d') )->get();
+    $clases = $user->teachclasses()->withCount('students')->where('status','ACTIVE')->where('ends_at', '>=', $hoy )->get();
 
     $clases_para_hoy = 0;
 
     foreach($clases AS $clase) {
-      $clase->next = $clase->nextSchedule();
+      $clase->next = $clase->sigFechaHora();
 
-      if ( $clase->next->greaterThanOrEqualTo( $today ) && $clase->next->lessThan( $today->tomorrow('America/Mexico_City') ) ) {
+      if ( $clase->next->greaterThanOrEqualTo( $hoy ) && $clase->next->lessThan( now()->tomorrow() ) ) {
         $clases_para_hoy++;
       }
     }
     $clases = $clases->sortBy('next');
 
     $clase = null;
-    if ($clases->first()->next->isoFormat('d') === $today->isoFormat('d') ) {
+    if ( $clases->count()>0 && $clases->first()->next->isoFormat('d') === $hoy->isoFormat('d') ) {
       $clase = $clases->shift();
+    }
+
+    $sigClase=null;
+    $sigClaseFin=null;
+    if ($clase!=null) {
+      $sigClase = $clase->sigFechaHora();
+
+      $sigClaseFin = $sigClase->copy()->addMinutes(40);
     }
 
     return view('teacher.home', [
@@ -76,27 +86,32 @@ class TeacherController extends Controller
       'clase'=>$clase,
       'clases'=>$clases,
       'clases_para_hoy'=>$clases_para_hoy,
-      'today'=>$today,
+      'hoy'=>$hoy->setTimezone('-0600')->locale('es'),
+      'sigClase'=>$sigClase,
+      'sigClaseFin'=>$sigClaseFin,
       'weekdays'=>config('wiseabc.weekdays')
     ]);
   }
 
-
-  public function pagos(Request $request) {
-
+  public function pagos(Request $request)
+  {
     return view('teacher.pagos',[
       'user'=>$request->user()
     ]);
   }
 
-  public function perfil(Request $request) {
+  public function perfil(Request $request)
+  {
+    $profe = $request->user();
 
     return view('teacher.perfil',[
-      'profe'=>$request->user()
+      'profe'=>$profe,
+
     ]);
   }
 
-  public function update(Request $request) {
+  public function update(Request $request)
+  {
 
     $valid = $request->validate([
       'fname' => 'required',
@@ -143,7 +158,8 @@ class TeacherController extends Controller
     return back();
   }
 
-  public function profileUpdateRequest(Request $request) {
+  public function profileUpdateRequest(Request $request)
+  {
     return redirect()->route('teacher.home')->with('success','Solicitud recibda');
   }
 }

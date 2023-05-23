@@ -1,15 +1,14 @@
-@php
-  $user = \Illuminate\Support\Facades\Auth::user();
-@endphp
+@props([
+  'user'=>\Illuminate\Support\Facades\Auth::user(),
+  'body'=>new \Illuminate\View\ComponentSlot()
+])
 <!DOCTYPE html>
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>WiseABC</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;700&family=Open+Sans:wght@400;500;700&display=swap" rel="stylesheet">
+  <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@300;400;500;700&family=Montserrat:wght@300;400;500;700&family=Roboto+Slab:wght@300;400;500;700&display=swap" rel="stylesheet">
 
   <link rel="stylesheet" href="{{ mix('css/app.css') }}">
   <script src="{{ mix('js/app.js') }}" defer></script>
@@ -19,13 +18,13 @@
     window.app.home = '{{ route('home') }}';
   </script>
 </head>
-<body class="bg-gray-100 text-gray-600 dark:bg-azul dark:text-gray-200">
-  <header id="AdminHeader" class="fixed top-0 left-0 w-full bg-gray-100 dark:bg-azul shadow-md z-20 flex justify-between items-center">
-    <button class="btn btn-toggle-aside w-12 text-azul dark:text-gray-200 text-center text-[22px] leading-12"><i class="fa-light fa-bars"></i></button>
+<body {{ $body->attributes->class(['bg-gray-100 text-gray-600 dark:bg-azulw dark:text-gray-400', $attributes->get('class')]) }}>
+  <header id="AdminHeader" class="fixed top-0 left-0 w-full bg-gray-100 dark:bg-azulw shadow-md z-20 flex justify-between items-center">
+    <button class="btn btn-toggle-aside w-12 text-azul-600 dark:text-gray-200 text-center text-[22px] leading-12"><i class="fa-light fa-bars"></i></button>
 
     <div class="flex text-sm font-accent font-medium">
       <span class="p-2">Hola {{ !empty($user->fname) ? $user->fname : $user->name }}</span>
-      <a href="{{ route('logout') }}" class="p-2">Salir</a>
+      <a href="{{ route('salir') }}" class="p-2">Salir</a>
 
       <label for="darkmode-toggler1" class="inline-flex relative items-center cursor-pointer ml-2">
         <span class="mr-2">
@@ -41,17 +40,20 @@
       </label>
     </div>
   </header>
-  <aside id="AdminAside" class="fixed top-0 left-0 h-full bg-gray-300 dark:bg-slate-900 shadow-md z-10 pt-[68px] px-5 pb-6 font-accent">
+  <aside id="AdminAside" class="fixed top-0 left-0 h-full -translate-x-full xl:translate-x-0 shadow-md z-10 bg-blue-900 pt-[68px] px-3 md:px-4 xl:px-5 pb-5 text-gray-200 font-accent">
     <ul class="font-accent">
+      <li><a href="{{ route('admin.home') }}" class="block p-2">Inicio</a></li>
       <li><a href="{{ route('admin.cursos.index') }}" class="block p-2">Cursos</a></li>
       <li><a href="{{ route('admin.classroom.index') }}" class="block p-2">Clases</a></li>
       <li><a href="{{ route('admin.teacher.index') }}" class="block p-2">Profesores</a></li>
       <li><a href="{{ route('admin.student.index') }}" class="block p-2">Alumnos</a></li>
+      <li><a href="{{ route('admin.pagos.index') }}" class="block p-2">Pagos</a></li>
     </ul>
   </aside>
-  <div id="AdminMainContainer" class="pt-20 pl-[170px] pr-5 pb-5">
+  <div id="AdminMainContainer" class="pt-16 px-3 pb-5 lg:pt-20 xl:pl-[170px]">
     {{ $slot }}
-    <x-alert-incontent></x-alert-incontent>
   </div>
+  <x-layout-toast></x-layout-toast>
+  @stack('scripts')
 </body>
 </html>

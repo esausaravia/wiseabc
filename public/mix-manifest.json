@@ -1,4 +1,7 @@
 {
     "/js/app.js": "/js/app.js",
+    "/js/students.js": "/js/students.js",
+    "/js/admin.pagos.js": "/js/admin.pagos.js",
+    "/js/admin.classroom.cforcurso.js": "/js/admin.classroom.cforcurso.js",
     "/css/app.css": "/css/app.css"
 }

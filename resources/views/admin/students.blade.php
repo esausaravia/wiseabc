@@ -10,6 +10,36 @@
     </a>
   </div>--}}
 
+
+    <div class="flex items-center my-3">
+      <form class="inline-flex">
+        <div class="mr-2 mb-5">
+          <x-forms.input label="Buscar:" name="searchfor" id="searchfor" value="{{$search}}" type="search"/>
+        </div>
+        <div class="mr-3 mb-5">
+          <x-forms.select label="Estatus" name="estatus" :value="$request->input('estatus')" :options="config('wiseabc.user_status_labels')" ></x-forms.select>
+        </div>
+        <div class="mr-3 mb-5">
+          <x-forms.select label="Nivel" name="nivel" :value="$request->input('nivel')" :options="config('wiseabc.nivel_labels')" ></x-forms.select>
+        </div>
+        <div class="mr-3 mb-5">
+          <x-forms.select label="Edad" name="edad" :value="$request->input('edad')" :options="config('wiseabc.edad_labels')" ></x-forms.select>
+        </div>
+        <div class="mr-3 mb-5">
+          <x-forms.select label="Ritmo" name="ritmo" :value="$request->input('ritmo')" :options="config('wiseabc.ritmo_labels')" ></x-forms.select>
+        </div>
+        <div class="mr-3 mt-5">
+          <button class="h-12 xl:h-8 shadow-md rounded-2xl px-3 bg-rojo text-white text-center flex items-center" type="submit">Buscar</button>
+        </div>
+      </form>
+      <form class="inline-flex">
+        <div class="mr-3 mb-1">
+          <x-forms.input name="searchfor" id="searchfor" value="" type="hidden"></x-forms.input>
+          <button class="h-12 xl:h-8 shadow-md rounded-2xl px-3 bg-blue-700 text-white text-center flex items-center" type="submit">Limpiar</button>
+        </div>
+      </form>
+    </div>
+
   <table class="border border-black/5 dark:border-white/5">
     <thead class="text-left">
       <tr class="bg-black/5 dark:bg-white/5">
@@ -17,13 +47,13 @@
         <th class="p-2">Nombre</th>
         <th class="p-2">Edad</th>
         <th class="p-2">Nivel</th>
-        <th class="p-2">Suscripción</th>
+        <th class="p-2">Ritmo</th>
         <th class="p-2">Classroom</th>
         <th class="p-2">Acciones</th>
       </tr>
     </thead>
     <tbody>
-      @foreach ($alumnos as $alumno)
+      @foreach ($Students as $alumno)
         <tr class="even:bg-black/5 dark:even:bg-white/5">
           <td class="p-2">{{ $alumno->id }}</td>
           <td class="p-2">
@@ -31,19 +61,19 @@
           </td>
           <td class="p-2">{{ $alumno->edadLabel }}</td>
           <td class="p-2">{{ $alumno->nivelLabel }}</td>
-          <td class="p-2">{{ ($_arr = config('wiseabc.suscripcion_labels')) && !empty($_arr[( $alumno->suscripcion )]) ? $_arr[( $alumno->suscripcion )] : $alumno->suscripcion }}</td>
+          <td class="p-2">
+            {{ $alumno->clase_tipo==1 ? 'Grupo' : 'Particular' }}
+            {{ $alumno->ritmoLabel }}
+          </td>
 
           <td class="p-2">
-            @if ( $alumno->suscripcion!==NULL )
-              @if ( $alumno->classrooms()->count()>0 )
-                @php $classroom = $alumno->classrooms()->get()->first(); @endphp
-
-                #{{ $classroom->id }}
-              @else
-                <a href="{{ route('admin.student.assignclass', ['student'=>$alumno]) }}" class="px-2">
-                  <i class="fa-light fa-plus"></i> Classroom </a>
-              @endif
+            @if( !empty($alumno->currentClassroom) )
+            #{{ $alumno->currentClassroom->id }}
+            @else
+            <a href="{{ route('admin.student.assignclass', ['student'=>$alumno]) }}" class="px-2">
+              <i class="fa-light fa-plus"></i> Classroom </a>
             @endif
+
           </td>
 
           <td class="px-2 text-sm ">

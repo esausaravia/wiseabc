@@ -28,7 +28,13 @@
 
 @if ($errors->any())
 <div class="alert fixed bottom-0 left-1/2 -translate-x-1/2 shadow-lg rounded-t-xl p-5 bg-rose-200 text-rose-700" role="alert">
-  <span class="block">Verifique la información y corrija los errores de arriba.</span>
+  <p>
+    @error('alert')
+    {{$message}}
+    @else
+    Verifique la información y corrija los errores de arriba.
+    @enderror
+  </p>
   <button type="button" class="btn-close absolute top-0 right-0 w-6" aria-label="Close"><i class="fa-light fa-times"></i></button>
 </div>
 @endif

@@ -4,7 +4,7 @@ namespace App\Console;
 
 use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Foundation\Console\Kernel as ConsoleKernel;
-
+use App\Http\Controllers\Admin\MsApiController;
 class Kernel extends ConsoleKernel
 {
     /**
@@ -16,6 +16,9 @@ class Kernel extends ConsoleKernel
     protected function schedule(Schedule $schedule)
     {
         // $schedule->command('inspire')->hourly();
+        $schedule->command("my:schedules")->cron('0 1 * * *');
+        //$schedule->command("my:atendance")->cron('45 * * * *');
+        $schedule->command("my:receipts")->cron('1 * * * * ');
     }
 
     /**

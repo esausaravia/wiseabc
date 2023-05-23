@@ -7,7 +7,7 @@
         Editar clase #{{$clase->id}}
       @endempty
     </h1>
-    <form action="{{route('admin.classroom.update', ['classroom'=>$clase->id])}}" method="POST" class="grid grid-cols-1 gap-5 lg:grid-cols-2">
+    <form action="{{route('admin.classroom.update', ['classroom'=>$clase->id])}}" method="POST" class="grid grid-cols-1 gap-5 lg:grid-cols-2" data-redirect="{{route('admin.classroom.index')}}">
       @csrf
       @method('PUT')
       <div class="flex">
@@ -32,11 +32,11 @@
 
       <section>
         <div>
-          <x-forms.option-group name="tipo" label="Tipo" :options="\App\Models\Classroom::$arrTipo" :value="$clase->tipo" class="mb-5" required></x-forms.option-group>
+          <x-forms.option-group name="tipo" label="Tipo" :options="\App\Models\Classroom::$arrTipos" :value="$clase->tipo" class="mb-5" required></x-forms.option-group>
 
           <x-forms.option-group name="ritmo" label="Intensidad" :options="config('wiseabc.ritmo_labels')" :value="$clase->ritmo" class="mb-5" required></x-forms.option-group>
 
-          <x-forms.input class="mb-5" type="date" name="start" label="Fecha de inicio" :value="$clase->start" required></x-forms.input>
+          <x-forms.input class="mb-5" type="date" name="start" label="Fecha de inicio" :value="$clase->start->format('Y-m-d')" required></x-forms.input>
         </div>
       </section>
 
@@ -59,7 +59,7 @@
             @foreach ($arrHorarios[($dia)] as $hr)
             <label for="idia{{$dia}}hr{{$hr}}" class="cursor-pointer block border-b border-gray-400 last:border-b-0">
               <input type="checkbox" id="idia{{$dia}}hr{{$hr}}" name="horarios[{{$dia}}][]" value="{{$hr}}" class="sr-only peer" @checked( !empty($oldHorarios[( $dia )]) && in_array($hr, $oldHorarios[( $dia )] ) ) />
-              <div class="px-2 peer-checked:bg-azul peer-checked:text-white leading-12 xl:leading-8">{{$hr}}:00</div>
+              <div class="px-2 peer-checked:bg-azulw peer-checked:text-white leading-12 xl:leading-8">{{$hr}}:00</div>
             </label>
             @endforeach
           </div>

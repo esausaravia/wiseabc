@@ -15,7 +15,7 @@ class CreateUserHorariosTable extends Migration
     {
         Schema::create('user_horarios', function (Blueprint $table) {
             $table->unsignedBigInteger('user_id');
-            $table->foreign('user_id')->references('id')->on('users');
+            $table->foreign('user_id')->references('id')->on('users')->onUpdate('cascade')->onDelete('cascade');
             $table->unsignedInteger('dia');
             $table->unsignedInteger('hr');
             $table->primary(['user_id','dia','hr']);

@@ -5,13 +5,16 @@ namespace App\Models;
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
-use Laravel\Sanctum\HasApiTokens;
-use Intervention\Image\Facades\Image;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Support\Carbon;
+use Intervention\Image\Facades\Image;
+use Laravel\Sanctum\HasApiTokens;
+use Illuminate\Support\Facades\Log;
 
-class User extends Authenticatable
+class User extends Authenticatable implements MustVerifyEmail
 {
     use HasApiTokens, HasFactory, Notifiable, SoftDeletes;
 
@@ -47,7 +50,7 @@ class User extends Authenticatable
         'email_verified_at' => 'datetime',
     ];
 
-    protected $with = ['usermetas'];
+    //protected $with = ['usermetas'];
 
     protected static function booted() {
         static::saved(function($user){
@@ -66,7 +69,7 @@ class User extends Authenticatable
      * @return Illuminate\Database\Eloquent\Collection
      */
 	public function usermetas() {
-		return $this->hasMany(\App\Models\Usermeta::class);
+		return $this->hasMany(Usermeta::class);
 	}
 
     /**
@@ -89,6 +92,47 @@ class User extends Authenticatable
     public function classrooms() {
         return $this->belongsToMany(Classroom::class, 'class_student', 'user_id', 'class_id')->withTimestamps()->orderByPivot('created_at', 'desc');
     }
+
+    public function attendances(){
+        return $this->hasMany(Attendance::class);
+    }
+    public function asistencias(){
+        return $this->hasMany(Attendance::class);
+    }
+
+    //old metakey suscripcion
+    public function billingplans()
+    {
+        return $this->belongsToMany( BillingPlan::class, 'subscriptions', 'user_id', 'billing_plan_id' )->as('subscription')->withTimestamps()->withPivot('id','status')->orderByPivot('created_at', 'desc');
+    }
+
+    public function subscriptions()
+    {
+        return $this->hasMany( Subscription::class )->orderBy('created_at','desc');
+    }
+
+    public function paypal()
+    {
+        return $this->morphOne(Paypalobj::class, 'paypalable')->ofMany([
+            'created_at'=>'max',
+            'id'=>'max'
+        ], function($query){
+            $query->where('api','paypal');
+        });
+
+        return $this->morphOne(Paypalobj::class, 'paypalable');
+    }
+
+    public function stripe()
+    {
+        return $this->morphOne(Paypalobj::class, 'paypalable')->ofMany([
+            'created_at'=>'max',
+            'id'=>'max'
+        ], function($query){
+            $query->where('api','stripe');
+        });
+    }
+
 
     /**
      * Accessors
@@ -117,19 +161,30 @@ class User extends Authenticatable
             },
         );
     }
+    protected function ritmoLabel(): Attribute
+    {
+        return Attribute::make(
+            get: function($value, $attributes) {
+                $config = config('wiseabc.ritmo_labels');
+                if (!is_array($config) ) {
+                    $config = array();
+                }
+                return $this->ritmo!==NULL && !empty($config[( $this->ritmo )]) ? $config[( $this->ritmo )] : $this->ritmo;
+            },
+        );
+    }
+    protected function currentClassroom(): Attribute
+    {
+        return Attribute::make(
+            get: function($value, $attributes){
+                return $this->classrooms()->with(['curso','teacher','horarios'])->where('status','active')->where('ends_at','>=', now() )->first();
+            }
+        );
+    }
 
     /**
      * Class Methods
      */
-	public function __get($gkey)
-	{
-        $attr = $this->getAttribute($gkey);
-		if ( $attr!==NULL ) {
-			return $attr;
-		}
-        $meta = $this->getMeta($gkey);
-        return $meta!==NULL ? $meta : $attr;
-	}
 
 	/**
 	 * @param string $mkey
@@ -137,12 +192,10 @@ class User extends Authenticatable
 	 */
 	public function getMeta($mkey="")
 	{
-		if ( empty($mkey) || empty($this->usermetas) || ! is_object($this->usermetas)
-			|| ! is_a($this->usermetas, "Illuminate\Database\Eloquent\Collection") )
-		{
+		if ( empty($mkey) )
+        {
 			return NULL;
 		}
-
         $return = '';
 
 		foreach( $this->usermetas AS $meta )
@@ -166,34 +219,31 @@ class User extends Authenticatable
         array_push($model_keys, '_token', '_method', 'password_confirmation', 'horario', 'horarios');
 
         $metasrc = array();
-        foreach($input AS $ik=>$ival)
+        foreach($input AS $_input_key=>$_input_val)
         {
-            if ($ival===false || $ival===null || in_array($ik, $model_keys) ) {
+            if ($_input_val===false || $_input_val===null || in_array($_input_key, $model_keys)!==false ) {
                 continue;
             }
-            if ( is_array($ival) || is_object($ival) ) {
-                $ival = json_encode($ival, JSON_UNESCAPED_UNICODE);
+            if ( is_array($_input_val) || is_object($_input_val) ) {
+                $_input_val = json_encode($_input_val, JSON_UNESCAPED_UNICODE);
             }
-            if ( $this->$ik!==$ival ) {
-                $metasrc[$ik] = $ival;
+            if ( $this->$_input_key!==$_input_val ) {
+                $metasrc[$_input_key] = $_input_val;
             }
         }
 
-        foreach ( $metasrc AS $mk=>$mv)
+        foreach ( $metasrc AS $_metakey=>$_metaval)
         {
-            if ( strlen($mv)>250 ) {
-                $this->usermetas()->where('metakey', $mk)->delete();
-                $mv_arr = str_split($mv, 250);
+            if ( strlen($_metaval)>250 ) {
+                $this->usermetas()->where('metakey', $_metakey)->delete();
+                $_metaval_arr = str_split($_metaval, 250);
 
-                foreach($mv_arr AS $__mv) {
-                    $this->usermetas()->create(['metakey'=>$mk,'metaval'=>$__mv]);
+                foreach($_metaval_arr AS $__mv) {
+                    $this->usermetas()->create(['metakey'=>$_metakey,'metaval'=>$__mv]);
                 }
             }
-            else if ( $this->$mk!==NULL ) {
-                $this->usermetas()->where('metakey', $mk)->update(['metaval'=>$mv]);
-            }
             else {
-                $this->usermetas()->create(['metakey'=>$mk, 'metaval'=>$mv]);
+                $this->usermetas()->updateOrCreate(['metakey'=>$_metakey],['metaval'=>$_metaval]);
             }
         }//endforeach
         $this->refresh();
@@ -201,65 +251,18 @@ class User extends Authenticatable
     }
 
     /**
-     * Devuelve los horarios del usuario como Array
-     * @param int $dia
-     * @return array
-     */
-    public function getHorarioArray($dia=0){
-        $arrHorarios = array();
-        foreach($this->horarios AS $horario) {
-            $arrHorarios[( $horario->dia )][] = $horario->hr;
-        }
-        return empty($dia) ? $arrHorarios : ( !empty($arrHorarios[($dia)]) ? $arrHorarios[($dia)] : [] );
-    }
-
-    public function horariosOcupados($dia=0) {
-        $arrOcupado = array();
-
-        foreach( $this->teachclasses AS $clase ) {
-            $arr2 = $clase->getHorarioArray();
-            foreach( $arr2 AS $_dia=>$arrHr) {
-                if (empty($dia) && !isset($arrOcupado[$_dia])) {
-                    $arrOcupado[$_dia] = array();
-                }
-                if ( empty($dia) ) {
-                    $arrOcupado[$_dia] = array_merge( $arrOcupado[$_dia], $arrHr );
-                }
-                else {
-                    $arrOcupado = array_merge( $arrOcupado, $arrHr );
-                }
-            }
-        }
-        return $arrOcupado;
-    }
-
-    public function horariosDisponibles($dia=false) {
-
-        $arrHorarios = $this->getHorarioArray();
-        $arrOcupado = $this->horariosOcupados();
-
-        foreach( $arrOcupado AS $_dia=>$arrHrs ) {
-            foreach($arrHrs AS $hr) {
-                if ( !empty($arrHorarios[($_dia)]) && ($rmvkey = array_search($hr, $arrHorarios[($_dia)]) ) !== false ) {
-                    unset($arrHorarios[($_dia)][$rmvkey]);
-                }
-            }
-
-        }
-        return empty($dia) ? $arrHorarios : ( !empty($arrHorarios[( $dia )]) ? $arrHorarios[( $dia )] : [] );
-    }
-
-    /**
      * Actualiza los horarios eliminando todos los anteriores
-     * @param array horarios
+     * @param array $horarios [1=>[9,10,11]]
      * @return array
      */
-    public function saveHorarios($horarios) {
-        if (empty($horarios) || !is_array($horarios) ){
+    public function saveHorarios($horarios=[]) {
+        if ( empty($horarios) || !is_array($horarios) ){
             return false;
         }
 
         $deleted = \Illuminate\Support\Facades\DB::delete('DELETE FROM user_horarios WHERE user_id='.$this->id);
+
+        $horarios = \App\Http\Controllers\WiseabcController::transformHorariosTimezone($horarios, '-0600', $this->getMeta('timezone') );
 
         foreach( $horarios AS $dia=>$arrHrs ) {
             if ( !is_array($arrHrs) ) {
@@ -275,6 +278,82 @@ class User extends Authenticatable
         }
         $this->refresh();
         return $this->horarios;
+    }
+
+    /**
+     * Devuelve los horarios del usuario como Array
+     * @param int $dia
+     * @return array
+     */
+    public function getHorariosArray($dia=0): array
+    {
+        $arrHorarios = array();
+        foreach($this->horarios AS $horario) {
+            if (empty($arrHorarios[( $horario->dia )]) || !is_array($arrHorarios[( $horario->dia )])) {
+                $arrHorarios[( $horario->dia )] = array();
+            }
+            $arrHorarios[( $horario->dia )][] = $horario->hr;
+        }
+        return empty($dia) ? $arrHorarios : ( !empty($arrHorarios[($dia)]) ? $arrHorarios[($dia)] : [] );
+    }
+    public function getHorarioArray($dia=0): array
+    {
+        return $this->getHorariosArray($dia);
+    }
+    public function getHorariosArrayTimezoned($dia=0)
+    {
+        return $this->transformHorariosTimezone( $this->getHorariosArray($dia) );
+    }
+
+    public function transformHorariosTimezone($horarios=null, $timezone=null, $fromTz='-0600')
+    {
+        if (empty($horarios) || !is_array($horarios) )
+        {
+            $horarios = $this->getHorariosArray();
+        }
+        if ( !is_string($timezone) )
+        {
+            $timezone = $this->getMeta('timezone');
+        }
+        return \App\Http\Controllers\WiseabcController::transformHorariosTimezone($horarios,$timezone,$fromTz);
+    }
+
+    public function horariosOcupados($dia=0) {
+        $arrOcupado = array();
+
+        foreach( $this->teachclasses AS $clase ) {
+
+            $arr2 = $clase->getHorarioArray();
+            foreach( $arr2 AS $_dia=>$arrHr) {
+                if ( empty($arrOcupado[$_dia]) || !is_array( $arrOcupado[$_dia]) ) {
+                    $arrOcupado[$_dia] = $arrHr;
+                }
+                else {
+                    $arrOcupado[$_dia] = array_merge( $arrOcupado[$_dia], $arrHr );
+                }
+            }
+        }
+        return empty($dia) ? $arrOcupado : ( !empty($arrOcupado[$dia]) ? $arrOcupado[$dia] : [] );
+    }
+
+    public function horariosDisponibles($dia=false) {
+
+        $arrHorarios = $this->getHorarioArray();
+        $arrOcupado = $this->horariosOcupados();
+
+        foreach( $arrOcupado AS $_dia=>$arrHrs ) {
+            foreach($arrHrs AS $hr) {
+                if ( !empty($arrHorarios[($_dia)]) && ($rmvkey = array_search($hr, $arrHorarios[($_dia)]) ) !== false ) {
+                    unset($arrHorarios[($_dia)][$rmvkey]);
+                }
+            }
+        }
+        foreach($arrHorarios AS $_dia=>$arrHrs) {
+            if ( empty($arrHrs) ) {
+                unset($arrHorarios[$_dia]);
+            }
+        }
+        return empty($dia) ? $arrHorarios : ( !empty($arrHorarios[( $dia )]) ? $arrHorarios[( $dia )] : [] );
     }
 
     /**
@@ -348,4 +427,24 @@ class User extends Authenticatable
 
         return asset( $filePath.'/'.$fileName );
     }
+
+    public function activeSubscription()
+    {
+        return $this->subscriptions()->with(['billingPlan', 'paypal', 'stripe'])->where('status','ACTIVE')->first();
+    }
+
+
+    /**
+     * Devuelve el atributo nativo del Modelo o el usermeta
+     *
+     */
+	public function __get($gkey)
+	{
+        $attr = $this->getAttribute($gkey);
+		if ( $attr!==NULL ) {
+			return $attr;
+		}
+        $meta = $this->getMeta($gkey);
+        return $meta!==NULL ? $meta : $attr;
+	}
 }

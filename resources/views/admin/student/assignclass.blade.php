@@ -4,21 +4,21 @@
 
     <form method="POST" class="">
       @csrf
-      <input type="hidden" name="user_id" value="{{$student->id}}">
+      <input type="hidden" name="user_id" value="{{$Student->id}}">
       <div class="grid grid-cols-1 lg:grid-cols-2 gap-5 mb-5">
 
         <section class="">
           <h3 class="text-lg font-accent font-medium">Estudiante</h3>
           <div class="rounded-lg shadow-md bg-white dark:bg-white/10 p-3">
 
-            <p class="text-lg">{{$student->name}}</p>
+            <p class="text-lg">{{$Student->name}}</p>
             <div class="text-sm my-2 flex">
-              <p class="mr-2"><strong>Email</strong>: <a href="mailto:{{ $student->email }}">{{ $student->email }}</a></p>
-              <p class="mr-2"><strong>Tel</strong>: {{$student->tel }}</p>
-              <p class="mr-2"><strong>Edad</strong>: {{$student->edadLabel }} años</p>
-              <p class="mr-2"><strong>Nivel</strong>: {{$student->nivelLabel }}</p>
+              <p class="mr-2"><strong>Email</strong>: <a href="mailto:{{ $Student->email }}">{{ $Student->email }}</a></p>
+              <p class="mr-2"><strong>Tel</strong>: {{$Student->tel }}</p>
+              <p class="mr-2"><strong>Edad</strong>: {{$Student->edadLabel }} </p>
+              <p class="mr-2"><strong>Nivel</strong>: {{$Student->nivelLabel }}</p>
             </div>
-            <x-user-card-horarios :horarios="$student->getHorarioArray()" :user_type="2"></x-user-card-horarios>
+            <x-user-card-horarios class="flex flex-wrap" :horarios="$Student->getHorarioArray()" :user_type="2"></x-user-card-horarios>
           </div>
 
         </section>
@@ -26,7 +26,10 @@
         <section class="">
           <h3 class="text-lg font-accent font-medium">Suscripción</h3>
           <div class="rounded-lg shadow-md bg-white dark:bg-white/10 p-3">
-            {{$student->suscripcion}}
+            <p><b>{{ $billPlan->name }} </b></p>
+            <p class="text-sm">
+              <b>Tipo: </b> {{ $billPlan->tipo==1 ? 'Grupal' : 'Particular' }} | <b>Ritmo: {{ $billPlan->ritmoLabel }} </b>
+            </p>
           </div>
         </section>
       </div>
@@ -42,7 +45,8 @@
             @foreach ($otrasClases as $clase)
             <li class="">
               <label for="iclase-{{ $clase->id }}" class="block shadow-md rounded-lg p-4 bg-white dark:bg-white/10 peer-checked:shadow-blue-500 peer-checked:border-2 peer-checked:border-blue-500">
-                <p class="mb-2">{{$clase->curso->name}}</p>
+                <p class="">{{$clase->curso->name}}</p>
+                <p class="mb-2">{{ $clase->teacher->name }}</p>
                 <div class="text-sm">
 
                   <ul class="flex flex-wrap">
@@ -78,7 +82,8 @@
           <li class="">
             <input type="radio" name="class_id" id="iclase-{{ $clase->id }}" value="{{ $clase->id }}" required class="sr-only peer" />
             <label for="iclase-{{ $clase->id }}" class="block cursor-pointer shadow-md rounded-lg p-4 bg-white dark:bg-white/10 peer-checked:shadow-blue-500 peer-checked:border-2 peer-checked:border-blue-500">
-              <p class="mb-2">{{$clase->curso->name}}</p>
+              <p class="">{{$clase->curso->name}}</p>
+              <p class="mb-2">{{ $clase->teacher->name }}</p>
               <div class="text-sm">
 
                 <ul class="flex flex-wrap">

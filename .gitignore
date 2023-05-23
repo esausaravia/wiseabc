@@ -2,10 +2,14 @@
 /public/build
 /public/hot
 /public/storage
+/public/css
+/public/js
+/public/**/*.map
 /storage/*.key
 /vendor
+.DS_Store
 .env
-.env.backup
+.env.*
 .phpunit.result.cache
 Homestead.json
 Homestead.yaml
@@ -15,3 +19,6 @@ yarn-error.log
 /.idea
 /.vscode
 notes.txt
+/resources/css/tailwind.css
+public/js/admin.classroom.cforcurso.js
+public/js/admin.pagos.js

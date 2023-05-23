@@ -9,6 +9,7 @@ module.exports = {
   theme: {
     fontFamily:{
       'sans': ['"Open Sans"', defaultTheme.fontFamily.sans],
+      'serif': ['"Roboto Slab"', defaultTheme.fontFamily.serif],
       'accent': ['Montserrat', defaultTheme.fontFamily.sans],
       'mono': ['monospace']
     },
@@ -17,8 +18,22 @@ module.exports = {
         px: '1px'
       },
       colors:{
-        'azul':'#0B1F41',
-        'rojo':'#BE1F41'
+        'rojo':'#BE1F41',
+        'azulw':'#0B1F41',
+        'azul2':'#12346D',//'#0B1F41',
+        'azul':{
+          50:"#c5dbfd",
+          100:"#a6c8fb",
+          200:"#8ab4f4",
+          300:"#70a1ec",
+          400:"#467cd1",
+          500:"#2b5cab",
+          600:"#1a4181",
+          700:"#102d5c",
+          800:"#0b1f41",
+          900:"#031028",
+          950:"#000919",
+        }
       },
       container: {
         screens: {

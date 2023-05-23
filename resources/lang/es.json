@@ -1,4 +1,22 @@
 {
+    "APPROVAL_PENDING": "Aprobación pendiente",
+    "APPROVED": "Aprobado",
+    "ACTIVE": "Activo",
+    "SUSPENDED": "Suspendido",
+    "CANCELLED": "Cancelado",
+    "EXPIRED": "Expirado",
+
+    "APPROVAL_PENDINGa": "Aprobación pendiente",
+    "APPROVEDa": "Aprobada",
+    "ACTIVEa": "Activa",
+    "SUSPENDEDa": "Suspendida",
+    "CANCELLEDa": "Cancelada",
+    "EXPIREDa": "Expirada",
+
+    "Continue":"Continuar",
+    "Save":"Guardar",
+    "Send":"Enviar",
+
     "E-Mail Address": "Correo electrónico",
     "Password": "Contraseña",
     "Remember Me": "Recuérdame",

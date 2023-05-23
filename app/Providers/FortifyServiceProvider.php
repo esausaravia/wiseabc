@@ -4,9 +4,11 @@ namespace App\Providers;
 
 use App\Actions\Fortify\CreateNewUser;
 use App\Actions\Fortify\ResetUserPassword;
+use App\Http\Controllers\WiseabcController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\ServiceProvider;
+use Illuminate\Validation\Rules\Password;
 use Laravel\Fortify\Contracts\LoginResponse;
 use Laravel\Fortify\Contracts\LogoutResponse;
 use Laravel\Fortify\Fortify;
@@ -26,28 +28,15 @@ class FortifyServiceProvider extends ServiceProvider
    */
   public function register()
   {
-    //
+    /*
     $this->app->instance(LoginResponse::class, new class implements LoginResponse{
       public function toResponse($request) {
-        $user = $request->user();
-
-        if ($user->user_type===1) {
-          return $request->wantsJson()
-            ? response()->json(['redirect' => route('admin.home') ])
-            : redirect()->route('admin.home');
-        }
-
-        if ($user->user_type===2 && $user->suscripcion===null) {
-          return $request->wantsJson()
-            ? response()->json(['redirect' => route('student.elegir-suscripcion') ])
-            : redirect()->route('student.elegir-suscripcion');
-        }
 
         return $request->wantsJson()
           ? response()->json(['two_factor' => false, 'redirect' => config('fortify.home') ])
           : redirect()->intended( config('fortify.home') );
       }
-    });
+    });*/
   }
 
   /**
@@ -57,6 +46,16 @@ class FortifyServiceProvider extends ServiceProvider
    */
   public function boot()
   {
+    Password::defaults(function(){
+      $ruleProd = Password::min(8)
+        ->letters()
+        ->mixedCase()
+        ->numbers()
+        ->symbols();
+
+      return $this->app->isProduction() ? $ruleProd : Password::min(8);
+    });
+
     Fortify::createUsersUsing(CreateNewUser::class);
     Fortify::resetUserPasswordsUsing(ResetUserPassword::class);
     /*
@@ -73,8 +72,29 @@ class FortifyServiceProvider extends ServiceProvider
       return Limit::perMinute(5)->by($request->session()->get('login.id'));
     });
     */
-    Fortify::registerView(function(){
-      return view('auth.registro');
+    Fortify::registerView(function(Request $request){
+
+      $horarios = array(1=>array());
+      for($h=8; $h<21; $h++)
+      {
+        $horarios[1][] = $h;
+      }
+
+      $timezone = session('ip-api');
+      if ( is_array($timezone) && !empty($timezone['timezone']) )
+      {
+        $horarios = WiseabcController::transformHorariosTimezone( $horarios, $timezone['timezone'] );
+      }
+
+      $horarios[2] = [];
+      foreach($horarios[1] AS $hr)
+      {
+        $horarios[2][$hr] = $hr.':00';
+      }
+
+      return view('auth.registro', [
+        'horarios' => $horarios[2]
+      ]);
     });
     Fortify::loginView(function(){
       return view('auth.login');
@@ -83,7 +103,10 @@ class FortifyServiceProvider extends ServiceProvider
       return view('auth.forgot-password');
     });
     Fortify::resetPasswordView(function($request){
-      return view('auth.reset-password', ['request',$request]);
+      return view('auth.reset-password', ['request'=>$request]);
+    });
+    Fortify::verifyEmailView(function($request){
+      return view('auth.verify-email', ['request'=>$request]);
     });
   }
 }

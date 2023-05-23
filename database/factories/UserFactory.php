@@ -17,12 +17,18 @@ class UserFactory extends Factory
      */
     public function definition()
     {
+        /**
+         * Faker documentation
+         * https://fakerphp.github.io/
+         */
         return [
-            'name' => fake()->name(),
+            'name' => fake()->firstName().' '.fake()->lastName(),
             'email' => fake()->unique()->safeEmail(),
             'email_verified_at' => now(),
-            'password' => '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', // password
+            'password' => \Illuminate\Support\Facades\Hash::make('qwerasdf'), // password
             'remember_token' => Str::random(10),
+            'status' => 'active',
+            'user_type' => 2
         ];
     }
 
@@ -35,6 +41,18 @@ class UserFactory extends Factory
     {
         return $this->state(fn (array $attributes) => [
             'email_verified_at' => null,
+        ]);
+    }
+
+    public function isStudent() {
+        return $this->state(fn (array $attributes) => [
+            'user_type' => 2,
+        ]);
+    }
+
+    public function isTeacher() {
+        return $this->state(fn (array $attributes) => [
+            'user_type' => 3,
         ]);
     }
 }

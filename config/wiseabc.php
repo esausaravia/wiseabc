@@ -1,17 +1,10 @@
 <?php
 return [
   'edad_labels' => [
-    3 => '3-5',
-    6 => '6-11',
-    12 => '12-17',
-    18 => '18+'
-  ],
-
-  'edad_cats' => [
-    5 => 'Niños',
-    11 => 'Niños2',
-    15 => 'Adolecentes',
-    18 => 'Adultos'
+    3 => '3-5 años',
+    6 => '6-11 años',
+    12 => '12-17 años',
+    18 => '18+ años'
   ],
 
   'nivel_labels' => [
@@ -26,74 +19,20 @@ return [
     9=>'D3'
   ],
 
+  'clase_tipo_labels'=>[
+    '1' => 'Grupal',
+    '2' => 'Particular',
+  ],
+
   'ritmo_labels' => [
-    1 => 'Relax',
-    2 => 'Medio',
-    3 => 'Intenso',
-    4 => 'Intenso+'
-  ],
-
-  'suscripcion_labels' => [
-    1 => 'Grupal Relax',
-    2 => 'Grupal Medio',
-    3 => 'Grupal Intenso',
-    4 => 'Grupal Intenso+',
-    5 => 'Individual Relax',
-    6 => 'Individual Medio',
-    7 => 'Individual Intenso',
-    8 => 'Individual Intenso+'
-  ],
-
-  'suscripciones' => [
-    0 => [
-      'name'=>'Prueba',
-      'tipo'=>1,
-      'ritmo'=>1
-    ],
-    1 => [
-      'name'=>'Grupal Relax',
-      'tipo'=>1,
-      'ritmo'=>1
-    ],
-    2 => [
-      'name'=>'Grupal Medio',
-      'tipo'=>1,
-      'ritmo'=>2
-    ],
-    3 => [
-      'name'=>'Grupal Intenso',
-      'tipo'=>1,
-      'ritmo'=>3
-    ],
-    4 => [
-      'name'=>'Grupal Intenso+',
-      'tipo'=>1,
-      'ritmo'=>4
-    ],
-    5 => [
-      'name'=>'Individual Relax',
-      'tipo'=>2,
-      'ritmo'=>1
-    ],
-    6 => [
-      'name'=>'Individual Medio',
-      'tipo'=>2,
-      'ritmo'=>2
-    ],
-    7 => [
-      'name'=>'Individual Intenso',
-      'tipo'=>2,
-      'ritmo'=>3
-    ],
-    8 => [
-      'name'=>'Individual Intenso+',
-      'tipo'=>2,
-      'ritmo'=>4
-    ],
+    '1' => 'Relax',
+    '2' => 'Medio',
+    '3' => 'Intenso',
+    '5' => 'Intenso+'
   ],
 
   'weekdays' => [
-    '','lun','mar','mie','jue','vie','sab','dom'
+    '','lun.','mar.','mie.','jue.','vie.','sab.','dom.'
   ],
 
   'en_weekdays' => [
@@ -117,5 +56,39 @@ return [
     19=>'19:00',
     20=>'20:00',
     21=>'21:00'
-  ]
+  ],
+  'student_horarios_labels' => [
+    8=>'8:00',
+    9=>'9:00',
+    10=>'10:00',
+    11=>'11:00',
+    12=>'12:00',
+    13=>'13:00',
+    14=>'14:00',
+    15=>'15:00',
+    16=>'16:00',
+    17=>'17:00',
+    18=>'18:00',
+    19=>'19:00',
+    20=>'20:00'
+  ],
+
+  'status_labels'=>[
+    'DISABLED'=>'Desactivado',
+    'ACTIVE'=>'Activo',
+  ],
+  'user_status_labels' =>[
+    'DISABLED'=>'Desactivado',
+    'ACTIVE'=>'Activo',
+  ],
+  'pago_status_labels'=>[
+    'PENDING'=>'Pendiente',
+    'PAID'=>'Pagado',
+    'FAILED'=>'Fallido'
+  ],
+  'classrooms_exist' => [
+    '2' => 'Sin clases',
+    '1' => 'Con clases',
+  ],
+
 ];
