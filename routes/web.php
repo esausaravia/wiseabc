@@ -23,55 +23,8 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('test', function(Request $request){
-	ob_start();
-
-	$ritmo = 3;
-	echo "Ritmo: {$ritmo} clases por semana\n";
-	echo "  curso de ".(48 / $ritmo)."semanas\n";
-
-	$inicio = Carbon::parse('2023-06-05','-0600');
-	echo "inicio: ".$inicio->isoFormat("ddd DD MMMM Y")."\n";
-
-	$fin = $inicio->copy()->addWeeks(48 / $ritmo);
-	echo "fin: ".$fin->isoFormat("ddd DD MMMM Y")."\n\n";
-
-	echo "ingreso: ".$inicio->isoFormat("DD MMMM Y")."\n";
-
-	$period = \Carbon\CarbonPeriod::create( $inicio , '4 weeks', $fin->format("Y-m-d"));
-	$period->excludeEndDate();
-
-	$billings = $period->count();
-	echo "billings: {$billings}\n";
-
-	$lastBillingDate = $period->last();
-	echo "last biling: ".$lastBillingDate->isoFormat("DD MMMM Y")."\n";
-
-
-	echo PHP_EOL.PHP_EOL."**** IRREGULAR ****".PHP_EOL;
-
-	$ingreso = Carbon::parse('2023-07-23','-0600');
-	echo "ingreso: ".$ingreso->isoFormat("DD MMMM Y")."\n";
-
-	$period = \Carbon\CarbonPeriod::create( $ingreso , '4 weeks', $fin->format("Y-m-d"));
-	$period->excludeEndDate();
-
-	$billings = $period->count();
-	echo "billings: {$billings}\n";
-
-	$lastBillingDate = $period->last();
-	echo "last biling: ".$lastBillingDate->isoFormat("DD MMMM Y")."\n";
-
-	$includedEndDate = $period->getIncludedEndDate();
-	echo "endDate: ".$includedEndDate->isoFormat("DD MMMM Y")."\n";
-
-	$endDatesDiff = $includedEndDate->diffInDays( $lastBillingDate );
-	echo "diff days {$endDatesDiff}\n";
-
-	ddd( ob_get_clean() );
-})->name('test');
-
-Route::get('country', function(Request $request){
+Route::get('country', function(Request $request)
+{
 	$tz = $request->input('tz');
 	$arrUStz = ['America/Adak',
 	'America/Anchorage',
@@ -134,7 +87,7 @@ Route::get('country', function(Request $request){
 	return ['status'=>'ok','countryCode'=>$countryCode];
 });
 
-Route::get('ip-api', function(Request $request){
+Route::get('ip-api', function(Request $request) {
 
 	$return = $request->session()->get('ip-api');
 	return !empty($return) ? ['type'=>gettype($return), 'return'=>$return] : response(['message'=>'Error'], 400);
@@ -202,14 +155,6 @@ Route::get('clases/disponibles', [ClassroomController::class, 'disponibles'])->n
 
 Route::resource('clases', ClassroomController::class);
 
-Route::get('/testerror', function(Request $request)
-{
-	$errMsg = "⚠️  Webhook error while parsing basic request.";
-
-	return $request->wantsJson() ? response(['error'=>$errMsg], 400)
-                : back()->withErrors(['message'=>$errMsg ]);
-});
-
 /**
  * Estudante
  */
@@ -229,14 +174,18 @@ Route::group(['prefix'=>'student','as'=>'student.','middleware' => ['auth','stud
 
 	Route::match(['PUT','PATCH'], 'perfil', [StudentController::class, 'update'])->name('update');
 
+	Route::patch('perfil/metas', [StudentController::class, 'updateMetas'])->name('update-metas');
+
 	Route::resource('subscriptions', SubscriptionController::class);
 
+	Route::post('stripe/create-checkout-session', [StripeController::class, 'subscriptionCheckoutSession'])->name('stripe.create-checkout-session');
+
+	Route::get('stripe/success', [StripeController::class, 'subscriptionCheckoutSuccess'])->name('stripe.success');
+
+	Route::any('stripe/create-portal-session', [StripeController::class,'customerPortalSession'])->name('stripe.create-portal-session');
 	/*
-	Route::post('/subscriptions/stripe/create-checkout-session', [StripeController::class, 'subscriptionCheckoutSession'])->name('subscriptions.stripe.create-checkout-session');
 
-	Route::get('/subscriptions/stripe/success', [StripeController::class, 'subscriptionCheckoutSuccess'])->name('subscriptions.stripe.success');
 
-	Route::post('/stripe/create-portal-session', [StripeController::class,'customerPortalSession'])->name('stripe.create-portal-session');
 	*/
 });
 
@@ -245,7 +194,7 @@ Route::group(['prefix'=>'student','as'=>'student.','middleware' => ['auth','stud
  */
 Route::group(['prefix'=>'teacher','as'=>'teacher.','middleware' => ['auth','teacher']], function(){
 
-	Route::get('home', [TeacherController::class, 'home'])->name('home');
+	Route::get('', [TeacherController::class, 'home'])->name('home');
 
 	Route::get('pagos', [TeacherController::class, 'pagos'])->name('pagos');
 
@@ -289,4 +238,59 @@ Route::group(['prefix'=>'admin','as'=>'admin.','middleware' => ['auth','admin']]
 		'teacher' => \App\Http\Controllers\Admin\TeacherController::class
 	]);
 
+});
+
+/**
+ * test routes
+ */
+Route::get('carbon', function(Request $request){
+	ob_start();
+
+	$ritmo = 3;
+	echo "Ritmo: {$ritmo} clases por semana\n";
+	echo "  curso de ".(48 / $ritmo)."semanas\n";
+
+	$inicio = Carbon::parse('2023-06-05','-0600');
+	echo "inicio: ".$inicio->isoFormat("ddd DD MMMM Y")."\n";
+
+	$fin = $inicio->copy()->addWeeks(48 / $ritmo);
+	echo "fin: ".$fin->isoFormat("ddd DD MMMM Y")."\n\n";
+
+	echo "ingreso: ".$inicio->isoFormat("DD MMMM Y")."\n";
+
+	$period = \Carbon\CarbonPeriod::create( $inicio , '4 weeks', $fin->format("Y-m-d"));
+	$period->excludeEndDate();
+
+	$billings = $period->count();
+	echo "billings: {$billings}\n";
+
+	$lastBillingDate = $period->last();
+	echo "last biling: ".$lastBillingDate->isoFormat("DD MMMM Y")."\n";
+
+
+	echo PHP_EOL.PHP_EOL."**** IRREGULAR ****".PHP_EOL;
+
+	$ingreso = Carbon::parse('2023-07-23','-0600');
+	echo "ingreso: ".$ingreso->isoFormat("DD MMMM Y")."\n";
+
+	$period = \Carbon\CarbonPeriod::create( $ingreso , '4 weeks', $fin->format("Y-m-d"));
+	$period->excludeEndDate();
+
+	$billings = $period->count();
+	echo "billings: {$billings}\n";
+
+	$lastBillingDate = $period->last();
+	echo "last biling: ".$lastBillingDate->isoFormat("DD MMMM Y")."\n";
+
+	$includedEndDate = $period->getIncludedEndDate();
+	echo "endDate: ".$includedEndDate->isoFormat("DD MMMM Y")."\n";
+
+	$endDatesDiff = $includedEndDate->diffInDays( $lastBillingDate );
+	echo "diff days {$endDatesDiff}\n";
+
+	ddd( ob_get_clean() );
+})->name('test');
+
+Route::get('colors', function(Request $request) {
+	return view('colors');
 });

@@ -3,11 +3,12 @@
 namespace Database\Seeders;
 
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
+use App\Models\Attendance;
 use App\Models\Classroom;
 use App\Models\Curso;
 use App\Models\Schedule;
 use App\Models\TeamsInfo;
-use App\Models\Attendance;
+use App\Models\User;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
 
@@ -107,7 +108,7 @@ class DatabaseSeeder extends Seeder
     /**
      * Crear classrooms, schedules y attendances
      */
-    $hoy = now('-0600');
+    $hoy = now();
     $enWeekdays = config('wiseabc.en_weekdays');
     $cursoStart = $hoy->copy()->subMonth();
 
@@ -137,7 +138,7 @@ class DatabaseSeeder extends Seeder
           'status' => 'ACTIVE',
           'tipo' => 1,
           'ritmo' => 1,
-          'start' => $cursoStart->copy()->setTimezone('UTC')
+          'start' => $cursoStart->copy()
         ]);
 
         /**
@@ -151,7 +152,7 @@ class DatabaseSeeder extends Seeder
          * CREAR Attendances del mes pasado
          *
          */
-        $_sigdia = $cursoStart->copy()->next( $enWeekdays[($dia)] )->hour($hr)->minute(0);
+        $_sigdia = $cursoStart->copy()->setTimezone('-0600')->next( $enWeekdays[($dia)] )->hour($hr)->minute(0);
         while( $_sigdia->lessThan($hoy) ) {
 
           /**
@@ -244,6 +245,14 @@ class DatabaseSeeder extends Seeder
       $pago->attendances()->saveMany($Asistencias);
 
     }//endforeach profe
+
+    $student = \App\Models\User::where('user_type', 2)->first();
+
+    $student->stripe()->create([ 'api' => 'stripe', 'api_id' => 'cus_Nvr5A5e5ehR2TE', 'api_object' => '{}' ]);
+
+    $subscription = $student->subscriptions()->create(['billing_plan_id' => 9,  'status' => 'ACTIVE',  'start' => '2023-05-20 06:00:00',  'next_billing' => '2023-06-05 06:00:00']);
+
+    $subscription->stripe()->create([ 'api' => 'stripe', 'api_id' => 'sub_1N9zgZJI1wpouYid0cpFRkXS', 'api_object' => '{}' ]);
 
 
     $this->call([

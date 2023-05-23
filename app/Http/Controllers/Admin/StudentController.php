@@ -305,6 +305,12 @@ class StudentController extends Controller
     ]);
 
     $clase = \App\Models\Classroom::find($valid['class_id']);
+    if ( !is_object($clase) || class_basename($clase)!=='Classroom' )
+    {
+      $errMsg = 'No se encontró la clase #'.$valid['class_id'];
+      return $request->wantsJson() ? response(['alert'=>$errMsg],400)
+          : back()->withErrors(['alert'=>$errMsg]);
+    }
     if ( $clase->students()->count()>2 ) {
       return back()->withErrors(['alert'=>'Esta clase ya tiene 3 estudiantes']);
     }

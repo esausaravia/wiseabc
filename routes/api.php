@@ -5,6 +5,7 @@ use App\Http\Controllers\StripeController;
 use App\Http\Controllers\SubscriptionController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Str;
 
@@ -26,8 +27,11 @@ Route::get('/', function(Request $request){
 
 Route::get('client-ip', function(Request $request){
 
-    $_SERVER['HTTP_X_FORWARDED_FOR'];
+    /*
     $_SERVER['HTTP_CF_CONNECTING_IP'];
+    $_SERVER['HTTP_X_FORWARDED_FOR'];
+    $_SERVER['REMOTE_ADDR'];
+    */
 
     $ip = !empty( $_SERVER['HTTP_CF_CONNECTING_IP'] ) ? $_SERVER['HTTP_CF_CONNECTING_IP'] : ( !empty($_SERVER['HTTP_X_FORWARDED_FOR']) ? $_SERVER['HTTP_X_FORWARDED_FOR'] : $_SERVER['REMOTE_ADDR'] );
     return ['ip' => $ip];
@@ -59,9 +63,10 @@ Route::middleware('auth:sanctum')->group(function(){
         return $request->user();
     });
 
+    Route::resource('subscriptions', SubscriptionController::class);
+
     Route::get('/paypal/order-details/{id}', [PayPalController::class, 'getOrderDetails']);
 
-    Route::resource('subscriptions', SubscriptionController::class);
 });
 
 /**
@@ -109,7 +114,7 @@ Route::group(['prefix'=>'admin','as'=>'api.admin.','middleware' => ['auth:sanctu
  * Webhooks
  */
 Route::group(['prefix'=>'stripe','as'=>'api.stripe.'], function(){
-    Route::any('/webhooks',[StripeController::class, 'webhooks'])->name('webhooks');
+    Route::any('webhooks',[StripeController::class, 'webhooks'])->name('webhooks');
 });
 
 Route::group(['prefix'=>'webhooks','as'=>'webhooks.'],function(){

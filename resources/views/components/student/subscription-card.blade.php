@@ -1,9 +1,9 @@
 @props([
-    'billPlan' => null,
-    'classroom' => null,
-    'paypalSubscriptionQty' => null,
-    'paypalSubscriptionStartDate' => null,
-    'subscripcion' => null,
+  'billplan' => null,
+  'classroom' => null,
+  'subscriptionQty' => null,
+  'subscriptionStartDate' => null,
+  'subscripcion' => null
 ])
 @if ( is_object($subscripcion) )
 
@@ -40,13 +40,6 @@
       <span class="w-2/3 whitespace-nowrap">{{ !empty($subscripcion->paypal) ? 'PayPal' : 'Stripe' }}</span>
     </div>
 
-    @if ( !empty($subscripcion->paypal) )
-    <div class="flex my-1 py-1 border-b border-black/10">
-      <span class="w-1/3 text-sm leading-7">PayPal Account:</span>
-      <span class="w-2/3 whitespace-nowrap">{{ $subscripcion->paypal->api_object->subscriber->email_address }}</span>
-    </div>
-    @endif
-
     <div class="flex my-1 py-1 border-b border-black/10">
       <span class="w-1/3 text-sm leading-7">Inicio:</span>
       <span class="w-2/3">{{ $subscripcion->start->setTimezone('-0600')->locale('es')->isoFormat('MMMM DD, Y') }}</span>
@@ -57,14 +50,27 @@
       <span class="w-2/3">cada 4 semanas</span>
     </div>
 
+    @if ( !empty($subscripcion->paypal) )
+    <div class="flex my-1 py-1 border-b border-black/10">
+      <span class="w-1/3 text-sm leading-7">PayPal Account:</span>
+      <span class="w-2/3 whitespace-nowrap">{{ $subscripcion->paypal->api_object->subscriber->email_address }}</span>
+    </div>
     <div class="p-3 lg:p-4">
       {{__('Para cancelar su subscripción, debe ingresar a su cuenta de PayPal.')}}
     </div>
+    @endif
+
+    @if( !empty($subscripcion->stripe) )
+    <div class="py-3 leading-12 text-base font-accent font-medium text-center">
+      <a href="{{ route('student.stripe.create-portal-session') }}" class="inline-block rounded-full shadow-md px-4 bg-gray-100 text-gray-500 dark:bg-white/10 dark:text-white/50">Administrar</a>
+    </div>
+    @endif
+
   </div>
 
 </section>
 
-@elseif( is_object($billPlan) )
+@elseif( is_object($billplan) )
 
 <section class="shadow-md mb-8 rounded-xl border-[3px] p-4 text-center border-azul-600 bg-white">
   @empty($classroom)
@@ -78,11 +84,11 @@
   @endempty
   <div class="md:flex md:-mx-3">
     <div class="md:w-1/2 md:px-3">
-      <h3 class="mb-2 text-xl font-accent font-medium">{{ $billPlan->name }}</h3>
-      {{--<p class="font-bold text-base">{{ ($billPlan->ritmo *4) }} clases</p> --}}
+      <h3 class="mb-2 text-xl font-accent font-medium">{{ $billplan->name }}</h3>
+      {{--<p class="font-bold text-base">{{ ($billplan->ritmo *4) }} clases</p> --}}
       <div class="flex items-top justify-center">
         <span class="font-bold">$</span>
-        <span class="font-accent font-bold text-5xl">{{ $billPlan->price/100 }}</span>
+        <span class="font-accent font-bold text-5xl">{{ $billplan->price/100 }}</span>
       </div>
       <p>cada 4 semanas</p>
     </div>
@@ -96,17 +102,25 @@
     </div>
   </div>
 
-  <div class="paypal paypal-container max-w-sm my-5 mx-auto loading" data-paypal-plan-id="{{ $billPlan->paypal->api_id }}" data-billing-plan-id="{{ $billPlan->id }}" data-quantity="{{ $paypalSubscriptionQty }}" data-start="{{ $paypalSubscriptionStartDate }}" >
+  {{--PAYPAL CHECKOUT
+  <div class="paypal paypal-container max-w-sm my-5 mx-auto loading" data-paypal-plan-id="{{ $billplan->paypal->api_id }}" data-billing-plan-id="{{ $billplan->id }}" data-quantity="{{ $subscriptionQty }}" data-start="{{ $subscriptionStartDate }}" >
   </div>
-  {{--STRIPE CHECKOUT
-  <form id="frmCreateCheckoutSession" action="{{ route('student.subscriptions.stripe.create-checkout-session') }}" method="POST" class="max-w-sm my-8 mx-auto text-center">
-    @csrf
-    <input type="hidden" name="billing_plan_id" value="{{ $billPlan->id }}" />
-    <button type="submit" class="rounded-full px-3 leading-12 font-accent bg-azul-600 text-white">Stripe</button>
-  </form>
   --}}
+  <form id="frmCreateCheckoutSession" action="{{ route('student.stripe.create-checkout-session') }}" method="POST" class="max-w-sm my-8 mx-auto text-center">
+    @csrf
+    <input type="hidden" name="billing_plan_stripe_id" value="{{ $billplan->stripe->api_id }}" />
+    @if( !empty($subscriptionQty) )
+    <input type="hidden" name="subscription_qty" value="{{ $subscriptionQty }}">
+    @endif
+
+    @if( !empty($subscriptionStartDate) )
+    <input type="hidden" name="start_date" value="{{ $subscriptionStartDate }}">
+    @endif
+
+    <button type="submit" class="btn rounded-full shadow-md px-5 leading-12 font-accent font-medium bg-rojo text-white">PAGAR</button>
+  </form>
   <div class="">
-    <a href="{{ route('student.elegir-ritmo') }}" class="btn rounded-full border-2 py-2 px-4 leading-7 font-accent font-medium text-base text-rojo border-rojo">{{__('Cambiar subscripción')}}</a>
+    <a href="{{ route('student.elegir-ritmo') }}" class="btn rounded-full border-2 py-2 px-4 leading-7 font-accent font-medium text-base text-azul-600 border-azul-600">{{__('Cambiar subscripción')}}</a>
   </div>
 
 </section>

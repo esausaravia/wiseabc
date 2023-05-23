@@ -17,9 +17,11 @@ class CreateClassroomsTable extends Migration
             $table->bigIncrements('id');
             $table->unsignedBigInteger('curso_id')->index();
             $table->foreign('curso_id')->references('id')->on('cursos')->restrictOnDelete();
+
             $table->unsignedBigInteger('teacher_id')->index();
             $table->foreign('teacher_id')->references('id')->on('users')->restrictOnDelete();
-            $table->string('status')->default('active')->index();
+
+            $table->string('status')->default('ACTIVE')->index();
             $table->unsignedInteger('tipo')->default(1)->index(); //grupal, individual
             $table->unsignedInteger('ritmo')->default(1)->index();
             $table->date('start')->nullable();

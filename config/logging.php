@@ -117,6 +117,19 @@ return [
         'emergency' => [
             'path' => storage_path('logs/laravel.log'),
         ],
+
+        'stripe-log' => [
+            'driver' => 'single',
+            'path' => storage_path('logs/stripe.log'),
+            'level' => env('LOG_LEVEL', 'debug'),
+        ],
+
+        'stripe' => [
+            'driver' => 'stack',
+            'channels' => ['stripe-log','stderr'],
+            'ignore_exceptions' => false,
+        ],
+
     ],
 
 ];

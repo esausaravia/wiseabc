@@ -52,8 +52,6 @@
   </aside>
   <div id="AdminMainContainer" class="pt-16 px-3 pb-5 lg:pt-20 xl:pl-[170px]">
     {{ $slot }}
-
-    <x-colores></x-colores>
   </div>
   <x-layout-toast></x-layout-toast>
   @stack('scripts')
