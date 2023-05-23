@@ -229,19 +229,16 @@ class Classroom extends Model
         else {
             $hoy = now('-0600');
         }
+        $hace40mins = $hoy->copy()->subMinutes(40);
 
-        $this->horarios->transform(function($horario,$hkey) use($enWeekdays, $hoy)
+        $this->horarios->transform(function($horario,$hkey) use($enWeekdays, $hoy, $hace40mins)
         {
-            //Horario->dia(lunes) === hoy(lunes)
-            if ( $horario->dia == $hoy->isoFormat('d') )
-            {
-                $nextStr = $horario->hr.':00';
-            }
-            else {
-                $nextStr = $enWeekdays[( $horario->dia )] . ' '.$horario->hr.':00';
-            }
+            $horario->next = $hoy->copy()->subDay()->next( $enWeekdays[( $horario->dia )] .' '.$horario->hr.':00' );
 
-            $horario->next = $hoy->copy()->subMinutes(40)->next( $nextStr );
+            if ( $horario->next->lessThan( $hace40mins ) )
+            {
+                $horario->next->next( $enWeekdays[( $horario->dia )] .' '.$horario->hr.':00' );
+            }
 
             return $horario;
         });
