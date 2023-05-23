@@ -326,8 +326,7 @@ class ClassroomController extends Controller
         $Classroom->students()->sync($input['students']);
         $Classroom->refresh();
 
-        $Students = \App\Models\User::whereIn('id',$input['students'])->get();
-        foreach($Students AS $student)
+        foreach($Classroom->students AS $student)
         {
             $mailable = new \App\Mail\Student\ClaseAsignada($student, $Classroom);
 	        $result = \Illuminate\Support\Facades\Mail::to( $student )->queue($mailable);

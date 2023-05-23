@@ -3,7 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\Http\Controllers\PayPalController;
+use App\Models\Paypalobj;
 use App\Models\Subscription;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
 
@@ -48,8 +50,9 @@ class SubscriptionController extends Controller
         $student = $request->user();
         if ( empty($student ) || !is_object($student) )
         {
-            return $request->wantsJson() ? response(['message'=>'sin sesión de usuario'], 400)
-                    : back()->withErrors(['alert'=>'sin sesión de usuario']);
+            $errMsg = 'sin sesión de usuario';
+            return $request->wantsJson() ? response(['error'=>$errMsg], 400)
+                    : back()->withError($errMsg);
         }
 
         $valid = $request->validate([
@@ -63,7 +66,7 @@ class SubscriptionController extends Controller
             $errorMsg = 'Ocurrio un problema verificando la subscripción con PayPal. Por favor, contáctenos con su ID de Subscripción: '.$valid['subscriptionID'];
 
             return $request->wantsJson() ? response(['error'=>$errorMsg], 400)
-                : back()->withErrors(['alert'=>$errorMsg]);
+                : back()->withError($errorMsg);
         }
 
         $bplan = \App\Models\BillingPlan::whereHas('paypal',function($query) use ($paypalSubscription){
@@ -75,7 +78,7 @@ class SubscriptionController extends Controller
             $errorMsg = 'Ocurrio un problema verificando la subscripción con PayPal. Por favor, contáctenos con su ID de Subscripción: '.$paypalSubscription->id;
 
             return $request->wantsJson() ? response(['error'=>$errorMsg], 400)
-                : back()->withErrors(['alert'=>$errorMsg]);
+                : back()->withError($errorMsg);
         }
 
         $student->saveMetas([
@@ -105,9 +108,37 @@ class SubscriptionController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show(Request $request, $id)
     {
-        //
+        if ( preg_match('/^\d+$/i', $id) )
+        {
+            $subscription = Subscription::with(['paypal','stripe'])->find($id);
+        }
+        else
+        {
+            $subscription = Subscription::with(['paypal','stripe'])->whereHas('stripe',function(Builder $query) use ($id) {
+                $query->where('api_id', $id);
+            })->orWhereHas('paypal',function(Builder $query) use ($id) {
+                $query->where('api_id', $id);
+            }) ->first();
+        }
+        if ( !is_object($subscription) )
+        {
+            $errMsg = "No se encontró la subscripción #{$id}";
+            return $request->wantsJson() ? response(['alert'=>$errMsg],400)
+                : back()->withError($errMsg);
+        }
+
+        $user = $request->user();
+
+        if ( $user->user_type!==1 && $user->id!==$subscription->user_id )
+        {
+            $errMsg = "No se encontró la subscripción #{$id}";
+            return $request->wantsJson() ? response(['alert'=>$errMsg],400)
+                : back()->withError($errMsg);
+        }
+
+        return $subscription;
     }
 
     /**
@@ -136,7 +167,7 @@ class SubscriptionController extends Controller
             $errorMsg = 'No se encontró la subscripción #'.$id;
 
             return $request->wantsJson() ? response(['error'=>$errorMsg], 400)
-                : back()->withErrors(['error'=>$errorMsg]);
+                : back()->withError($errorMsg);
         }
 
         if ( !empty($subscription->paypal) && is_object($subscription->paypal) )
@@ -171,7 +202,7 @@ class SubscriptionController extends Controller
             $errorMsg = 'Ocurrio un problema consultando la información de subscripción #'.$subscription->paypal->api_id;
 
             return $request->wantsJson() ? response(['error'=>$errorMsg], 400)
-                : back()->withErrors(['error'=>$errorMsg]);
+                : back()->withErrors($errorMsg);
         }
 
         if ( !empty($paypalSubscription->billing_info) && is_object($paypalSubscription->billing_info) && !empty($paypalSubscription->billing_info->next_billing_time) )

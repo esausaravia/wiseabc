@@ -38,6 +38,11 @@ class BillingPlansSeeder extends Seeder
             'ritmo'=>1,
             'price'=>4396
         ]);
+        $bplan->stripe()->create([
+            'api' => 'stripe',
+            'api_id'=>env('STRIPE_BillingPlan_US_1_1', 'price_1N9vPNJI1wpouYiddDiivGpj'),
+            'api_object' => '{}'
+        ]);
         $billRegion1->billingPlans()->save($bplan);
 
 
@@ -46,6 +51,11 @@ class BillingPlansSeeder extends Seeder
             'tipo'=>1,
             'ritmo'=>2,
             'price'=>8792
+        ]);
+        $bplan->stripe()->create([
+            'api' => 'stripe',
+            'api_id'=>env('STRIPE_BillingPlan_US_1_2', 'price_1N9vPNJI1wpouYidisn4jvfx'),
+            'api_object' => '{}'
         ]);
         $billRegion1->billingPlans()->save($bplan);
 
@@ -56,6 +66,11 @@ class BillingPlansSeeder extends Seeder
             'ritmo'=>3,
             'price'=>11988
         ]);
+        $bplan->stripe()->create([
+            'api' => 'stripe',
+            'api_id'=>env('STRIPE_BillingPlan_US_1_3', 'price_1N9vPNJI1wpouYidtznl5ZQz'),
+            'api_object' => '{}'
+        ]);
         $billRegion1->billingPlans()->save($bplan);
 
 
@@ -64,6 +79,11 @@ class BillingPlansSeeder extends Seeder
             'tipo'=>1,
             'ritmo'=>5,
             'price'=>18000
+        ]);
+        $bplan->stripe()->create([
+            'api' => 'stripe',
+            'api_id'=>env('STRIPE_BillingPlan_US_1_5', 'price_1N9vPNJI1wpouYidRze7n78d'),
+            'api_object' => '{}'
         ]);
         $billRegion1->billingPlans()->save($bplan);
 
@@ -81,6 +101,11 @@ class BillingPlansSeeder extends Seeder
             'ritmo'=>1,
             'price'=>9996
         ]);
+        $bplan->stripe()->create([
+            'api' => 'stripe',
+            'api_id'=>env('STRIPE_BillingPlan_US_2_1', 'price_1NA0qvJI1wpouYidCdnuJGdn'),
+            'api_object' => '{}'
+        ]);
         $billRegion1->billingPlans()->save($bplan);
 
 
@@ -89,6 +114,11 @@ class BillingPlansSeeder extends Seeder
             'tipo'=>2,
             'ritmo'=>2,
             'price'=>19992
+        ]);
+        $bplan->stripe()->create([
+            'api' => 'stripe',
+            'api_id'=>env('STRIPE_BillingPlan_US_2_2', 'price_1NA0qvJI1wpouYidZ6myM6yL'),
+            'api_object' => '{}'
         ]);
         $billRegion1->billingPlans()->save($bplan);
 
@@ -99,6 +129,11 @@ class BillingPlansSeeder extends Seeder
             'ritmo'=>3,
             'price'=>26400
         ]);
+        $bplan->stripe()->create([
+            'api' => 'stripe',
+            'api_id'=>env('STRIPE_BillingPlan_US_2_3', 'price_1NA0qvJI1wpouYidzHsjcxDJ'),
+            'api_object' => '{}'
+        ]);
         $billRegion1->billingPlans()->save($bplan);
 
 
@@ -107,6 +142,11 @@ class BillingPlansSeeder extends Seeder
             'tipo'=>2,
             'ritmo'=>5,
             'price'=>40000
+        ]);
+        $bplan->stripe()->create([
+            'api' => 'stripe',
+            'api_id'=>env('STRIPE_BillingPlan_US_2_5', 'price_1NA0qvJI1wpouYidGUgKWTZx'),
+            'api_object' => '{}'
         ]);
         $billRegion1->billingPlans()->save($bplan);
 
@@ -127,8 +167,9 @@ class BillingPlansSeeder extends Seeder
             'ritmo'=>1,
             'price'=>3600
         ]);
-        $bplan->paypal()->create([
-            'api_id'=>'P-9GW89184CA640501YMRGHN5Y',
+        $bplan->stripe()->create([
+            'api'=>'stripe',
+            'api_id'=>env('STRIPE_BillingPlan_MX_1_1', 'price_1N9dX5JI1wpouYidFe6cH9os'),
             'api_object' => '{}'
         ]);
         $billRegion2->billingPlans()->save($bplan);
@@ -140,8 +181,9 @@ class BillingPlansSeeder extends Seeder
             'ritmo'=>2,
             'price'=>7200
         ]);
-        $bplan->paypal()->create([
-            'api_id'=>'P-5UR330633P879011DMRCWHWY',
+        $bplan->stripe()->create([
+            'api'=>'stripe',
+            'api_id'=>env('STRIPE_BillingPlan_MX_1_2', 'price_1N9dacJI1wpouYidfAH8WnVT'),
             'api_object' => '{}'
         ]);
         $billRegion2->billingPlans()->save($bplan);
@@ -153,8 +195,9 @@ class BillingPlansSeeder extends Seeder
             'ritmo'=>3,
             'price'=>9600
         ]);
-        $bplan->paypal()->create([
-            'api_id'=>'P-05S84175CY603144AMRCWJPI',
+        $bplan->stripe()->create([
+            'api'=>'stripe',
+            'api_id'=>env('STRIPE_BillingPlan_MX_1_3', 'price_1N9dbbJI1wpouYidpZsMaycb'),
             'api_object' => '{}'
         ]);
         $billRegion2->billingPlans()->save($bplan);
@@ -166,8 +209,9 @@ class BillingPlansSeeder extends Seeder
             'ritmo'=>5,
             'price'=>14000
         ]);
-        $bplan->paypal()->create([
-            'api_id'=>'P-123PAYPALID456',
+        $bplan->stripe()->create([
+            'api'=>'stripe',
+            'api_id'=>env('STRIPE_BillingPlan_MX_1_5', 'price_1N9dfbJI1wpouYidNtIWfX51'),
             'api_object' => '{}'
         ]);
         $billRegion2->billingPlans()->save($bplan);
@@ -186,8 +230,9 @@ class BillingPlansSeeder extends Seeder
             'ritmo'=>1,
             'price'=>8000
         ]);
-        $bplan->paypal()->create([
-            'api_id'=>'P-9AA85697EP853700NMRCWMEQ',
+        $bplan->stripe()->create([
+            'api'=>'stripe',
+            'api_id'=>env('STRIPE_BillingPlan_MX_2_1', 'price_1NA0llJI1wpouYid3kHm26aY'),
             'api_object' => '{}'
         ]);
         $billRegion2->billingPlans()->save($bplan);
@@ -199,8 +244,9 @@ class BillingPlansSeeder extends Seeder
             'ritmo'=>2,
             'price'=>16000
         ]);
-        $bplan->paypal()->create([
-            'api_id'=>'P-24X8949020932182VMRCWNIQ',
+        $bplan->stripe()->create([
+            'api'=>'stripe',
+            'api_id'=>env('STRIPE_BillingPlan_MX_2_2', 'price_1NA0llJI1wpouYidDiCg5TFS'),
             'api_object' => '{}'
         ]);
         $billRegion2->billingPlans()->save($bplan);
@@ -212,8 +258,9 @@ class BillingPlansSeeder extends Seeder
             'ritmo'=>3,
             'price'=>21600
         ]);
-        $bplan->paypal()->create([
-            'api_id'=>'P-15241040HF231240CMRCWODA',
+        $bplan->stripe()->create([
+            'api'=>'stripe',
+            'api_id'=>env('STRIPE_BillingPlan_MX_2_3', 'price_1NA0llJI1wpouYidGguII77g'),
             'api_object' => '{}'
         ]);
         $billRegion2->billingPlans()->save($bplan);
@@ -225,8 +272,9 @@ class BillingPlansSeeder extends Seeder
             'ritmo'=>5,
             'price'=>32000
         ]);
-        $bplan->paypal()->create([
-            'api_id'=>'P-123PAYPALID456',
+        $bplan->stripe()->create([
+            'api'=>'stripe',
+            'api_id'=>env('STRIPE_BillingPlan_MX_2_5', 'price_1NA0llJI1wpouYidajSfdYXr'),
             'api_object' => '{}'
         ]);
         $billRegion2->billingPlans()->save($bplan);

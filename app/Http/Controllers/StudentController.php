@@ -24,8 +24,8 @@ class StudentController extends Controller
     $billPlan = null;
     $classroom = null;
     $nextSchedule = null;
-    $paypalSubscriptionQty = 4;
-    $paypalSubscriptionStartDate = Carbon::parse('2024-06-05 06:00:00');
+    $subscriptionQty = 4;
+    $subscriptionStartDate = Carbon::parse('2023-06-05 06:00:00');
     $subscripcion = $user->activeSubscription();
 
     $countryCode = 'US';
@@ -54,22 +54,21 @@ class StudentController extends Controller
           ->where('tipo', $user->clase_tipo)
           ->where('ritmo', $user->ritmo)
           ->whereHas('region', function($query) use ($countryCode){
-            $query->where('countries','LIKE',"%{$countryCode},%");
+            $query->where('countries','LIKE',"%{$countryCode}%");
           })
           ->orderBy('created_at','desc')->first();
 
       if ( is_object($billPlan) )
       {
-        $paypalSubscriptionQty = $billPlan->ritmo *4;
+        $subscriptionQty = $billPlan->ritmo *4;
 
         if( !is_object($classroom) )
         {
-          //$paypalSubscriptionStartDate = now()->addWeeks(4)->format('Y-m-d\TH:00:00\Z');
-          $paypalSubscriptionStartDate = $paypalSubscriptionStartDate->format('Y-m-d\TH:00:00\Z');
+          $subscriptionStartDate = $subscriptionStartDate->format('Y-m-d\TH:00:00\Z');
         }
         elseif ( now()->lessThan($classroom->start) )
         {
-          $paypalSubscriptionStartDate = $classroom->start->format('Y-m-d\TH:00:00\Z');
+          $subscriptionStartDate = $classroom->start->format('Y-m-d\TH:00:00\Z');
         }
       }//endif billPlan
     }//endif SIN subscripcion
@@ -89,8 +88,8 @@ class StudentController extends Controller
       'classroom'=>$classroom,
       'hoy'=>now('-0600')->locale('es'),
       'nextSchedule'=>$nextSchedule,
-      'paypalSubscriptionQty'=> $paypalSubscriptionQty,
-      'paypalSubscriptionStartDate' => $paypalSubscriptionStartDate,
+      'subscriptionQty'=> $subscriptionQty,
+      'subscriptionStartDate' => $subscriptionStartDate,
       'subscripcion'=>$subscripcion,
       'user'=>$user,
       'weekdays'=>config('wiseabc.weekdays'),
@@ -104,16 +103,16 @@ class StudentController extends Controller
 
     $ipApi = session('ip-api');
 
-    if ( is_array($ipApi) && !empty($ipApi['countryCode']) )
-    {
-      $countryCode = $ipApi['countryCode'];
-    }
-    else if( !empty($request->input('countryCode')) )
+    if( !empty($request->input('countryCode')) )
     {
       $countryCode = $request->input('countryCode');
     }
+    else if ( is_array($ipApi) && !empty($ipApi['countryCode']) )
+    {
+      $countryCode = $ipApi['countryCode'];
+    }
 
-    $region = \App\Models\billRegion::where('countries','LIKE',"%{$countryCode},%")->first();
+    $region = \App\Models\billRegion::where('countries','LIKE',"%{$countryCode}%")->first();
     if ( !is_object($region) )
     {
       $region = \App\Models\billRegion::find(1);
@@ -130,23 +129,26 @@ class StudentController extends Controller
 
   public function postElegirRitmo(Request $request)
   {
-    if ( empty($request->clase_tipo) || empty($request->ritmo) )
-    {
-      return redirect()->route('student.elegir-ritmo');
-    }
+    $valid = $request->validate([
+      'clase_tipo' => 'required|integer',
+      'ritmo' => 'required|integer',
+    ]);
 
-    $billPlan = \App\Models\BillingPlan::where('status','ACTIVE')->where('tipo',$request->clase_tipo)->where('ritmo',$request->ritmo)->first();
+    $billPlan = \App\Models\BillingPlan::where('status','ACTIVE')
+        ->where('tipo', $valid['clase_tipo'])
+        ->where('ritmo', $valid['ritmo'])
+        ->first();
 
     if ( empty($billPlan) )
     {
-      return back()->withErrors(['message'=>"No se encontró la suscripción compatible."]);
+      return back()->withError("No se encontró la suscripción compatible.");
     }
 
     $user = $request->user();
 
     $user->saveMetas([
-      'clase_tipo'=>$request->clase_tipo,
-      'ritmo'=>$request->ritmo
+      'clase_tipo'=>$valid['clase_tipo'],
+      'ritmo'=>$valid['ritmo']
     ]);
 
     return redirect()->route('student.home');
@@ -183,7 +185,7 @@ class StudentController extends Controller
           ->where('tipo', $user->clase_tipo)
           ->where('ritmo', $user->ritmo)
           ->whereHas('region', function($query) use ($countryCode){
-            $query->where('countries','LIKE',"%{$countryCode},%");
+            $query->where('countries','LIKE',"%{$countryCode}%");
           })
           ->orderBy('created_at','desc')->first();
     }
@@ -216,7 +218,8 @@ class StudentController extends Controller
     ]);
   }
 
-  public function perfil(Request $request) {
+  public function perfil(Request $request)
+  {
     return view('student.perfil',[
       'user'=>$request->user()
     ]);
@@ -262,7 +265,33 @@ class StudentController extends Controller
     {
       $errorMsg = 'Ya tiene una clase asignada, contáctenos para actualizar su perfil.';
       return $request->wantsJson() ? response(['error'=>$errorMsg], 400)
-        : back()->withErrors(['alert'=>$errorMsg]);
+        : back()->withError($errorMsg);
+    }
+
+    $student->saveMetas($input);
+
+    if ( !empty($input['horarios']) && is_array($input['horarios']) && !empty($input['horarios'][1]) )
+    {
+      $student->saveHorarios($input['horarios']);
+    }
+
+
+    return $request->wantsJson() ? response(['message'=>'Información actualizada con éxtio'])
+      : back()->with('success','Información actualizada con éxtio');
+  }
+  public function updateMetas(Request $request)
+  {
+    $student = $request->user();
+
+    $input = $request->all();
+
+    $inputColl = collect($input);
+
+    if ($student->currentClassroom!==null && $inputColl->hasAny(['edad','nivel','ritmo','clase_tipo','horarios']) )
+    {
+      $errorMsg = 'Ya tiene una clase asignada, contáctenos para actualizar su perfil.';
+      return $request->wantsJson() ? response(['error'=>$errorMsg], 400)
+        : back()->withError($errorMsg);
     }
 
     $student->saveMetas($input);

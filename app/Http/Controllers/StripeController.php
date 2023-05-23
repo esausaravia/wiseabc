@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\BillingPlan;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Log;
@@ -175,6 +176,10 @@ class StripeController extends Controller
         $subscription->stripe->api_object = $stripeData;
         $subscription->stripe->save();
 
+        //billing_cycle_anchor
+        //trial_end
+        //start_date
+
         $subscription->status = strtoupper($stripeData->status);
         $subscription->next_billing = Carbon::parse($stripeData->current_period_end);
         $subscription->save();
@@ -184,18 +189,35 @@ class StripeController extends Controller
     public function subscriptionCheckoutSession(Request $request)
     {
         $valid = $request->validate([
-            'billing_plan_id'=>'required|integer'
+            'billing_plan_stripe_id'=>'required'
         ]);
+        $stripeID = $valid['billing_plan_stripe_id'];
 
-        $bplan = BillingPlan::with('stripe')->find($valid['billing_plan_id']);
+        $bplan = BillingPlan::with('stripe')->whereHas('stripe', function(Builder $query) use ($stripeID) {
+            $query->where('api','stripe')->where('api_id',$stripeID);
+        })->first();
 
         if ( empty($bplan) || !is_object($bplan) )
         {
-            return false;
+            $errMsg = "No se encontró plan de subscripción {$stripeID}";
+            return $request->wantsJson() ? response(['alert'=>$errMsg],400)
+                : back()->withError($errMsg);
         }
-        if ( empty($bplan->stripe) || !is_object($bplan->stripe) || empty($bplan->stripe->api_id) )
+
+        $input = $request->input();
+
+        $startDate = $request->input('start_date');
+        $maxStartDate = now()->addWeeks(4)->subHour();
+        if ( is_string($startDate) )
         {
-            return false;
+            if ( $maxStartDate->lessThan($startDate) )
+            {
+                $startDate = $maxStartDate->getTimestamp();
+            }
+            else {
+                $startDate = Carbon::parse($startDate)->getTimestamp();
+            }
+
         }
 
         $student = $request->user();
@@ -207,19 +229,20 @@ class StripeController extends Controller
             $checkoutSession = \Stripe\Checkout\Session::create([
                 'line_items' => [[
                     'price' => $bplan->stripe->api_id,
-                    'quantity' => 1,
+                    'quantity' => !empty($input['subscription_qty']) ? $input['subscription_qty'] : 1,
                 ]],
                 'subscription_data' => [
-                    'default_tax_rates' => ['txr_1N2TLPKYG3qD2MystfTjOq4s']
+                    //'default_tax_rates' => ['txr_1N2TLPKYG3qD2MystfTjOq4s']
+                    'trial_end' => $startDate,
                 ],
                 'mode' => 'subscription',
-                'success_url' => route('student.subscriptions.stripe.success') . '?session_id={CHECKOUT_SESSION_ID}',
+                'success_url' => route('student.stripe.success') . '?session_id={CHECKOUT_SESSION_ID}',
                 'cancel_url' => route('student.home'),
                 'client_reference_id' => $student->id,
-                'customer_email' => $student->email,
+                'customer_email' => empty($student->stripe) ? $student->email : null,
                 'customer' => !empty($student->stripe) ? $student->stripe->api_id : null,
                 'metadata' => [
-                    'billing_plan_id' => $valid['billing_plan_id']
+                    'billing_plan_id' => $bplan->id
                 ]
                 /*
                 'subscription_data' => [
@@ -298,7 +321,7 @@ checkoutSession =
 
             $user = self::saveCustomerIdFromCheckoutSession($checkoutSession);
         }
-        if ( empty($user->stripe->api_id) )
+        if ( empty($user->stripe) && empty($user->stripe->api_id) )
         {
             $errMsg = 'El usuario no está asociado con un ID de Stripe.';
             return $request->wantsJson() ? response(['error'=>$errMsg], 400)
@@ -307,8 +330,8 @@ checkoutSession =
 
         // Authenticate your user.
         $session = \Stripe\BillingPortal\Session::create([
-        'customer' => $user->stripe->api_id,
-        'return_url' => route('student.home'),
+            'customer' => $user->stripe->api_id,
+            'return_url' => route('student.home'),
         ]);
 
         return redirect($session->url, 303);
@@ -316,14 +339,17 @@ checkoutSession =
 
     public function webhooks(Request $request)
     {
+        $stripe = new \Stripe\StripeClient( env('STRIPE_SECRET') );
         $endpoint_secret = env('STRIPE_ENDPOINT_SECRET');
         //signing secret is STRIPESIGNINSECRET
 
         $payload = @file_get_contents('php://input');
+        $sig_header = $_SERVER['HTTP_STRIPE_SIGNATURE'];
         $event = null;
+
         try {
-            $event = \Stripe\Event::constructFrom(
-                json_decode($payload, true)
+            $event = \Stripe\Webhook::constructEvent(
+                $payload, $sig_header, $endpoint_secret
             );
         }
         catch(Throwable $e)//\UnexpectedValueException $err
@@ -331,67 +357,72 @@ checkoutSession =
             $errMsg = "⚠️  Webhook error while parsing basic request.";
 
             return $request->wantsJson() ? response(['error'=>$errMsg], 400)
-                : back()->withErrors(['alert'=>$errMsg]);
+                : back()->withError($errMsg);
         }
 
-        if ( !is_object($event->data) && !is_object($event->data->object) )
-        {
-            $errMsg = '!is_object($event->data->object)';
-            Log::error(__METHOD__, [ 'error'=>$errMsg, 'event'=>$event ]);
-            return response(['error'=>$errMsg], 400);
-        }
-
-        Log::debug(__METHOD__, [
+        Log::channel('stripe')->debug('Stripe Webhook', [
             'event_type' => $event->type,
-            'event_data' => $event->data
+            'event_data_object' => $event->data->object
         ]);
 
         $subscription = null;
         // Handle the event
         switch ($event->type) {
+            case 'charge.succeeded':
+                $charge = $event->data->object;
+                break;
+
             case 'checkout.session.completed':
-                if ( $event->data->object->mode=='subscription' && !empty($event->data->object->subscription) )
+                $session = $event->data->object;
+                if ( $session->mode=='subscription' && !empty($session->subscription) )
                 {
-                    $subscription = self::saveSubscriptionFromCheckoutSession($event->data->object);
+                    $subscription = self::saveSubscriptionFromCheckoutSession($session);
                 }
                 //cs_test_a1nkYpWMSWi8Xj7OyLUdH60mp4p9jn4eDpfLygTjEHjRU5SSiQVBFOzzie
                 break;
+
+            case 'checkout.session.expired':
+                $session = $event->data->object;
+                break;
+
             case 'customer.created':
             case 'customer.updated':
-                self::updCustomerData($event->data->object);
+                $customer = $event->data->object;
+                self::updCustomerData($customer);
                 break;
-            case 'customer.subscription.trial_will_end':
-                $subscription = $event->data->object; // contains a \Stripe\Subscription
-                // Then define and call a method to handle the trial ending.
-                // handleTrialWillEnd($subscription);
-                break;
+
             case 'customer.subscription.created':
-                $event->data->object; // contains a \Stripe\Subscription
+            case 'customer.subscription.deleted':
+            case 'customer.subscription.paused':
+            case 'customer.subscription.resumed':
+            case 'customer.subscription.trial_will_end':
+            case 'customer.subscription.updated':
+                $subscription = $event->data->object; // contains a \Stripe\Subscription
                 // Then define and call a method to handle the subscription being created.
                 $subscription = self::updSubscriptionData($event->data->object);
                 break;
-            case 'customer.subscription.deleted':
-                $event->data->object; // contains a \Stripe\Subscription
-                // Then define and call a method to handle the subscription being deleted.
-                $subscription = self::updSubscriptionData($event->data->object);
-                break;
-            case 'customer.subscription.updated':
-                $event->data->object; // contains a \Stripe\Subscription
-                // Then define and call a method to handle the subscription being updated.
-                $subscription = self::updSubscriptionData($event->data->object);
-                break;
+
+            case 'invoice.created':
+                $invoice = $event->data->object;
+            case 'invoice.finalized':
+                $invoice = $event->data->object;
+            case 'invoice.paid':
+                $invoice = $event->data->object;
+            case 'invoice.payment_succeeded':
+                $invoice = $event->data->object;
+            case 'invoice.updated':
+                $invoice = $event->data->object;
+            case 'payment_intent.created':
+                $paymentIntent = $event->data->object;
+            case 'payment_intent.succeeded':
+                $paymentIntent = $event->data->object;
+            case 'payment_method.attached':
+                $paymentMethod = $event->data->object;
             default:
                 // Unexpected event type
-                echo 'Received unknown event type';
+                Log::channel('stripe')->info('Stripe Webhook: Unexpected event type', ['request'=>$request]);
         }
 
-        if ( is_object($subscription) )
-        {
-            Log::debug(__METHOD__, ['subscription'=>$subscription]);
-        }
-
-        return response([
-            'event' => $event
-        ]);
+        return response([],200);
     }
 }

@@ -121,7 +121,7 @@
       <section id="divSinClassroom" class="shadow-md rounded-xl overflow-clip bg-gray-50 dark:bg-white/10 p-4">
         <p class="mb-5">Nuestro personal evaluará su perfil de estudiante para asignar un profesor y una clase con base en las opciones que eligió durante su registro. Mismas que puede modificar antes de tener su clase asignada, con el formulario a continuación:</p>
 
-        <form action="{{ route('student.update') }}" method="POST" class=" text-center">
+        <form action="{{ route('student.update-metas') }}" method="POST" class=" text-center">
           @csrf
           @method('PATCH')
 
@@ -158,14 +158,8 @@
     </div>
     @endif {{-- endif clase --}}
 
-
-    <div class="w-full max-w-2xl lg:w-2/3 xl:w-1/2 px-3 mb-8">
-      <x-student.subscription-card :subscripcion="$subscripcion" :billPlan="$billPlan" :classroom="$classroom" :paypalSubscriptionQty="$paypalSubscriptionQty" :paypalSubscriptionStartDate="$paypalSubscriptionStartDate"></x-student.subscription-card>
-    </div>
-
-
     @if( !empty($nextSchedule) && is_object($nextSchedule) )
-    <section class="my-8 max-w-2xl lg:w-2/3 xl:w-1/2 ">
+    <section class="mb-8 max-w-2xl lg:w-2/3 xl:w-1/2 ">
 
       <article class="shadow-md rounded-xl md:flex bg-gray-50 dark:bg-white/5 p-4">
         <div class="mb-5 md:mb-0 md:mr-5">
@@ -192,6 +186,13 @@
       </article>
     </section>
     @endif {{--/nextSchedule--}}
+
+    @if ( is_object($subscripcion) || is_object($billPlan) )
+    <div class="w-full max-w-2xl lg:w-2/3 xl:w-1/2 px-3 mb-8">
+      <x-student.subscription-card :subscripcion="$subscripcion" :billplan="$billPlan" :classroom="$classroom" :subscription-qty="$subscriptionQty" :subscription-start-date="$subscriptionStartDate" ></x-student.subscription-card>
+    </div>
+    @endif
+
 
     <div class="w-full px-3"></div>
   </div>

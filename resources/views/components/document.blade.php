@@ -1,5 +1,4 @@
 @props([
-  //'user'=>\Illuminate\Support\Facades\Auth::user(),
   'body'=>new \Illuminate\View\ComponentSlot()
 ])
 <!DOCTYPE html>

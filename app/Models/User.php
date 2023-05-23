@@ -430,7 +430,7 @@ class User extends Authenticatable implements MustVerifyEmail
 
     public function activeSubscription()
     {
-        return $this->subscriptions()->with(['paypal','billingPlan'])->where('status','ACTIVE')->first();
+        return $this->subscriptions()->with(['billingPlan', 'paypal', 'stripe'])->where('status','ACTIVE')->first();
     }
 
 
