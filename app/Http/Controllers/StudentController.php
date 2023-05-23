@@ -47,6 +47,15 @@ class StudentController extends Controller
       $nextSchedule = $classroom->nextSchedule();
     }
 
+    if ( is_object($nextSchedule) )
+    {
+      if ( is_object($subscripcion) && now()->lessThan( $nextSchedule->ends_at ) )
+      {
+        $activarSigClaseBtn = true;
+      }
+      $nextSchedule->fechahora->setTimezone('-0600');
+    }
+
     if ( !is_object($subscripcion) )
     {
 
@@ -72,15 +81,6 @@ class StudentController extends Controller
         }
       }//endif billPlan
     }//endif SIN subscripcion
-
-    if ( is_object($nextSchedule) )
-    {
-      if ( is_object($subscripcion) && now()->lessThan( $nextSchedule->ends_at ) )
-      {
-        $activarSigClaseBtn = true;
-      }
-      $nextSchedule->fechahora = $nextSchedule->fechahora->setTimezone('-0600');
-    }
 
     return view('student.home', [
       'activarSigClaseBtn'=>$activarSigClaseBtn,

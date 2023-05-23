@@ -20,6 +20,7 @@
     @endif {{--/email_verified_at --}}
 
     @if( is_object($classroom) )
+
     <div class="w-full px-3 mb-8 ">
       <section class="shadow-md rounded-xl overflow-hidden md:grid md:grid-cols-2 xl:grid-cols-4 ">
         <div class="bg-green-100 text-green-800 p-3 flex">
@@ -115,7 +116,9 @@
         </div>
       </section>
     </div>
+
     @else {{-- SIN CLASE --}}
+
     <h2 class="w-full my-8 px-3 text-xl lg:text-2xl font-accent font-semibold ">Aun no tiene una clase asignada.</h2>
     <div class="w-full max-w-2xl lg:w-1/2 px-3 mb-8">
       <section id="divSinClassroom" class="shadow-md rounded-xl overflow-clip bg-gray-50 dark:bg-white/10 p-4">
