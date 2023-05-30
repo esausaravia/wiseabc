@@ -83,6 +83,7 @@ return [
             'client_id' => env('MICROSOFT_GRAPH_CLIENT_ID'),
             'client_secret' => env('MICROSOFT_GRAPH_CLIENT_SECRET'),
             'tenant_id' => env('MICROSOFT_GRAPH_TENANT_ID'),
+            'access_token_ttl' => 3300,
             'from' => [
                 'address' => env('MAIL_USERNAME', 'web@wiseabcenglish.com'),
                 'name' => env('MAIL_FROM_NAME', 'WiseABC English'),

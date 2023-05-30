@@ -3,91 +3,60 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use Illuminate\Http\Client\PendingRequest;
+use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
-use Illuminate\Support\Facades\Storage;
 
 class MsApiController extends Controller
 {
 
   public static $token = null;
+  protected readonly string $tenantId;
+  protected readonly string $clientId;
+  protected readonly string $clientSecret;
+  protected readonly int $accessTokenTtl;
 
-  public static function getFileToken()
+  public function __construct()
   {
-    $fileToken = Storage::get('MsApiToken.txt');
+    $this->tenantId = env('MICROSOFT_GRAPH_TENANT_ID', null);
+    $this->clientId = env('MICROSOFT_GRAPH_CLIENT_ID', null);
+    $this->clientSecret = env('MICROSOFT_GRAPH_CLIENT_SECRET', null);
+    $this->accessTokenTtl = 3300;
 
-    if ( empty($fileToken) ) {
-      return null;
-    }
-
-    $fileToken = json_decode($fileToken);
-
-    if ( empty($fileToken) || !is_object($fileToken) || empty($fileToken->expires_at) ) {
-      return null;
-    }
-
-    $expires_at = \Carbon\Carbon::parse($fileToken->expires_at);
-
-    if ( !is_object($expires_at) ) {
-      return null;
-    }
-
-    if ( $expires_at->subSeconds(30)->lessThan( now() ) ) {
-      return null;
-    }
-
-    self::$token = $fileToken;
-    return $fileToken;
+    throw_if( empty($this->tenantId), __CLASS__.' missing env MICROSOFT_GRAPH_TENANT_ID' );
+    throw_if( empty($this->clientId), __CLASS__.' missing env MICROSOFT_GRAPH_CLIENT_ID' );
+    throw_if( empty($this->clientSecret), __CLASS__.' missing env MICROSOFT_GRAPH_CLIENT_SECRET' );
   }
 
-  /**
-   * Solicita un Access Token a Microsoft Graph API
-   * https://learn.microsoft.com/en-us/graph/auth-v2-service#4-get-an-access-token
-   *
-   */
-  public static function reqBearerToken(){
-    Log::info('MsApiController::reqBearerToken');
-
-    $guzzle = new \GuzzleHttp\Client();
-    $url = "https://login.microsoftonline.com/".env('MICROSOFT_GRAPH_TENANT_ID')."/oauth2/v2.0/token";
-
-    $response = $guzzle->post( $url, [
-      'form_params' => [
-        'client_id' => env('MICROSOFT_GRAPH_CLIENT_ID'),
-        'client_secret' => env('MICROSOFT_GRAPH_CLIENT_SECRET'),
-        'scope' => "https://graph.microsoft.com/.default",
-        'grant_type' => 'client_credentials',
-      ],
-    ]);
-
-    $resBody = $response->getBody()->getContents();
-
-    self::$token = json_decode( $resBody );
-
-    self::$token->expires_at = now()->addSeconds( self::$token->expires_in )->format('Y-m-d H:i:s');
-
-    Storage::put('MsApiToken.txt', json_encode(self::$token) );
-
-    return self::$token;
-  }
-
-  public static function getAccessToken(){
-
-    if ( empty(self::$token) || !is_object(self::$token) || empty(self::$token->access_token) )
-    {
-      if ( self::getFileToken()==null ) {
-        self::reqBearerToken();
-      }
-    }
-
-    return self::$token->access_token;
-  }
-
-  public function createOnlineMeeting( string $userADid="admin@wiseabcenglish.com", string $subject="WiseABC Clase en línea", $fecha, array $reqBody=array() )
+  protected function getAccessToken()
   {
-    if ( empty($subject) || empty($fecha) ) {
-      return false;
-    }
+    return Cache::remember('microsoft-graph-api-access-token', 3300, function (): string {
+        $response = Http::asForm()
+            ->post("https://login.microsoftonline.com/{$this->tenantId}/oauth2/v2.0/token",
+                [
+                    'grant_type' => 'client_credentials',
+                    'client_id' => $this->clientId,
+                    'client_secret' => $this->clientSecret,
+                    'scope' => 'https://graph.microsoft.com/.default',
+                ]);
 
+        $response->throw();
+
+        Log::debug(__METHOD__,['response'=>$response->json()]);
+
+        return $response->json('access_token');
+    });
+  }
+
+  protected function getBaseRequest(): PendingRequest
+  {
+      return Http::withToken($this->getAccessToken())
+          ->baseUrl('https://graph.microsoft.com/v1.0');
+  }
+
+  public function createOnlineMeeting( $fecha, string $userMsId="admin@wiseabcenglish.com", string $subject="WiseABC Clase en línea", array $payload=array() )
+  {
     if ( is_object($fecha) && class_basename($fecha)==='Carbon' )
     {
       $fecha = $fecha->copy();
@@ -100,15 +69,12 @@ class MsApiController extends Controller
       return false;
     }
 
-    $client = new \GuzzleHttp\Client([
-      'base_uri' => 'https://graph.microsoft.com/v1.0',
-      'headers' => [
-        'Authorization' => 'Bearer ' . self::getAccessToken(),
-        'Content-Type' => 'application/json'
-      ]
-    ]);
+    if ( !is_array($payload) ) {
+      $payload = array();
+    }
 
     $defaults = [
+      'subject' => $subject,
       'body' => [
         'contentType' => 'HTML',
         'content' => $subject
@@ -120,30 +86,95 @@ class MsApiController extends Controller
       'onlineMeetingProvider' => 'teamsForBusiness'
     ];
 
-    if ( !is_array($reqBody) ) {
-      $reqBody = array();
-    }
-
-    $body = array_merge_recursive( $defaults, $reqBody );
+    $payload = array_merge_recursive( $defaults, $payload );
 
     $fecha->setTimezone('-0600');
 
-    $body = array_merge_recursive( $body, [
-      'subject' => $subject,
+    $payload = array_merge_recursive( $payload, [
       'start' => [
         'dateTime' => $fecha->format('Y-m-d\TH:i:s'),
         'timeZone' => 'America/Mexico_City',
       ],
       'end' => [
-        'dateTime' => $fecha->copy()->addMinutes(40)->format('Y-m-d\TH:i:s'),
+        'dateTime' => $fecha->addMinutes(40)->format('Y-m-d\TH:i:s'),
         'timeZone' => 'America/Mexico_City',
       ]
-    ] );
-
-    $response = $client->post("/users/{$userADid}/calendar/events", [
-      'body' => json_encode($body)
     ]);
-    return json_decode( $response->getBody()->getContents(), true);
+
+    return $this->getBaseRequest()
+                ->post("/users/{$userMsId}/calendar/events", $payload)
+                ->throw()->json();
+  }
+
+  public function getUserByMail( string $mail )
+  {
+    $response = $this->getBaseRequest()->get('/users/'.$mail);
+    if ( $response->failed() )
+    {
+      Log::error(__METHOD__, [
+        'mail' => $mail,
+        'resp_body' => $response->body()
+      ]);
+      return null;
+    }
+
+    return $response->json();
+  }
+
+  public function getUserId( string $mail )
+  {
+    $msUser = $this->getUserByMail($mail);
+    return is_object($msUser) ? $msUser->id : (is_array($msUser) ? $msUser['id'] : null);
+  }
+
+  public function getOnlineMeetingByJoinURL(string $userId, string $joinUrl)
+  {
+    $response = $this->getBaseRequest()
+                ->get("/users/{$userId}/onlineMeetings?\$filter=JoinWebUrl eq '".rawurlencode($joinUrl)."'" );
+
+    if ( $response->failed() )
+    {
+      Log::error(__METHOD__, [
+        'joinUrl' => $joinUrl,
+        'resp_body' => $response->body()
+      ]);
+      return false;
+    }
+    return $response->json();
+  }
+
+  public function getAttendanceReportsList( string $userId, string $meetingId )
+  {
+    $response = $this->getBaseRequest()
+                ->get("/users/{$userId}/onlineMeetings/{$meetingId}/attendanceReports?\$expand=attendanceRecords");
+
+    if ( $response->failed() )
+    {
+      Log::error(__METHOD__, [
+        'userId' => $userId,
+        'meetingId' => $meetingId,
+        'resp_body' => $response->body()
+      ]);
+      return false;
+    }
+    return $response->json();
+  }
+
+  public function getAttendanceReport( string $userId, string $meetingId, string $reportId )
+  {
+    $response = $this->getBaseRequest()
+                ->get("/users/{$userId}/onlineMeetings/{$meetingId}/attendanceReports/{$reportId}?\$expand=attendanceRecords");
+
+    if ( $response->failed() )
+    {
+      Log::error(__METHOD__, [
+        'userId' => $userId,
+        'meetingId' => $meetingId,
+        'resp_body' => $response->body()
+      ]);
+      return false;
+    }
+    return $response->json();
   }
 
 
@@ -160,6 +191,20 @@ class MsApiController extends Controller
      * List meetingAttendanceReports
      * https://learn.microsoft.com/en-us/graph/api/meetingattendancereport-list?view=graph-rest-1.0&tabs=http
      */
+    /*
+    {"@odata.context":"","value":[{"id":"80e65d43-4180-4723-98eb-a115e5ed150a","totalParticipantCount":2,"meetingStartDateTime":"2023-05-25T19:14:41.28Z","meetingEndDateTime":"2023-05-25T19:49:21.697Z"}]}
+    */
+
+
+
+    /**
+     * Filtrar reportes que sucedan únicamente en la fecha de la clase,
+     * comiencen antes de la (hora de inicio +1hr),
+     * y terminen después de la hora de inicio,
+     *
+     * Obtener únicamente IDs de reporte
+     */
+
 
 
     /**
@@ -170,6 +215,9 @@ class MsApiController extends Controller
      *   GET /users/{userId}/onlineMeetings/{meetingId}/attendanceReports/{reportId}
      *
      */
+    /*
+    {"@odata.context":"","id":"80e65d43-4180-4723-98eb-a115e5ed150a","totalParticipantCount":2,"meetingStartDateTime":"2023-05-25T19:14:41.28Z","meetingEndDateTime":"2023-05-25T19:49:21.697Z","attendanceRecords@odata.context":"","attendanceRecords":[{"id":"fba3c228-3a07-42f1-8722-63958f8a81e9","emailAddress":"admin@wiseabcenglish.com","totalAttendanceInSeconds":1868,"role":"Organizer","identity":{"id":"fba3c228-3a07-42f1-8722-63958f8a81e9","displayName":"Administrator","tenantId":"d2bd8599-9a43-4141-8364-a885f8571570"},"attendanceIntervals":[{"joinDateTime":"2023-05-25T19:18:12.8777223Z","leaveDateTime":"2023-05-25T19:49:21.6979659Z","durationInSeconds":1868}]},{"id":"1445c618-3e8d-4d1a-8790-7ad3b4eed537","emailAddress":"esau@wiseabcenglish2023.onmicrosoft.com","totalAttendanceInSeconds":1387,"role":"Presenter","identity":{"id":"1445c618-3e8d-4d1a-8790-7ad3b4eed537","displayName":"Esau Saravia","tenantId":"d2636ec3-22a2-4eaa-8e2a-72f28bfe0fef"},"attendanceIntervals":[{"joinDateTime":"2023-05-25T19:18:16.5166802Z","leaveDateTime":"2023-05-25T19:41:24.0500422Z","durationInSeconds":1387}]}]}
+    */
 
 
 

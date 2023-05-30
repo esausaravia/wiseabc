@@ -1,24 +1,8 @@
 @props([
-  'user'=>\Illuminate\Support\Facades\Auth::user(),
-  'body'=>new \Illuminate\View\ComponentSlot()
+  'user' => request()->user(),
+  'body' => null
 ])
-<!DOCTYPE html>
-<html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
-<head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>WiseABC</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@300;400;500;700&family=Montserrat:wght@300;400;500;700&family=Roboto+Slab:wght@300;400;500;700&display=swap" rel="stylesheet">
-
-  <link rel="stylesheet" href="{{ mix('css/app.css') }}">
-  <script src="{{ mix('js/app.js') }}" defer></script>
-  <script src="https://kit.fontawesome.com/161bce774c.js" crossorigin="anonymous" defer></script>
-  <script>
-    window.app = window.app || {};
-    window.app.home = '{{ route('home') }}';
-  </script>
-</head>
-<body {{ $body->attributes->class(['bg-gray-100 text-gray-600 dark:bg-azulw dark:text-gray-400', $attributes->get('class')]) }}>
+<x-document :body="$body">
   <header id="AdminHeader" class="fixed top-0 left-0 w-full bg-gray-100 dark:bg-azulw shadow-md z-20 flex justify-between items-center">
     <button class="btn btn-toggle-aside w-12 text-azul-600 dark:text-gray-200 text-center text-[22px] leading-12"><i class="fa-light fa-bars"></i></button>
 
@@ -40,7 +24,7 @@
       </label>
     </div>
   </header>
-  <aside id="AdminAside" class="fixed top-0 left-0 h-full -translate-x-full xl:translate-x-0 shadow-md z-10 bg-blue-900 pt-[68px] px-3 md:px-4 xl:px-5 pb-5 text-gray-200 font-accent">
+  <aside id="AdminAside" class="fixed top-0 left-0 h-full -translate-x-full xl:translate-x-0 shadow-md z-10 pt-[68px] px-3 md:px-4 xl:px-5 pb-5 bg-azulw dark:bg-black/30 font-accent text-gray-200 ">
     <ul class="font-accent">
       <li><a href="{{ route('admin.home') }}" class="block p-2">Inicio</a></li>
       <li><a href="{{ route('admin.cursos.index') }}" class="block p-2">Cursos</a></li>
@@ -53,7 +37,4 @@
   <div id="AdminMainContainer" class="pt-16 px-3 pb-5 lg:pt-20 xl:pl-[170px]">
     {{ $slot }}
   </div>
-  <x-layout-toast></x-layout-toast>
-  @stack('scripts')
-</body>
-</html>
+</x-document>

@@ -20,7 +20,6 @@ module.exports = {
       colors:{
         'rojo':'#BE1F41',
         'azulw':'#0B1F41',
-        'azul2':'#12346D',//'#0B1F41',
         'azul':{
           50:"#c5dbfd",
           100:"#a6c8fb",
