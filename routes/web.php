@@ -22,6 +22,23 @@ use Illuminate\Support\Facades\Route;
 | contains the "web" middleware group. Now create something great!
 |
 */
+Route::get('/', function (Request $request)
+{
+	$user = $request->user();
+
+	if ($user->user_type===1 ) {
+		return redirect()->route('admin.home');
+	}
+	elseif ($user->user_type===2 && ($user->clase_tipo===null || $user->ritmo===null) ) {
+		return redirect()->route('student.elegir-ritmo');
+	}
+	elseif ($user->user_type===2 ) {
+		return redirect()->route('student.home');
+	}
+	else if ( $user->user_type==3 ) {
+		return redirect()->route('teacher.home');
+	}
+})->middleware(['auth'])->name('home');
 
 Route::get('country', function(Request $request)
 {
@@ -108,25 +125,6 @@ Route::post('ip-api', function(Request $request) {
 	$request->session()->put( 'ip-api', $data );
 	return ['status'=>'ok'];
 });
-
-
-Route::get('/', function (Request $request)
-{
-	$user = $request->user();
-
-	if ($user->user_type===1 ) {
-		return redirect()->route('admin.home');
-	}
-	elseif ($user->user_type===2 && ($user->clase_tipo===null || $user->ritmo===null) ) {
-		return redirect()->route('student.elegir-ritmo');
-	}
-	elseif ($user->user_type===2 ) {
-		return redirect()->route('student.home');
-	}
-	else if ( $user->user_type==3 ) {
-		return redirect()->route('teacher.home');
-	}
-})->middleware(['auth'])->name('home');
 
 
 Route::get('registro-profesor', function () {
@@ -293,4 +291,25 @@ Route::get('carbon', function(Request $request){
 
 Route::get('colors', function(Request $request) {
 	return view('colors');
+});
+
+Route::get('msapi', function(Request $request) {
+	$msapi = new \App\Http\Controllers\Admin\MsApiController();
+
+	$userMsId = 'fba3c228-3a07-42f1-8722-63958f8a81e9';
+	/**
+	 *
+	 */
+	return $msapi->getUserId('mariojimenez@wiseabcenglish.com');
+
+	$userMsId = 'fba3c228-3a07-42f1-8722-63958f8a81e9';
+	$meetingId = 'MSpmYmEzYzIyOC0zYTA3LTQyZjEtODcyMi02Mzk1OGY4YTgxZTkqMCoqMTk6bWVldGluZ19ZVFl3WWpJeVl6WXRPR1l6TXkwMFl6TXpMV0l5TlRFdE56QXlNR000WmpNelpHSmtAdGhyZWFkLnYy';
+
+	return $msapi->getAttendanceReportsList($userMsId, $meetingId);
+
+	$attendanceReportId = "80e65d43-4180-4723-98eb-a115e5ed150a";
+
+	return $msapi->getAttendanceReport( $userMsId, $meetingId, $attendanceReportId );
+
+	return [];
 });
