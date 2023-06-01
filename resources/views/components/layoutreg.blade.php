@@ -1,29 +1,11 @@
 @php
   $user = \Illuminate\Support\Facades\Auth::user();
 @endphp
-<!DOCTYPE html>
-<html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
-<head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>WiseABC</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;700&family=Open+Sans:wght@400;500;700&display=swap" rel="stylesheet">
-
-  <link rel="stylesheet" href="{{ mix('css/app.css') }}">
-  <script src="{{ mix('js/app.js') }}" defer></script>
-  <script src="https://kit.fontawesome.com/161bce774c.js" crossorigin="anonymous" defer></script>
-  <script>
-    window.app = window.app || {};
-    window.app.home = '{{ route('home') }}';
-  </script>
-</head>
-<body class="bg-gray-100 text-gray-700 dark:bg-azulw dark:text-gray-200 pt-14 md:pt-0">
+<x-document>
   <header id="HeaderMain" class="fixed md:relative top-0 left-0 w-full bg-gray-100 text-gray-700 dark:bg-azulw dark:text-gray-200 shadow-md md:shadow-none z-10">
     <div class="container flex justify-between md:items-center py-[2px] px-3 xl:p-0">
 
-      <a href="https://mezcalent.com/wiseabc">
+      <a href="https://wiseabcenglish.com">
         <img src="{{asset('img/wiseabc-logo.svg')}}" alt="" class="dark:hidden w-auto h-[52px] md:h-[120px]" />
         <img src="{{asset('img/wiseabc-logo-white.svg')}}" alt="" class="hidden dark:block w-auto h-[52px] md:h-[120px]" />
       </a>
@@ -52,11 +34,11 @@
           </div>
           <nav class="flex-grow flex flex-col font-accent font-medium text-lg">
 
-            <a href="https://mezcalent.com/wiseabc/" class="px-5 py-10px">Inicio</a>
-            <a href="https://mezcalent.com/wiseabc/#home-cursos" class="px-5 py-10px">Cursos</a>
-            <a href="https://mezcalent.com/wiseabc/#home-clases" class="px-5 py-10px">Clases</a>
-            <a href="https://mezcalent.com/wiseabc/#home-blog" class="px-5 py-10px">Blog</a>
-            <a href="https://mezcalent.com/wiseabc/#home-contact" class="px-5 py-10px">Contacto</a>
+            <a href="https://wiseabcenglish.com/" class="px-5 py-10px">Inicio</a>
+            <a href="https://wiseabcenglish.com/#home-cursos" class="px-5 py-10px">Cursos</a>
+            <a href="https://wiseabcenglish.com/#home-clases" class="px-5 py-10px">Clases</a>
+            <a href="https://wiseabcenglish.com/#home-blog" class="px-5 py-10px">Blog</a>
+            <a href="https://wiseabcenglish.com/#home-contact" class="px-5 py-10px">Contacto</a>
           </nav>
           <div class="p-5 grid grid-cols-1 gap-4 text-center font-accent font-medium">
             <a href="{{ route('register') }}" class="rounded-lg bg-rojo text-white px-5 py-10px">
@@ -90,11 +72,11 @@
           </label>
         </nav>
         <nav class="border-t-2 border-gray-400 flex font-bold">
-          <a href="https://mezcalent.com/wiseabc/" class="px-5 py-4">Inicio</a>
-          <a href="https://mezcalent.com/wiseabc/#home-cursos" class="px-5 py-4">Cursos</a>
-          <a href="https://mezcalent.com/wiseabc/#home-clases" class="px-5 py-4">Clases</a>
-          <a href="https://mezcalent.com/wiseabc/#home-blog" class="px-5 py-4">Blog</a>
-          <a href="https://mezcalent.com/wiseabc/#home-contact" class="px-5 py-4">Contacto</a>
+          <a href="https://wiseabcenglish.com/" class="px-5 py-4">Inicio</a>
+          <a href="https://wiseabcenglish.com/#home-cursos" class="px-5 py-4">Cursos</a>
+          <a href="https://wiseabcenglish.com/#home-clases" class="px-5 py-4">Clases</a>
+          <a href="https://wiseabcenglish.com/#home-blog" class="px-5 py-4">Blog</a>
+          <a href="https://wiseabcenglish.com/#home-contact" class="px-5 py-4">Contacto</a>
         </nav>
       </div>
     </div>
@@ -106,11 +88,11 @@
     <div class="container md:flex md:justify-between md:items-end py-5">
       <div class="hidden md:block">
         <nav class="border-b-2 border-gray-400 flex text-lg font-accent">
-          <a href="https://mezcalent.com/wiseabc/" class="px-5 py-4">Inicio</a>
-          <a href="https://mezcalent.com/wiseabc/#home-cursos" class="px-5 py-4">Cursos</a>
-          <a href="https://mezcalent.com/wiseabc/#home-clases" class="px-5 py-4">Clases</a>
-          <a href="https://mezcalent.com/wiseabc/#home-blog" class="px-5 py-4">Blog</a>
-          <a href="https://mezcalent.com/wiseabc/#home-contact" class="px-5 py-4">Contacto</a>
+          <a href="https://wiseabcenglish.com/" class="px-5 py-4">Inicio</a>
+          <a href="https://wiseabcenglish.com/#home-cursos" class="px-5 py-4">Cursos</a>
+          <a href="https://wiseabcenglish.com/#home-clases" class="px-5 py-4">Clases</a>
+          <a href="https://wiseabcenglish.com/#home-blog" class="px-5 py-4">Blog</a>
+          <a href="https://wiseabcenglish.com/#home-contact" class="px-5 py-4">Contacto</a>
         </nav>
         <nav class="flex text-sm leading-6">
           <a href="#" class="p-3">Registro de profesor</a>
@@ -132,12 +114,8 @@
         </nav>
       </div>
     </div>
-    <x-colores></x-colores>
     <p class="text-center text-xs pb-2">
       &copy; 2022 Todos los derechos reservados
     </p>
   </footer>
-  <x-layout-toast></x-layout-toast>
-  @stack('scripts')
-</body>
-</html>
+</x-document>

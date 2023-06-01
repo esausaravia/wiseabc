@@ -23,9 +23,10 @@ class StudentController extends Controller
     $activarSigClaseBtn = false;
     $billPlan = null;
     $classroom = null;
+    $hoy = now();
     $nextSchedule = null;
     $subscriptionQty = 4;
-    $subscriptionStartDate = Carbon::parse('2023-06-05 06:00:00');
+    $subscriptionStartDate = Carbon::parse('2023-06-12 06:00:00');
     $subscripcion = $user->activeSubscription();
 
     $countryCode = 'US';
@@ -49,7 +50,7 @@ class StudentController extends Controller
 
     if ( is_object($nextSchedule) )
     {
-      if ( is_object($subscripcion) && now()->lessThan( $nextSchedule->ends_at ) )
+      if ( is_object($subscripcion) && $hoy->lessThan( $nextSchedule->ends_at ) )
       {
         $activarSigClaseBtn = true;
       }
@@ -71,13 +72,16 @@ class StudentController extends Controller
       {
         $subscriptionQty = $billPlan->ritmo *4;
 
-        if( !is_object($classroom) )
-        {
-          $subscriptionStartDate = $subscriptionStartDate->format('Y-m-d\TH:00:00\Z');
-        }
-        elseif ( now()->lessThan($classroom->start) )
+        if ( is_object($classroom) && $hoy->lessThan($classroom->start) )
         {
           $subscriptionStartDate = $classroom->start->format('Y-m-d\TH:00:00\Z');
+        }
+        else if ( $subscriptionStartDate->lessThan( $hoy ) )
+        {
+          $subscriptionStartDate = $hoy->format('Y-m-d\TH:00:00\Z');
+        }
+        else {
+          $subscriptionStartDate = $subscriptionStartDate->format('Y-m-d\TH:00:00\Z');
         }
       }//endif billPlan
     }//endif SIN subscripcion
@@ -86,7 +90,7 @@ class StudentController extends Controller
       'activarSigClaseBtn'=>$activarSigClaseBtn,
       'billPlan'=>$billPlan,
       'classroom'=>$classroom,
-      'hoy'=>now('-0600')->locale('es'),
+      'hoy'=>$hoy->setTimezone('-0600')->locale('es'),
       'nextSchedule'=>$nextSchedule,
       'subscriptionQty'=> $subscriptionQty,
       'subscriptionStartDate' => $subscriptionStartDate,
