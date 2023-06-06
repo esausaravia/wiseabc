@@ -64,7 +64,35 @@ class TeacherController extends Controller
    */
   public function store(Request $request)
   {
-    //
+    $validated = $request->validate([
+      'fname' => 'required',
+      'lname' => 'required',
+      'email' => [
+          'required',
+          'string',
+          'email',
+          'max:255',
+          Rule::unique(User::class),
+      ],
+      'tel' => ['required', 'regex:/[0-9()#&+*-=.]+/i']
+    ]);
+
+    $input = $request->all();
+
+    $user = User::create([
+      'user_type' => 3,
+      'name' => ucwords( $validated['fname'].' '.$validated['lname'] ),
+      'email' => $validated['email'],
+      'password' => Hash::make($input['password'])
+    ]);
+    $user->status = !empty($input['status']) ? $input['status'] : 'PENDING';
+    $user->save();
+
+    $user->saveMetas($input);
+
+    $user->saveHorarios($input['horarios']);
+
+    return redirect()->route('admin.teacher.index')->with('success', 'Guardado con éxito');
   }
 
   /**
