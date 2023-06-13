@@ -477,6 +477,7 @@ window.addEventListener('DOMContentLoaded',function(){
   (function(form){
     if (!form || !form.tagName)  return false;
 
+    /*
     //form.querySelector('[type="submit"]').classList.add('hidden');//reactiva registro
 
     form.querySelectorAll('[name="horarios[]"]').forEach(function(_input){
@@ -485,6 +486,7 @@ window.addEventListener('DOMContentLoaded',function(){
         //form.querySelector('[type="submit"]').classList.add('hidden');//reactiva registro
       });
     });
+    */
 
     document.getElementById('btn-disponibilidad').addEventListener('click', async function(){
       let claseDispEl = document.getElementById('clases-disponibles'),

@@ -404,7 +404,7 @@ class User extends Authenticatable implements MustVerifyEmail
     public function getProfilePic($size=80) {
         $fileName = $this->getMeta('profilepic');
         if ( empty($fileName) ) {
-            return false;
+            return null;
         }
 
         switch( $this->user_type ) {

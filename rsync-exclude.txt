@@ -11,5 +11,6 @@ node_modules
 storage/framework/cache/*
 storage/framework/sessions/*
 storage/framework/views/*
+storage/framework/logs/*
 storage/logs/laravel.log
 storage/logs/*.log

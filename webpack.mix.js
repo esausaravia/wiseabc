@@ -15,6 +15,7 @@ mix.disableNotifications();
 mix.js('resources/js/app.js', 'public/js')
     //.js('resources/js/fontawesome.js','public/js')
     .js('resources/js/students.js','public/js')
+    .js('resources/js/app-profile-form.js','public/js')
     .js('resources/js/admin.pagos.js','public/js')
     .js('resources/js/admin.classroom.cforcurso.js','public/js')
     .css('resources/css/app.css', 'public/css')

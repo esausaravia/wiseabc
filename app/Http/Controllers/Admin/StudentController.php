@@ -108,8 +108,11 @@ class StudentController extends Controller
         'classrooms.horarios'
       ])->find($id);
 
+    $subscripcion = $student->subscriptions()->first();
+
     return view('admin.student.show', [
-      'student'=>$student,
+      'student' => $student,
+      'subscripcion' => $subscripcion,
       'ritmo_labels'=>config('wiseabc.ritmo_labels')
     ]);
   }

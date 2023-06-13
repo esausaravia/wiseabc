@@ -82,11 +82,9 @@ class Curso extends Model
 
         $userResult = $usersQuery->get();
 
-        $alumnosSinClase = \App\Models\User::with(['usermetas'=>function($query){
-            $query->where(function($query){
-                return $query->where('metakey','ritmo')->orWhere('metakey','clase_tipo');
-            });
-        }])->whereIn('id', $userResult->pluck('user_id')->all() );
+        $alumnosSinClase = \App\Models\User::whereHas('usermetas', function($query){
+            $query->where('metakey','ritmo')->orWhere('metakey','clase_tipo');
+        })->whereIn('id', $userResult->pluck('user_id')->all() );
         //$sql = vsprintf(str_replace(array('?'), array('\'%s\''), $alumnosSinClase->toSql()), $alumnosSinClase->getBindings()); dd($sql);
         $this->alumnos_sin_clase = $alumnosSinClase->get();
 

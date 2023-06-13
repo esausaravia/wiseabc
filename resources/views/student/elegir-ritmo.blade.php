@@ -1,5 +1,9 @@
 <x-layoutreg container-class="py-12 text-center">
-  <h1 class="text-3xl font-bold text-azul-600 mb-8">Elegir suscripción</h1>
+  <h1 class="text-2xl md:text-3xl font-bold text-azul-600 my-6">Elige tu subscripción para finalizar tu registro</h1>
+
+  <p class="max-w-[600px] mx-auto mb-8 text-center">
+    Puedes cambiarla más adelante
+  </p>
 
   @if( is_object($region) && $region->id==2 )
 
@@ -431,4 +435,14 @@
     </div>
   </div>
   @endif
+
+  @push('scripts')
+  <script>
+    window.addEventListener('beforeunload', function(ev) {
+      let confirmationMessage = "Si sales de esta página perderás tu progreso.";
+      ev.returnValue = confirmationMessage;
+      return confirmationMessage;
+    });
+  </script>
+  @endpush
 </x-layoutreg>

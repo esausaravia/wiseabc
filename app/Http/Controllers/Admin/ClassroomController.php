@@ -206,9 +206,8 @@ class ClassroomController extends Controller
             return !empty($disp);
         });
 
-        $curso->alumnosSinClase();
         $arrStudentsToJS = collect();
-        foreach($curso->alumnos_sin_clase AS $student) {
+        foreach( $curso->alumnosSinClase() AS $student) {
             $obj = [
                 'id'=>$student->id,
                 'tipo'=>$student->clase_tipo,

@@ -11,7 +11,9 @@
         <section class="flex">
           <div class="rounded-lg shadow-md p-4 lg:p-5 bg-white dark:bg-white/20 flex">
             <figure class="flex-grow-0 flex-shrink-0 rounded-full bg-gray-500 mr-4 overflow-hidden">
+              @if( $profe->getProfilePic()!==null )
               <x-img :alt="$profe->name" class="w-[5rem] h-[5rem]" width="80" height="80" :src="$profe->getProfilePic()" srcset="{{$profe->getProfilePic() }} 80w, {{$profe->getProfilePic(160) }} 160w" ></x-img>
+              @endif
             </figure>
             <div class="flex-grow">
               <h4>{{$profe->name}}</h4>
