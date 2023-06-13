@@ -25,12 +25,12 @@
         </p>
         <p class="mb-2 px-2">
           <b class="block -mb-1 font-accent text-xs">Ritmo</b>
-          {{ $student->clase_tipo==1 ? 'Grupo' : 'Particular' }}
+          @if ( is_null($student->clase_tipo) )
+          No ha elegido
+          @else
+          {{ config('wiseabc.clase_tipo_labels.'.$student->clase_tipo) }}
+          @endif
           {{ $student->ritmo_label }}
-        </p>
-        <p class="mb-2 px-2">
-          <b class="block -mb-1 font-accent text-xs">nivel</b>
-          {{$student->nivel_label }}
         </p>
 
         <p class="mb-2 px-2">
@@ -57,13 +57,10 @@
       </div>
     </div>{{--/card--}}
 
-    @if( !empty($student->billingplans) && ( $billPlan = $student->billingplans->first() )!==null )
-    <section class="rounded-lg shadow-md p-3 bg-gray-50 mb-5 md:mr-5">
-      <h3 class="font-bold font-accent text-xs">Suscripción:</h3>
-      <p class="mb-2">{{ $billPlan->name }}</p>
-      <p>$@money($billPlan->precio)</p>
-    </section>
-    @endif
+    <div class="mb-5 md:mr-5">
+      <x-admin.student-subscription :subscripcion="$subscripcion"></x-admin.student-subscription>
+    </div>
+
 
     @if ( !empty( $student->currentClassroom ) )
     <section class="rounded-lg shadow-md p-3 bg-gray-50 mb-5 md:mr-5">

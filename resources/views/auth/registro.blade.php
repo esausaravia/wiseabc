@@ -39,7 +39,7 @@
         <x-forms.input label="Nombre" name="fname" required></x-forms.input>
         <x-forms.input label="Apellidos" name="lname" required></x-forms.input>
         <x-forms.input label="Correo electrónico" name="email" required></x-forms.input>
-        <x-forms.input label="Teléfono" name="tel" required></x-forms.input>
+        <x-forms.input label="Teléfono" name="tel" type="tel" required></x-forms.input>
 
         <x-forms.input label="{{__('Password')}}" name="password" type="password" required></x-forms.input>
         <x-forms.input label="{{__('Confirm Password')}}" name="password_confirmation" type="password" required></x-forms.input>
@@ -189,4 +189,58 @@
       </p>
     </div>
   </section>
+
+  @push('css')
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/intl-tel-input@18.1.1/build/css/intlTelInput.css">
+  @endpush
+
+  @push('scripts')
+  <script src="{{ asset('js/app-profile-form.js') }}" defer></script>
+  {{--
+  <script src="https://cdn.jsdelivr.net/npm/intl-tel-input@18.1.1/build/js/intlTelInput.min.js"></script>
+  <script>
+    var itiErrorMap = ["Invalid number", "Invalid country code", "Too short", "Too long", "Invalid number"];
+    window.addEventListener('DOMContentLoaded',function(){
+      var resetInputState = function(input){
+        console.log('resetInputState', typeof input, input);
+
+        if ( input.target || input.srcElement ) {
+          input = input.target || input.srcElement;
+        }
+
+        if ( input.setCustomValidity ) {
+          input.setCustomValidity("");
+        }
+
+        input.classList.remove('border-rose-600');
+        input.classList.remove('bg-rose-200');
+        input.classList.remove('text-rose-600');
+      };
+      document.querySelectorAll('input[name="phone"], input[type="tel"]').forEach(function(input){
+
+        input.__iti = window.intlTelInput(input, {
+          utilsScript: "https://cdn.jsdelivr.net/npm/intl-tel-input@18.1.1/build/js/utils.js"
+        });
+
+        input.addEventListener('blur', function(ev){
+          let input = ev.target || ev.srcElement;
+          resetInputState(input);
+          if (input.value.trim()) {
+            if (input.__iti.isValidNumber()) {
+              //validMsg.classList.remove("hide");
+            } else {
+              //input.classList.add("error");
+              const errorCode = input.__iti.getValidationError();
+              input.setCustomValidity( itiErrorMap[errorCode] );
+            }
+          }
+        });
+
+        input.addEventListener('change', resetInputState);
+        input.addEventListener('keyup', resetInputState);
+      });
+
+    });
+  </script>--}}
+  @endpush
 </x-layoutreg>

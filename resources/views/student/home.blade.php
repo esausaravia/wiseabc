@@ -1,7 +1,17 @@
 <x-layout class="student-home">
-@push('scripts')
-<script defer src="{{ asset('./js/students.js') }}"></script>
-@endpush
+
+  @push('scripts')
+  <script defer src="{{ asset('./js/students.js') }}"></script>
+  @endpush
+
+  <div class="flex mb-8">
+    <section class="shadow-md rounded-xl p-4 bg-gray-50">
+      <h2 class="font-accent font-semibold text-2xl md:text-3xl mb-4">¡Bienvenido a WiseABC English!</h2>
+
+      <p>Estamos entusiasmados con tu llegada a nuestra institución. En esta página podrás consultar tu perfil y los detalles de tus cursos y clases, así como los avances y monitorear el progreso del estudiante.</p>
+
+    </section>
+  </div>
 
   <div class="flex flex-wrap -mx-2 md:-mx-3">
 
@@ -119,7 +129,7 @@
 
     @else {{-- SIN CLASE --}}
 
-    <h2 class="w-full my-8 px-3 text-xl lg:text-2xl font-accent font-semibold ">Aun no tiene una clase asignada.</h2>
+    <h2 class="w-full my-8 px-3 text-xl lg:text-2xl font-accent font-semibold ">Aún no tiene una clase asignada</h2>
     <div class="w-full max-w-2xl lg:w-1/2 px-3 mb-8">
       <section id="divSinClassroom" class="shadow-md rounded-xl overflow-clip bg-gray-50 dark:bg-white/10 p-4">
         <p class="mb-5">Nuestro personal evaluará su perfil de estudiante para asignar un profesor y una clase con base en las opciones que eligió durante su registro. Mismas que puede modificar antes de tener su clase asignada, con el formulario a continuación:</p>
@@ -193,6 +203,11 @@
     @if ( is_object($subscripcion) || is_object($billPlan) )
     <div class="w-full max-w-2xl lg:w-2/3 xl:w-1/2 px-3 mb-8">
       <x-student.subscription-card :subscripcion="$subscripcion" :billplan="$billPlan" :classroom="$classroom" :subscription-qty="$subscriptionQty" :subscription-start-date="$subscriptionStartDate" ></x-student.subscription-card>
+
+      <div class="">
+        <p class="mb-3">Cualquier duda, escríbenos a <a href="mailto:admin@wiseabcenglish.com">admin@wiseabcenglish.com</a></p>
+        <p class="mb-3">Teléfonos: <br />+1 239 3564996 <br /> +1 239 3563567</p>
+      </div>
     </div>
     @endif
 

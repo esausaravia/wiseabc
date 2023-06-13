@@ -75,9 +75,16 @@
 <section class="shadow-md mb-8 rounded-xl border-[3px] p-4 text-center border-azul-600 bg-white">
   @empty($classroom)
   <h3 class="mb-5 text-xl md:text-2xl font-semibold font-accent text-azul-600">
+
+    @if ( now()->lessThan( \Carbon\Carbon::parse('2023-06-12 06:00:00') ) )
+    Activa tu suscripción antes del 12 de junio
+    @else
     ¡Activa tu subscripción ahora!
+    @endif
+
   </h3>
-  <p class="my-4">Recibirás el primer cargo cuando comiencen las clases.</p>
+  <p class="my-4"></p>
+  <p class="my-4">Por favor, haz tu pago para comenzar a aprender inglés en los horarios, nivel y curso que elegiste ¡Nos vemos en clase!</p>
   @else
   <h3 class="mb-5 text-xl md:text-2xl font-semibold font-accent text-azul-600">¡Paga tu subscripción ahora!</h3>
   <p class="my-4">Ahora que tienes profesor y clase asignados, el siguiente paso es acreditar el pago de tu subscripción.</p>

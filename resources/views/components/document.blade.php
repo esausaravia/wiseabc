@@ -23,6 +23,7 @@
   {{ $slot }}
 
   <x-layout-toast></x-layout-toast>
+  @stack('css')
   @stack('scripts')
 </body>
 </html>

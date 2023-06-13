@@ -53,24 +53,28 @@
       </tr>
     </thead>
     <tbody>
-      @foreach ($Students as $alumno)
+      @foreach ($Students as $student)
         <tr class="even:bg-black/5 dark:even:bg-white/5">
-          <td class="p-2">{{ $alumno->id }}</td>
+          <td class="p-2">{{ $student->id }}</td>
           <td class="p-2">
-            <a href="{{ route('admin.student.show', ['student'=>$alumno->id]) }}">{{ $alumno->name }}</a>
+            <a href="{{ route('admin.student.show', ['student'=>$student->id]) }}">{{ $student->name }}</a>
           </td>
-          <td class="p-2">{{ $alumno->edadLabel }}</td>
-          <td class="p-2">{{ $alumno->nivelLabel }}</td>
+          <td class="p-2">{{ $student->edadLabel }}</td>
+          <td class="p-2">{{ $student->nivelLabel }}</td>
           <td class="p-2">
-            {{ $alumno->clase_tipo==1 ? 'Grupo' : 'Particular' }}
-            {{ $alumno->ritmoLabel }}
+            @if ( is_null($student->clase_tipo) )
+            No ha elegido
+            @else
+            {{ config('wiseabc.clase_tipo_labels.'.$student->clase_tipo) }}
+            @endif
+            {{ $student->ritmoLabel }}
           </td>
 
           <td class="p-2">
-            @if( !empty($alumno->currentClassroom) )
-            #{{ $alumno->currentClassroom->id }}
+            @if( !empty($student->currentClassroom) )
+            #{{ $student->currentClassroom->id }}
             @else
-            <a href="{{ route('admin.student.assignclass', ['student'=>$alumno]) }}" class="px-2">
+            <a href="{{ route('admin.student.assignclass', ['student'=>$student]) }}" class="px-2">
               <i class="fa-light fa-plus"></i> Classroom </a>
             @endif
 
@@ -78,10 +82,10 @@
 
           <td class="px-2 text-sm ">
             <div class="flex">
-              <a href="{{ route('admin.student.edit', ['student'=>$alumno]) }}" class="px-2">
+              <a href="{{ route('admin.student.edit', ['student'=>$student]) }}" class="px-2">
                 <i class="fa-light fa-pen-to-square"></i> Editar</a>
 
-              <a href="{{ route('admin.student.destroy', ['student'=>$alumno]) }}" class="px-2">
+              <a href="{{ route('admin.student.destroy', ['student'=>$student]) }}" class="px-2">
                 <i class="fa-light fa-trash"></i> Eliminar</a>
             </div>
           </td>

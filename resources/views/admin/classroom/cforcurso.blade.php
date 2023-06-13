@@ -2,7 +2,7 @@
   <h1 class="text-xl md:text-2xl font-accent font-bold mb-5">Crear classroom para curso</h1>
 
   <div class="lg:flex">
-    <div class="lg:flex-grow lg:flex-shrink-0">
+    <div class="lg:flex-grow">
       <section class="flex mb-5">
         <div class="shadow-md rounded-lg bg-white dark:bg-white/10 p-5">
           <h4 class="mb-3"><span>[#{{$curso->id}}]</span> {{ $curso->name }}</h4>
@@ -20,13 +20,13 @@
         @csrf
         <input type="hidden" name="curso_id" value="{{$curso->id}}" />
 
-        <section class="lg:grid lg:grid-cols-2 xl:grid-cols-3 mb-5">
+        <section class="flex flex-wrap -mx-2 mb-5">
 
-          <x-forms.option-group name="tipo" label="Tipo" required :options="\App\Models\Classroom::$arrTipos" class="mb-5"></x-forms.option-group>
+          <x-forms.option-group name="tipo" label="Tipo" required :options="\App\Models\Classroom::$arrTipos" class=" w-full md:w-auto px-2 mb-5"></x-forms.option-group>
 
-          <x-forms.option-group name="ritmo" label="Intensidad" required :options="config('wiseabc.ritmo_labels')" class="mb-5"></x-forms.option-group>
+          <x-forms.option-group name="ritmo" label="Intensidad" required :options="config('wiseabc.ritmo_labels')" class="w-full md:w-auto px-2 mb-5"></x-forms.option-group>
 
-          <x-forms.input class="mb-5" type="date" name="start" label="Fecha de inicio" :value="old('start', date('Y-m-d'))" required></x-forms.input>
+          <x-forms.input class="w-full md:w-auto px-2 mb-5" type="date" name="start" label="Fecha de inicio" :value="old('start', date('Y-m-d'))" required></x-forms.input>
 
         </section>
 

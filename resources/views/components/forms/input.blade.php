@@ -35,7 +35,7 @@ if ( $type==='time' ) {
 
   @endif
 
-  <input type="{{$type}}" id="{{$id}}" name="{{$name}}" value="{{ old($name, $value) }}" placeholder="{{$placeholder}}" @required($required) @disabled($disabled) @readonly($readonly) class="block {{$inputW}} shadow-sm p-3 xl:py-1 rounded-md border border-black/5 bg-white text-gray-600 disabled:bg-transparent disabled:text-inherit" />
+  <input type="{{$type}}" id="{{$id}}" name="{{$name}}" value="{{ old($name, $value) }}" placeholder="{{$placeholder}}" @required($required) @disabled($disabled) @readonly($readonly) class="block {{$inputW}} shadow-sm p-3 xl:py-1 rounded-md border border-black/5 bg-white text-gray-600 disabled:bg-black/5 disabled:dark:bg-white/5 disabled:text-inherit" />
 
   @error($name)
   <span class="error-msg block text-sm text-rose-700">{{$message}}</span>
