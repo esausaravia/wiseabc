@@ -39,7 +39,8 @@
         <x-forms.input label="Nombre" name="fname" required></x-forms.input>
         <x-forms.input label="Apellidos" name="lname" required></x-forms.input>
         <x-forms.input label="Correo electrónico" name="email" required></x-forms.input>
-        <x-forms.input label="Teléfono" name="tel" type="tel" required></x-forms.input>
+        <x-forms.input label="Teléfono" name="user_phone" type="tel" required></x-forms.input>
+        <input type="hidden" name="country" value="" />
 
         <x-forms.input label="{{__('Password')}}" name="password" type="password" required></x-forms.input>
         <x-forms.input label="{{__('Confirm Password')}}" name="password_confirmation" type="password" required></x-forms.input>

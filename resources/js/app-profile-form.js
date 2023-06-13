@@ -23,7 +23,9 @@ window.addEventListener('DOMContentLoaded', function() {
   document.querySelectorAll('input[name="phone"], input[type="tel"]').forEach( function(input){
 
     input.__iti = intlTelInput( input, {
-      utilsScript: "https://cdn.jsdelivr.net/npm/intl-tel-input@18.1.1/build/js/utils.js"
+      utilsScript: "https://cdn.jsdelivr.net/npm/intl-tel-input@18.1.1/build/js/utils.js",
+      separateDialCode: true,
+      hiddenInput: "tel",
     });
 
     input.addEventListener('blur', function(ev) {
@@ -32,16 +34,23 @@ window.addEventListener('DOMContentLoaded', function() {
 
       resetInputState(input);
 
-      if (input.value.trim()) {
+      if (input.value.trim() && input.__iti && input.__iti.isValidNumber) {
 
-        if (input.__iti.isValidNumber()) {
+        if ( input.__iti.isValidNumber()) {
           //validMsg.classList.remove("hide");
         } else {
           //input.classList.add("error");
           const errorCode = input.__iti.getValidationError();
           input.setCustomValidity( itiErrorMap[errorCode] )
         }
+
+        let countryData = input.__iti.getSelectedCountryData();
+        if ( countryData && countryData.name ) {
+          document.querySelector('input[name="country"]').value = countryData.name
+        }
       }
+
+
     });
 
     input.addEventListener('change', resetInputState);
