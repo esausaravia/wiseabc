@@ -21,9 +21,11 @@
             <h3 class="text-2xl font-accent font-medium">Relax</h3>
             <p class="font-bold text-base">4 clases</p>
             <div class="my-3">
-              <div class="flex items-top justify-center">
+              <div class="flex items-top justify-center font-accent">
+                <span class="self-end line-through ">$36</span>
                 <span class="font-bold">$</span>
-                <span class="font-accent font-bold text-5xl">36</span>
+                <span class="font-bold text-5xl">28</span>
+                <span class="font-bold">.80</span>
               </div>
               <p>al mes</p>
             </div>
@@ -46,8 +48,10 @@
             <p class="font-bold text-base">8 clases</p>
             <div class="my-3">
               <div class="flex items-top justify-center">
+                <span class="self-end line-through ">$72</span>
                 <span class="font-bold">$</span>
-                <span class="font-accent font-bold text-5xl">72</span>
+                <span class="font-accent font-bold text-6xl">57</span>
+                <span class="font-bold">.60</span>
               </div>
               <p>al mes</p>
             </div>
@@ -70,8 +74,10 @@
             <p class="font-bold text-base">12 clases</p>
             <div class="my-3">
               <div class="flex items-top justify-center">
+                <span class="self-end line-through ">$96</span>
                 <span class="font-bold">$</span>
-                <span class="font-accent font-bold text-5xl">96</span>
+                <span class="font-accent font-bold text-6xl">76</span>
+                <span class="font-bold">.80</span>
               </div>
               <p>al mes</p>
             </div>
@@ -94,8 +100,9 @@
             <p class="font-bold text-base">20 clases</p>
             <div class="my-3">
               <div class="flex items-top justify-center">
+                <span class="self-end line-through ">$140</span>
                 <span class="font-bold">$</span>
-                <span class="font-accent font-bold text-5xl">140</span>
+                <span class="font-accent font-bold text-6xl">112</span>
               </div>
               <p>al mes</p>
             </div>
@@ -124,8 +131,9 @@
             <p class="font-bold text-base">4 clases</p>
             <div class="my-3">
               <div class="flex items-top justify-center">
+                <span class="self-end line-through ">$80</span>
                 <span class="font-bold">$</span>
-                <span class="font-accent font-bold text-5xl">80</span>
+                <span class="font-accent font-bold text-6xl">64</span>
               </div>
               <p>usd al mes</p>
             </div>
@@ -148,8 +156,9 @@
             <p class="font-bold text-base">8 clases</p>
             <div class="my-3">
               <div class="flex items-top justify-center">
+                <span class="self-end line-through ">$160</span>
                 <span class="font-bold">$</span>
-                <span class="font-accent font-bold text-5xl">160</span>
+                <span class="font-accent font-bold text-6xl">128</span>
               </div>
               <p>usd al mes</p>
             </div>
@@ -172,8 +181,10 @@
             <p class="font-bold text-base">12 clases</p>
             <div class="my-3">
               <div class="flex items-top justify-center">
+                <span class="self-end line-through ">$216</span>
                 <span class="font-bold">$</span>
-                <span class="font-accent font-bold text-5xl">216</span>
+                <span class="font-accent font-bold text-6xl">172</span>
+                <span class="font-bold">.80</span>
               </div>
               <p>al mes</p>
             </div>
@@ -196,8 +207,9 @@
             <p class="font-bold text-base">20 clases</p>
             <div class="my-3">
               <div class="flex items-top justify-center">
+                <span class="self-end line-through ">$320</span>
                 <span class="font-bold">$</span>
-                <span class="font-accent font-bold text-5xl">320</span>
+                <span class="font-accent font-bold text-6xl">256</span>
               </div>
               <p>al mes</p>
             </div>
@@ -237,13 +249,15 @@
             <p class="font-bold text-base">4 clases</p>
             <div class="my-3">
               <div class="flex items-top justify-center">
+                <span class="self-end line-through ">$44</span>
                 <span class="font-bold">$</span>
-                <span class="font-accent font-bold text-5xl">43.96</span>
+                <span class="font-accent font-bold text-6xl">35</span>
+                <span class="font-bold">.17</span>
               </div>
               <p>al mes</p>
             </div>
             <ul class="text-left mx-5 pl-5 list-disc text-sm">
-              <li class="text-base">$10.99 usd por clase</li>
+              <li class="text-base">$8.8 usd por clase</li>
               <li>1 clase por semana</li>
               <li>Clase grupal de 40 min.</li>
               <li>Grupo de hasta 3 estudiantes</li>
@@ -261,13 +275,15 @@
             <p class="font-bold text-base">8 clases</p>
             <div class="my-3">
               <div class="flex items-top justify-center">
+                <span class="self-end line-through ">$88</span>
                 <span class="font-bold">$</span>
-                <span class="font-accent font-bold text-5xl">87.92</span>
+                <span class="font-accent font-bold text-6xl">70</span>
+                <span class="font-bold">.34</span>
               </div>
               <p>al mes</p>
             </div>
             <ul class="text-left mx-5 pl-5 list-disc text-sm">
-              <li class="text-base">$9 usd por clase</li>
+              <li class="text-base">$8.8 usd por clase</li>
               <li>2 clases por semana</li>
               <li>Clase grupal de 40 min.</li>
               <li>Grupo de hasta 3 estudiantes</li>
@@ -285,8 +301,10 @@
             <p class="font-bold text-base">12 clases</p>
             <div class="my-3">
               <div class="flex items-top justify-center">
+                <span class="self-end line-through ">$120</span>
                 <span class="font-bold">$</span>
-                <span class="font-accent font-bold text-5xl">119.88</span>
+                <span class="font-accent font-bold text-6xl">95</span>
+                <span class="font-bold">.91</span>
               </div>
               <p>al mes</p>
             </div>
@@ -309,13 +327,14 @@
             <p class="font-bold text-base">20 clases</p>
             <div class="my-3">
               <div class="flex items-top justify-center">
+                <span class="self-end line-through ">$180</span>
                 <span class="font-bold">$</span>
-                <span class="font-accent font-bold text-5xl">180</span>
+                <span class="font-accent font-bold text-6xl">144</span>
               </div>
               <p>al mes</p>
             </div>
             <ul class="text-left mx-5 pl-5 list-disc text-sm">
-              <li class="text-base">$7 usd por clase</li>
+              <li class="text-base">$7.2 usd por clase</li>
               <li>5 clases por semana</li>
               <li>Clase grupal de 40 min.</li>
               <li>Grupo de hasta 3 estudiantes</li>
@@ -339,13 +358,14 @@
             <p class="font-bold text-base">4 clases</p>
             <div class="my-3">
               <div class="flex items-top justify-center">
+                <span class="self-end line-through ">$100</span>
                 <span class="font-bold">$</span>
-                <span class="font-accent font-bold text-5xl">99.96</span>
+                <span class="font-accent font-bold text-6xl">80</span>
               </div>
               <p>usd al mes</p>
             </div>
             <ul class="text-left mx-5 pl-5 list-disc text-sm">
-              <li class="text-base">$24.99 usd por clase</li>
+              <li class="text-base">$20 usd por clase</li>
               <li>Clase particular de 40 mins</li>
               <li>Un solo estudiante</li>
               <li>1 clase por semana</li>
@@ -363,13 +383,14 @@
             <p class="font-bold text-base">8 clases</p>
             <div class="my-3">
               <div class="flex items-top justify-center">
+                <span class="self-end line-through ">$200</span>
                 <span class="font-bold">$</span>
-                <span class="font-accent font-bold text-5xl">199.92</span>
+                <span class="font-accent font-bold text-6xl">160</span>
               </div>
               <p>usd al mes</p>
             </div>
             <ul class="text-left mx-5 pl-5 list-disc text-sm">
-              <li class="text-base">$24.99 usd por clase</li>
+              <li class="text-base">$20 usd por clase</li>
               <li>Clase particular de 40 mins</li>
               <li>Un solo estudiante</li>
               <li>2 clases por semana</li>
@@ -387,13 +408,15 @@
             <p class="font-bold text-base">12 clases</p>
             <div class="my-3">
               <div class="flex items-top justify-center">
+                <span class="self-end line-through ">$264</span>
                 <span class="font-bold">$</span>
-                <span class="font-accent font-bold text-5xl">264</span>
+                <span class="font-accent font-bold text-6xl">211</span>
+                <span class="font-bold">.20</span>
               </div>
               <p>al mes</p>
             </div>
             <ul class="text-left mx-5 pl-5 list-disc text-sm">
-              <li class="text-base">$22 usd por clase</li>
+              <li class="text-base">$17.6 usd por clase</li>
               <li>Clase particular de 40 mins</li>
               <li>Un solo estudiante</li>
               <li>3 clases por semana</li>
@@ -411,13 +434,14 @@
             <p class="font-bold text-base">20 clases</p>
             <div class="my-3">
               <div class="flex items-top justify-center">
+                <span class="self-end line-through ">$400</span>
                 <span class="font-bold">$</span>
-                <span class="font-accent font-bold text-5xl">400</span>
+                <span class="font-accent font-bold text-6xl">320</span>
               </div>
               <p>al mes</p>
             </div>
             <ul class="text-left mx-5 pl-5 list-disc text-sm">
-              <li class="text-base">$20 usd por clase</li>
+              <li class="text-base">$16 usd por clase</li>
               <li>Clase particular de 40 mins</li>
               <li>Un solo estudiante</li>
               <li>5 clases por semana</li>

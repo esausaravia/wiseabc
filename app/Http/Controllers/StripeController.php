@@ -222,34 +222,56 @@ class StripeController extends Controller
 
         $student = $request->user();
 
+        $checkoutSessionData = [
+            'line_items' => [[
+                'price' => $bplan->stripe->api_id,
+                'quantity' => !empty($input['subscription_qty']) ? $input['subscription_qty'] : 1,
+            ]],
+            'subscription_data' => [
+                //'default_tax_rates' => ['txr_1N2TLPKYG3qD2MystfTjOq4s']
+                'trial_end' => $startDate,
+            ],
+            'mode' => 'subscription',
+            'success_url' => route('student.stripe.success') . '?session_id={CHECKOUT_SESSION_ID}',
+            'cancel_url' => route('student.home'),
+            'client_reference_id' => $student->id,
+            'customer_email' => empty($student->stripe) ? $student->email : null,
+            'customer' => !empty($student->stripe) ? $student->stripe->api_id : null,
+            'metadata' => [
+                'billing_plan_id' => $bplan->id
+            ],
+            //'allow_promotion_codes'=>true,
+            'discounts' => [[
+                'coupon' => 'AqH3o0Fl'
+            ]]
+            /*
+            'subscription_data' => [
+                'billing_cycle_anchor' => 1672531200,
+            ],
+            */
+        ];
+
+        if ( !empty($input['coupon']) )
+        {
+            $checkoutSessionData['discounts'] = [[
+                'coupon' => $input['coupon']
+            ]];
+        }
+        elseif ( !empty($input['promotion_code']) )
+        {
+            $checkoutSessionData['discounts'] = [[
+                'promotion_code' => $input['promotion_code']
+            ]];
+        }
+        else {
+            $checkoutSessionData['allow_promotion_codes'] = true;
+        }
+
         \Stripe\Stripe::setApiKey( env('STRIPE_SECRET') );
 
         try {
 
-            $checkoutSession = \Stripe\Checkout\Session::create([
-                'line_items' => [[
-                    'price' => $bplan->stripe->api_id,
-                    'quantity' => !empty($input['subscription_qty']) ? $input['subscription_qty'] : 1,
-                ]],
-                'subscription_data' => [
-                    //'default_tax_rates' => ['txr_1N2TLPKYG3qD2MystfTjOq4s']
-                    'trial_end' => $startDate,
-                ],
-                'mode' => 'subscription',
-                'success_url' => route('student.stripe.success') . '?session_id={CHECKOUT_SESSION_ID}',
-                'cancel_url' => route('student.home'),
-                'client_reference_id' => $student->id,
-                'customer_email' => empty($student->stripe) ? $student->email : null,
-                'customer' => !empty($student->stripe) ? $student->stripe->api_id : null,
-                'metadata' => [
-                    'billing_plan_id' => $bplan->id
-                ]
-                /*
-                'subscription_data' => [
-                    'billing_cycle_anchor' => 1672531200,
-                ],
-                */
-            ]);
+            $checkoutSession = \Stripe\Checkout\Session::create($checkoutSessionData);
             Log::debug(__METHOD__, ['checkoutSession'=>$checkoutSession]);
 
             $student->saveMetas([
