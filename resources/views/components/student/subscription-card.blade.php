@@ -95,7 +95,7 @@
       {{--<p class="font-bold text-base">{{ ($billplan->ritmo *4) }} clases</p> --}}
       <div class="flex items-top justify-center">
         <span class="font-bold">$</span>
-        <span class="font-accent font-bold text-5xl">{{ $billplan->price/100 }}</span>
+        <span class="font-accent font-bold text-5xl">{{ $billplan->price*.8/100 }}</span>
       </div>
       <p>cada 4 semanas</p>
     </div>
@@ -123,6 +123,8 @@
     @if( !empty($subscriptionStartDate) )
     <input type="hidden" name="start_date" value="{{ $subscriptionStartDate }}">
     @endif
+
+    <input type="hidden" name="coupon" value="AqH3o0Fl" />
 
     <button type="submit" class="btn rounded-full shadow-md px-5 leading-12 font-accent font-medium bg-rojo text-white">PAGAR</button>
   </form>

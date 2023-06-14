@@ -26,7 +26,7 @@ class StudentController extends Controller
     $hoy = now();
     $nextSchedule = null;
     $subscriptionQty = 4;
-    $subscriptionStartDate = Carbon::parse('2023-06-12 06:00:00');
+    $subscriptionStartDate = null;
     $subscripcion = $user->activeSubscription();
 
     $countryCode = 'US';
@@ -75,13 +75,6 @@ class StudentController extends Controller
         if ( is_object($classroom) && $hoy->lessThan($classroom->start) )
         {
           $subscriptionStartDate = $classroom->start->format('Y-m-d\TH:00:00\Z');
-        }
-        else if ( $subscriptionStartDate->lessThan( $hoy ) )
-        {
-          $subscriptionStartDate = $hoy->format('Y-m-d\TH:00:00\Z');
-        }
-        else {
-          $subscriptionStartDate = $subscriptionStartDate->format('Y-m-d\TH:00:00\Z');
         }
       }//endif billPlan
     }//endif SIN subscripcion

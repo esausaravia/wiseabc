@@ -1,4 +1,5 @@
 <x-layout>
+  <div class="max-w-[1200px] mx-auto">a</div>
 
   <section class=" mb-5 grid grid-cols-1 gap-5 md:grid-cols-2 lg:grid-cols-4 text-center">
     <div class="rounded-xl p-4 bg-rose-700 text-white">
