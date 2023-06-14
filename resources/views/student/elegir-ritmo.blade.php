@@ -30,7 +30,7 @@
               <p>al mes</p>
             </div>
             <ul class="text-left mx-5 pl-5 list-disc text-sm">
-              <li class="text-base">$9 usd por clase</li>
+              <li class="text-base">$7.2 usd por clase</li>
               <li>1 clase por semana</li>
               <li>Clase grupal de 40 min.</li>
               <li>Grupo de hasta 3 estudiantes</li>
@@ -56,7 +56,7 @@
               <p>al mes</p>
             </div>
             <ul class="text-left mx-5 pl-5 list-disc text-sm">
-              <li class="text-base">$9 usd por clase</li>
+              <li class="text-base">$7.2 usd por clase</li>
               <li>2 clases por semana</li>
               <li>Clase grupal de 40 min.</li>
               <li>Grupo de hasta 3 estudiantes</li>
@@ -82,7 +82,7 @@
               <p>al mes</p>
             </div>
             <ul class="text-left mx-5 pl-5 list-disc text-sm">
-              <li class="text-base">$8 usd por clase</li>
+              <li class="text-base">$6.4 usd por clase</li>
               <li>3 clases por semana</li>
               <li>Clase grupal de 40 min.</li>
               <li>Grupo de hasta 3 estudiantes</li>
@@ -107,7 +107,7 @@
               <p>al mes</p>
             </div>
             <ul class="text-left mx-5 pl-5 list-disc text-sm">
-              <li class="text-base">$7 usd por clase</li>
+              <li class="text-base">$5.6 usd por clase</li>
               <li>5 clases por semana</li>
               <li>Clase grupal de 40 min.</li>
               <li>Grupo de hasta 3 estudiantes</li>
@@ -138,7 +138,7 @@
               <p>usd al mes</p>
             </div>
             <ul class="text-left mx-5 pl-5 list-disc text-sm">
-              <li class="text-base">$20 usd por clase</li>
+              <li class="text-base">$16 usd por clase</li>
               <li>Clase particular de 40 mins</li>
               <li>Un solo estudiante</li>
               <li>1 clase por semana</li>
@@ -163,7 +163,7 @@
               <p>usd al mes</p>
             </div>
             <ul class="text-left mx-5 pl-5 list-disc text-sm">
-              <li class="text-base">$20 usd por clase</li>
+              <li class="text-base">$16 usd por clase</li>
               <li>Clase particular de 40 mins</li>
               <li>Un solo estudiante</li>
               <li>2 clases por semana</li>
@@ -189,7 +189,7 @@
               <p>al mes</p>
             </div>
             <ul class="text-left mx-5 pl-5 list-disc text-sm">
-              <li class="text-base">$18 usd por clase</li>
+              <li class="text-base">$14.4 usd por clase</li>
               <li>Clase particular de 40 mins</li>
               <li>Un solo estudiante</li>
               <li>3 clases por semana</li>
@@ -214,7 +214,7 @@
               <p>al mes</p>
             </div>
             <ul class="text-left mx-5 pl-5 list-disc text-sm">
-              <li class="text-base">$16 usd por clase</li>
+              <li class="text-base">$12.8 usd por clase</li>
               <li>Clase particular de 40 mins</li>
               <li>Un solo estudiante</li>
               <li>5 clases por semana</li>
