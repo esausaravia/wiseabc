@@ -85,12 +85,13 @@
               <a href="{{ route('admin.student.edit', ['student'=>$student]) }}" class="px-2">
                 <i class="fa-light fa-pen-to-square"></i> Editar</a>
 
-              <a href="{{ route('admin.student.destroy', ['student'=>$student]) }}" class="px-2">
-                <i class="fa-light fa-trash"></i> Eliminar</a>
+              <button type="button" data-delete-url="{{ route('admin.student.destroy', ['student'=>$student]) }}" class="px-2 btn-delete" data-delete-name="#{{ $student->id }} {{ $student->name }}" >
+                <i class="fa-light fa-trash"></i> Eliminar</button>
             </div>
           </td>
         </tr>
       @endforeach
     </tbody>
   </table>
+
 </x-admin.layout>

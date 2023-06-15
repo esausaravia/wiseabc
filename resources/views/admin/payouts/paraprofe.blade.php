@@ -107,7 +107,7 @@
       <div class="flex justify-around font-accent font-medium text-sm leading-7">
         <a href="{{ route('admin.pagos.index') }}" class="inline-block rounded-full border-2 py-2 xl:py-0 px-4 border-white bg-white text-gray-600 shadow-md">Regresar</a>
 
-        <button class="rounded-full border-2 py-2 xl:py-0 px-4 border-rojo bg-rojo text-white shadow-md" data-toggle="modal" data-target="modal-pago-form">Pagar</button>
+        <button class="rounded-full border-2 py-2 xl:py-0 px-4 border-rojo bg-rojo text-white shadow-md">Pagar</button>
       </div>
     </section>
 

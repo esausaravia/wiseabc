@@ -232,7 +232,8 @@ class StudentController extends Controller
    */
   public function destroy(User $student)
   {
-    //
+    $student->delete();
+    return redirect()->route('admin.student.index')->with('success','Eliminado con éxito');
   }
 
   public function assignClassroom(Request $request, User $student) {
