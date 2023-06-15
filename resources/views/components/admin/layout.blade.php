@@ -57,6 +57,6 @@
   </div>
 
   @push('scripts')
-    <script src="{{ asset('js/admin.js') }}"></script>
+    <script src="{{ asset('js/admin.js') }}" defer></script>
   @endpush
 </x-document>

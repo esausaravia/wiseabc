@@ -1,5 +1,4 @@
 @php
-  $user = \Illuminate\Support\Facades\Auth::user();
 @endphp
 <x-document>
   <header id="HeaderMain" class="fixed md:relative top-0 left-0 w-full bg-gray-100 text-gray-700 dark:bg-azulw dark:text-gray-200 shadow-md md:shadow-none z-10">
@@ -51,13 +50,9 @@
 
       <div class="hidden md:block font-accent font-medium">
         <nav class="flex justify-end text-sm">
-          @guest
-            <a href="{{ route('login') }}" class="p-2">Acceso</a>
-            <a href="{{ route('register') }}" class="p-2">Registro</a>
-          @else
-            <span class="p-2">Hola {{ !empty($user->fname) ? $user->fname : $user->name }}</span>
-            <a href="{{ route('salir') }}" class="p-2">Salir</a>
-          @endguest
+          <a href="{{ route('login') }}" class="p-2">Acceso</a>
+          <a href="{{ route('register') }}" class="p-2">Registro</a>
+
           <label for="darkmode-toggler1" class="inline-flex relative items-center cursor-pointer ml-2">
             <span class="mr-2">
                 <svg id="theme-toggle-light-icon" class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
@@ -95,27 +90,27 @@
           <a href="https://wiseabcenglish.com/#home-contact" class="px-5 py-4">Contacto</a>
         </nav>
         <nav class="flex text-sm leading-6">
-          <a href="#" class="p-3">Registro de profesor</a>
-          <a href="#" class="p-3">Términos y condiciones</a>
-          <a href="#" class="p-3">Política de privacidad</a>
+          <a href="{{ route('regprof') }}" class="p-3">Registro de profesor</a>
+          <a href="https://wiseabcenglish.com/wp-content/uploads/2023/05/TERMINOS-DE-SERVICIO-WISEABC.pdf" class="p-3">Términos y condiciones</a>
+          <a href="https://wiseabcenglish.com/wp-content/uploads/2023/05/POLITICAS-DE-PRIVACIDAD-WISEABC.pdf" class="p-3">Política de privacidad</a>
         </nav>
       </div>
       <div class="text-center flex flex-col items-center justify-center">
-        <a href="#" class="block">
+        <a href="https://wiseabcenglish.com/" class="block">
           <img src="{{asset('img/wiseabc-logo-footer.svg')}}" alt="" class="w-auto h-[120px] opacity-75" />
         </a>
         <nav class="flex justify-center text-xl leading-[3rem] mt-3 border-t-2 border-gray-300">
-          <a href="#" class="w-12">
+          <a href="https://www.facebook.com/wiseabcenglish" class="w-12">
             <i class="fa-brands fa-facebook-f"></i>
           </a>
-          <a href="#" class="w-12">
+          <a href="https://www.twitter.com/wiseabcenglish" class="w-12">
             <i class="fa-brands fa-twitter"></i>
           </a>
         </nav>
       </div>
     </div>
     <p class="text-center text-xs pb-2">
-      &copy; 2022 Todos los derechos reservados
+      &copy; 2023 Todos los derechos reservados
     </p>
   </footer>
 </x-document>

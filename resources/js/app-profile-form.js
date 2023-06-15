@@ -56,4 +56,15 @@ window.addEventListener('DOMContentLoaded', function() {
     input.addEventListener('change', resetInputState);
     input.addEventListener('keyup', resetInputState)
   });
+
+  document.querySelectorAll('[data-clase-tipo][data-ritmo]').forEach(function (btn) {
+    btn.addEventListener('click', function (ev) {
+      if ( !ev.currentTarget || !ev.currentTarget.form )  return;
+
+      ev.currentTarget.form.querySelector('input[name="clase_tipo"]').value = ev.currentTarget.dataset.claseTipo;
+      ev.currentTarget.form.querySelector('input[name="ritmo"]').value = ev.currentTarget.dataset.ritmo;
+
+      ev.currentTarget.form.dispatchEvent(new Event('submit'));
+    });
+  });
 });
