@@ -15,9 +15,17 @@ window.addEventListener('DOMContentLoaded', function(){
       if (!modal || !modal.querySelector)  return false;
 
       modal.addEventListener('click', (ev)=>{
-        console.log('click',ev);
-        const _modal = document.getElementById(ev.target.dataset.target);
-        if ( _modal && _modal.querySelector )  _modal.dispatchEvent(evModalShow);
+
+        if ( ev.currentTarget.tagName==="A")
+        {
+          if (ev.preventDefault)  ev.preventDefault();
+        }
+
+        const modal_target = document.getElementById(ev.currentTarget.dataset.target);
+
+        if ( modal_target && modal_target.querySelector )  modal_target.dispatchEvent(evModalShow);
+
+        return false;
       });
     });
 
@@ -42,13 +50,18 @@ window.addEventListener('DOMContentLoaded', function(){
       });
 
       modal.addEventListener('click', (ev)=>{
-        if ( this!=window && this!=ev.target )  return false;
         if ( ev.currentTarget!=ev.target )  return false;
 
         if ( ev.stopPropagation )  ev.stopPropagation();
         if ( ev.preventDefault )  ev.preventDefault();
 
         ev.currentTarget.dispatchEvent(evModalHide);
+      });
+
+      modal.querySelectorAll('.modal-close').forEach( (btn)=>{
+        btn.addEventListener('click', (ev)=>{
+          ev.currentTarget.closest('.modal').dispatchEvent(evModalHide);
+        } );
       });
     });
 

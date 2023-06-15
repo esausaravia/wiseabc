@@ -37,4 +37,26 @@
   <div id="AdminMainContainer" class="pt-16 px-3 pb-5 lg:pt-20 xl:pl-[170px]">
     {{ $slot }}
   </div>
+
+  <div id="modal-delete-entity" class="modal fixed inset-0 w-full h-full z-50 flex items-center justify-center bg-black/50 hidden" role="dialog">
+    <form action="" method="post" class="modal-content rounded-2xl bg-gray-100 text-gray-600">
+      @csrf
+      @method('delete')
+
+      <section class="modal-body py-5 px-3">¿Está seguro que desea eliminar <b class="delete-name underline"></b>?</section>
+
+      <section class="modal-footer border-t border-t-gray-300 py-2 px-3 flex justify-between font-accent font-medium leading-12 xl:leading-8">
+        <span>
+          <button type="button" class="modal-close rounded-full px-4 bg-white shadow-md">Cancelar</button>
+        </span>
+        <span>
+          <button type="submit" class="rounded-full px-4 bg-rojo text-white shadow-md">Eliminar</button>
+        </span>
+      </section>
+    </form>
+  </div>
+
+  @push('scripts')
+    <script src="{{ asset('js/admin.js') }}"></script>
+  @endpush
 </x-document>
