@@ -26,7 +26,6 @@ window.addEventListener('DOMContentLoaded',function(){
 
   const strTimezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
 
-
   (async function(){
     window.app.ipapi = await (async function(){
       if ( localStorage && localStorage.ipapi)
@@ -36,7 +35,7 @@ window.addEventListener('DOMContentLoaded',function(){
 
         if ( ttl && ttl.getTime && ttl.getTime() > mydate.getTime() )
         {
-          console.log('localStorage', ipapi );
+          console.log('ipapi.local', ipapi );
           return ipapi
         }
       }
