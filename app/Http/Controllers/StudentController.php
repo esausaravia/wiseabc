@@ -29,7 +29,7 @@ class StudentController extends Controller
     $subscriptionStartDate = null;
     $subscripcion = $user->activeSubscription();
 
-    $countryCode = 'US';
+    $countryCode = 'MX';//US
     $ipApi = session('ip-api');
 
     if ( is_array($ipApi) && !empty($ipApi['countryCode']) )
@@ -64,7 +64,7 @@ class StudentController extends Controller
           ->where('tipo', $user->clase_tipo)
           ->where('ritmo', $user->ritmo)
           ->whereHas('region', function($query) use ($countryCode){
-            $query->where('countries','LIKE',"%{$countryCode}%");
+            $query->where('countries','LIKE',"%MX%");  //('countries','LIKE',"%{$countryCode}%");
           })
           ->orderBy('created_at','desc')->first();
 
@@ -96,7 +96,7 @@ class StudentController extends Controller
   public function elegirRitmo(Request $request)
   {
 
-    $countryCode = 'US';
+    $countryCode = 'MX';//US
 
     $ipApi = session('ip-api');
 
@@ -109,7 +109,7 @@ class StudentController extends Controller
       $countryCode = $ipApi['countryCode'];
     }
 
-    $region = \App\Models\billRegion::where('countries','LIKE',"%{$countryCode}%")->first();
+    $region = \App\Models\billRegion::where('countries','LIKE',"%MX%")->first();//where('countries','LIKE',"%{$countryCode}%")->first();
     if ( !is_object($region) )
     {
       $region = \App\Models\billRegion::find(1);
@@ -120,7 +120,6 @@ class StudentController extends Controller
     */
     return view('student.elegir-ritmo',[
       'region' => $region,
-      'ipApiCountry' => session('ip-api')
     ]);
   }
 

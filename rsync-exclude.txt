@@ -6,6 +6,7 @@
 package-lock.json
 composer.lock
 *.map
+notes.txt
 vendor
 node_modules
 storage/framework/cache/*

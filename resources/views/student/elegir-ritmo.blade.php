@@ -459,14 +459,4 @@
     </div>
   </div>
   @endif
-
-  @push('scripts')
-  <script>
-    window.addEventListener('beforeunload', function(ev) {
-      let confirmationMessage = "Si sales de esta página perderás tu progreso.";
-      ev.returnValue = confirmationMessage;
-      return confirmationMessage;
-    });
-  </script>
-  @endpush
 </x-layoutreg>
