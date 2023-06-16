@@ -3,10 +3,9 @@ import intlTelInput from 'intl-tel-input'
 const itiErrorMap = ["Invalid number", "Invalid country code", "Too short", "Too long", "Invalid number"]
 
 const resetInputState = (input) => {
-  console.log('resetInputState', typeof input, input);
 
-  if ( input.target || input.srcElement ) {
-    input = input.target || input.srcElement
+  if ( input.currentTarget || input.target || input.srcElement ) {
+    input = input.currentTarget || input.target || input.srcElement
   }
 
   if ( input.setCustomValidity ) {
@@ -30,7 +29,7 @@ window.addEventListener('DOMContentLoaded', function() {
 
     input.addEventListener('blur', function(ev) {
 
-      let input = ev.target || ev.srcElement;
+      let input = ev.currentTarget || ev.target || ev.srcElement;
 
       resetInputState(input);
 
@@ -49,8 +48,6 @@ window.addEventListener('DOMContentLoaded', function() {
           document.querySelector('input[name="country"]').value = countryData.name
         }
       }
-
-
     });
 
     input.addEventListener('change', resetInputState);
@@ -65,6 +62,7 @@ window.addEventListener('DOMContentLoaded', function() {
       ev.currentTarget.form.querySelector('input[name="ritmo"]').value = ev.currentTarget.dataset.ritmo;
 
       ev.currentTarget.form.dispatchEvent(new Event('submit'));
+      ev.currentTarget.form.submit();
     });
   });
 });

@@ -42,6 +42,11 @@ class CreateNewUser implements CreatesNewUsers
             'password' => Hash::make($input['password']),
         ]);
 
+        if ( !empty($input['country']) && $input['country']=="United States" )
+        {
+            //session(['ip-api'=>['countryCode'=>'US']]);
+        }
+
         $temp = array(1=>$input['horarios']);
 
         $user->saveMetas($input);

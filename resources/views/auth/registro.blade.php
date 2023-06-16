@@ -53,7 +53,7 @@
 
         <span></span>
         <div class="text-right">
-          <button type="button" class="btn-next shadow-md rounded-full px-5 py-3 leading-6 bg-rojo text-white text-sm font-medium font-accent" onclick="checkCountrySubscriptions()">Continuar</button>
+          <button type="button" class="btn-next shadow-md rounded-full px-5 py-3 leading-6 bg-rojo text-white text-sm font-medium font-accent" >Continuar</button>
         </div>
       </section>
 
@@ -180,7 +180,7 @@
           <input type="hidden" name="clases" required value="" >
           <div class="md:flex justify-between font-medium font-accent text-sm">
             <button type="button" class="btn-back shadow-md rounded-full px-5 py-3 bg-white text-gray-600">Regresar</button>
-            <button id="btn-disponibilidad" type="button" class=" shadow-md rounded-full px-5 py-3 bg-azulw text-white">Validar disponibilidad</button>
+            <button id="btn-disponibilidad" type="button" class="hidden shadow-md rounded-full px-5 py-3 bg-azulw text-white">Validar disponibilidad</button>
             <button type="button" class="btn-next shadow-md rounded-full px-5 py-3 bg-rojo text-white">Continuar</button>
             {{--}}<button type="submit" class="shadow-md rounded-full px-5 py-3 bg-rojo text-white">Submit</button>{{--}}
           </div>
@@ -398,7 +398,7 @@
           </div>
         </div>
 
-        <div id="SubscriptionPricesUS" class="tabs-widget overflow-hidden" data-active-class="" >
+        <div id="SubscriptionPricesUS" class="tabs-widget overflow-hidden hidden" data-active-class="" >
           <div class="tabs-wrapper font-accent font-medium text-xl text-azul-600 flex justify-center" role="tablist">
             <div id="tab-title-us1" data-tab="1" role="tab" aria-controls="tab-content-us1" aria-expanded="true" aria-selected="true" class="tab active cursor-pointer py-10px px-3 border-l border-r border-t border-black/20 dark:border-white/20 text-rojo relative after:content-[''] after:absolute after:left-full after:bottom-0 after:w-[100vw] after:h-0 after:border-t after:border-black/20 after:dark:border-white/20 before:content-[''] before:absolute before:right-full before:bottom-0 before:w-[100vw] before:h-0 before:border-t before:border-black/20 before:dark:border-white/20" > {{__('Grupal')}} </div>
 
@@ -601,6 +601,7 @@
 
         <div class="my-6 md:flex justify-between font-medium font-accent text-sm">
           <button type="button" class="btn-back shadow-md rounded-full px-5 py-3 bg-white text-gray-600">Regresar</button>
+          <button type="submit" class="hidden shadow-md rounded-full px-5 py-3 bg-rojo text-white">Submit</button>
         </div>
       </section>
     </form>
@@ -625,7 +626,7 @@
   @endpush
 
   @push('scripts')
-  <script src="{{ asset('js/app-profile-form.js') }}" defer></script>
+  <script src="{{ mix('js/app-profile-form.js') }}?v=1.20230616.1519" defer></script>
   <script>
     window.addEventListener('beforeunload', function(ev) {
       if ( document.getElementById('frmRegStudent').querySelector('input[name="ritmo"]').value!="" )
@@ -637,8 +638,9 @@
       return confirmationMessage;
     });
     function checkCountrySubscriptions() {
-      const btn = document.querySelector('input[name="user_phone"]');
-      const itiData = btn.__iti.getSelectedCountryData();
+      return;
+      const input = document.querySelector('input[name="user_phone"]');
+      const itiData = input.__iti.getSelectedCountryData();
 
       if ( window.app.ipapi.countryCode=='US' || itiData.iso2=='us' )
       {

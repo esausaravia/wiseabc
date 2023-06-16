@@ -42,7 +42,23 @@ Route::get('/', function (Request $request)
 
 Route::get('country', function(Request $request)
 {
-	$tz = $request->input('tz');
+	return ['status'=>'forced','countryCode'=>'MX'];
+
+	$input = $request->input();
+
+	$exists = $request->session()->get('ip-api');
+
+	if ( empty($input['force']) && is_array($exists) && !empty($exists['countryCode']) && !empty($exists['ttl']) )
+	{
+		if ( now()->lessThan( Carbon::parse($exists['ttl']) ) )
+		{
+			return ['status'=>'session', 'countryCode' => $exists['countryCode'] ];
+		}
+	}
+	$request->session()->forget('ip-api');
+
+	$countryCode = null;
+
 	$arrUStz = ['America/Adak',
 	'America/Anchorage',
 	'America/Atka',
@@ -77,31 +93,25 @@ Route::get('country', function(Request $request)
 	'America/Shiprock',
 	'America/Sitka',
 	'America/Yakutat'];
-	if ( !empty($tz) && in_array($tz, $arrUStz) )
+	if ( !empty($input['tz']) )
 	{
-		$countryCode = 'US';
-	}
-	else
-	{
-		$countryCode = 'MX';
-	}
-
-	$exists = $request->session()->get('ip-api');
-
-	if ( is_array($exists) && !empty($exists['countryCode']) && !empty($exists['ttl']) )
-	{
-		if ( now()->lessThan( Carbon::parse($exists['ttl']) ) )
+		if ( in_array($input['tz'], $arrUStz) )
 		{
-			return ['status'=>'session','countryCode'=>$countryCode];
+			$countryCode = 'US';
 		}
 		else
 		{
-			$request->session()->forget('ip-api');
+			$countryCode = 'MX';
 		}
 	}
 
-	$request->session()->put( 'ip-api', ['countryCode'=>$countryCode] );
-	return ['status'=>'ok','countryCode'=>$countryCode];
+	if ( !empty($$countryCode) && $countryCode!==null )
+	{
+		$request->session()->put( 'ip-api', ['countryCode'=>$countryCode] );
+		return ['status'=>'ok','countryCode'=>$countryCode];
+	}
+
+	return ['status'=>'error','countryCode'=>null];
 });
 
 Route::get('ip-api', function(Request $request) {
@@ -111,9 +121,11 @@ Route::get('ip-api', function(Request $request) {
 });
 Route::post('ip-api', function(Request $request) {
 
+	$input = $request->input();
+
 	$exists = $request->session()->get('ip-api');
 
-	if ( is_array($exists) && !empty($exists['countryCode']) && !empty($exists['ttl']) )
+	if ( empty($input['force']) && is_array($exists) && !empty($exists['countryCode']) && !empty($exists['ttl']) )
 	{
 		if ( now()->lessThan( Carbon::parse($exists['ttl']) ) )
 		{
@@ -121,8 +133,7 @@ Route::post('ip-api', function(Request $request) {
 		}
 	}
 
-	$data = $request->input();
-	$request->session()->put( 'ip-api', $data );
+	$request->session()->put( 'ip-api', $input );
 	return ['status'=>'ok'];
 });
 
@@ -241,6 +252,10 @@ Route::group(['prefix'=>'admin','as'=>'admin.','middleware' => ['auth','admin']]
 /**
  * test routes
  */
+Route::get('makeUS', function(Request $request){
+	session(['ip-api'=>['countryCode'=>'US']]);
+	return $request->session()->get('ip-api');
+});
 Route::get('carbon', function(Request $request){
 	ob_start();
 
