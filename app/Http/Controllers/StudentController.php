@@ -29,18 +29,6 @@ class StudentController extends Controller
     $subscriptionStartDate = null;
     $subscripcion = $user->activeSubscription();
 
-    $countryCode = 'MX';//US
-    $ipApi = session('ip-api');
-
-    if ( is_array($ipApi) && !empty($ipApi['countryCode']) )
-    {
-      $countryCode = $ipApi['countryCode'];
-    }
-    else if( !empty($request->input('countryCode')) )
-    {
-      $countryCode = $request->input('countryCode');
-    }
-
     $classroom = $user->currentClassroom;
 
     if ( is_object($classroom) )
@@ -59,13 +47,10 @@ class StudentController extends Controller
 
     if ( !is_object($subscripcion) )
     {
-
       $billPlan = \App\Models\BillingPlan::where('status','ACTIVE')
           ->where('tipo', $user->clase_tipo)
           ->where('ritmo', $user->ritmo)
-          ->whereHas('region', function($query) use ($countryCode){
-            $query->where('countries','LIKE',"%MX%");  //('countries','LIKE',"%{$countryCode}%");
-          })
+          ->where('bill_region_id', 2) // $user->bill_region_id )
           ->orderBy('created_at','desc')->first();
 
       if ( is_object($billPlan) )
@@ -95,21 +80,8 @@ class StudentController extends Controller
 
   public function elegirRitmo(Request $request)
   {
+    $region = \App\Models\billRegion::find(2); // $user->bill_region_id );
 
-    $countryCode = 'MX';//US
-
-    $ipApi = session('ip-api');
-
-    if( !empty($request->input('countryCode')) )
-    {
-      $countryCode = $request->input('countryCode');
-    }
-    else if ( is_array($ipApi) && !empty($ipApi['countryCode']) )
-    {
-      $countryCode = $ipApi['countryCode'];
-    }
-
-    $region = \App\Models\billRegion::where('countries','LIKE',"%MX%")->first();//where('countries','LIKE',"%{$countryCode}%")->first();
     if ( !is_object($region) )
     {
       $region = \App\Models\billRegion::find(1);
@@ -156,21 +128,9 @@ class StudentController extends Controller
 
     $billPlan = null;
     $classroom = null;
-    $paypalSubscriptionQty = 4;
-    $paypalSubscriptionStartDate = Carbon::parse('2024-06-05 06:00:00');
+    $subscriptionQty = 4;
+    $subscriptionStartDate = null;
     $subscripcion = $user->activeSubscription();
-
-    $countryCode = 'US';
-    $ipApi = session('ip-api');
-
-    if ( is_array($ipApi) && !empty($ipApi['countryCode']) )
-    {
-      $countryCode = $ipApi['countryCode'];
-    }
-    else if( !empty($request->input('countryCode')) )
-    {
-      $countryCode = $request->input('countryCode');
-    }
 
     if ( is_object($subscripcion) )
     {
@@ -180,25 +140,19 @@ class StudentController extends Controller
       $billPlan = \App\Models\BillingPlan::where('status','ACTIVE')
           ->where('tipo', $user->clase_tipo)
           ->where('ritmo', $user->ritmo)
-          ->whereHas('region', function($query) use ($countryCode){
-            $query->where('countries','LIKE',"%{$countryCode}%");
-          })
+          ->where('bill_region_id', 2) // $user->bill_region_id )
           ->orderBy('created_at','desc')->first();
     }
 
     if ( is_object($billPlan) )
     {
-      $classroom = $user->currentClassroom;
+      $subscriptionQty = $billPlan->ritmo *4;
 
-      $paypalSubscriptionQty = $billPlan->ritmo *4;
+      $classroom = $user->currentClassroom;
 
       if ( is_object($classroom) && now()->lessThan($classroom->start) )
       {
-        $paypalSubscriptionStartDate = $classroom->start->format('Y-m-d\TH:00:00\Z');
-      }
-      else {
-        //$paypalSubscriptionStartDate = now()->addWeeks(4)->format('Y-m-d\TH:00:00\Z');
-        $paypalSubscriptionStartDate = $paypalSubscriptionStartDate->format('Y-m-d\TH:00:00\Z');
+        $subscriptionStartDate = $classroom->start->format('Y-m-d\TH:00:00\Z');
       }
     }//endif billPlan
 
@@ -206,8 +160,8 @@ class StudentController extends Controller
       'billPlan'=>$billPlan,
       'classroom'=>$classroom,
       'hoy'=>now('-0600')->locale('es'),
-      'paypalSubscriptionQty'=> $paypalSubscriptionQty,
-      'paypalSubscriptionStartDate' => $paypalSubscriptionStartDate,
+      'subscriptionQty'=> $subscriptionQty,
+      'subscriptionStartDate' => $subscriptionStartDate,
       'subscripcion'=>$subscripcion,
       'user'=>$user,
       'weekdays'=>config('wiseabc.weekdays'),

@@ -15,10 +15,10 @@
     window.app = window.app || {};
     window.app.home = '{{ route('home') }}';
   </script>
-  <script src="{{ mix('js/app.js') }}?v=1.20230616.1519" defer></script>
+  <script src="{{ mix('js/app.js') }}?v=1.20230617.1557" defer></script>
   <script src="https://kit.fontawesome.com/161bce774c.js" crossorigin="anonymous" defer></script>
 </head>
-<body {{ $body->attributes->class(['bg-gray-200 text-gray-600 dark:bg-azulw dark:text-gray-400 text-lg', $attributes->get('class')]) }}>
+<body {{ $body->attributes->class(['bg-gray-200 text-gray-600 dark:bg-gray-950 dark:text-gray-400 text-lg', $attributes->get('class')]) }}>
 
   {{ $slot }}
 

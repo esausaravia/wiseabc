@@ -1,10 +1,12 @@
 <?php
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\ClassroomController;
+use App\Http\Controllers\RegionController;
 use App\Http\Controllers\StudentController;
 use App\Http\Controllers\SubscriptionController;
 use App\Http\Controllers\TeacherController;
 use App\Http\Controllers\StripeController;
+use App\Http\Controllers\WiseabcController;
 use Illuminate\Foundation\Auth\EmailVerificationRequest;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
@@ -40,103 +42,6 @@ Route::get('/', function (Request $request)
 	}
 })->middleware(['auth'])->name('home');
 
-Route::get('country', function(Request $request)
-{
-	return ['status'=>'forced','countryCode'=>'MX'];
-
-	$input = $request->input();
-
-	$exists = $request->session()->get('ip-api');
-
-	if ( empty($input['force']) && is_array($exists) && !empty($exists['countryCode']) && !empty($exists['ttl']) )
-	{
-		if ( now()->lessThan( Carbon::parse($exists['ttl']) ) )
-		{
-			return ['status'=>'session', 'countryCode' => $exists['countryCode'] ];
-		}
-	}
-	$request->session()->forget('ip-api');
-
-	$countryCode = null;
-
-	$arrUStz = ['America/Adak',
-	'America/Anchorage',
-	'America/Atka',
-	'America/Boise',
-	'America/Chicago',
-	'America/Denver',
-	'America/Detroit',
-	'America/Fort_Wayne',
-	'America/Indiana/Indianapolis',
-	'America/Indiana/Knox',
-	'America/Indiana/Marengo',
-	'America/Indiana/Petersburg',
-	'America/Indiana/Tell_City',
-	'America/Indiana/Vevay',
-	'America/Indiana/Vincennes',
-	'America/Indiana/Winamac',
-	'America/Indianapolis',
-	'America/Juneau',
-	'America/Kentucky/Louisville',
-	'America/Kentucky/Monticello',
-	'America/Knox_IN',
-	'America/Los_Angeles',
-	'America/Louisville',
-	'America/Menominee',
-	'America/Metlakatla',
-	'America/New_York',
-	'America/Nome',
-	'America/North_Dakota/Beulah',
-	'America/North_Dakota/Center',
-	'America/North_Dakota/New_Salem',
-	'America/Phoenix',
-	'America/Shiprock',
-	'America/Sitka',
-	'America/Yakutat'];
-	if ( !empty($input['tz']) )
-	{
-		if ( in_array($input['tz'], $arrUStz) )
-		{
-			$countryCode = 'US';
-		}
-		else
-		{
-			$countryCode = 'MX';
-		}
-	}
-
-	if ( !empty($$countryCode) && $countryCode!==null )
-	{
-		$request->session()->put( 'ip-api', ['countryCode'=>$countryCode] );
-		return ['status'=>'ok','countryCode'=>$countryCode];
-	}
-
-	return ['status'=>'error','countryCode'=>null];
-});
-
-Route::get('ip-api', function(Request $request) {
-
-	$return = $request->session()->get('ip-api');
-	return !empty($return) ? ['type'=>gettype($return), 'return'=>$return] : response(['message'=>'Error'], 400);
-});
-Route::post('ip-api', function(Request $request) {
-
-	$input = $request->input();
-
-	$exists = $request->session()->get('ip-api');
-
-	if ( empty($input['force']) && is_array($exists) && !empty($exists['countryCode']) && !empty($exists['ttl']) )
-	{
-		if ( now()->lessThan( Carbon::parse($exists['ttl']) ) )
-		{
-			return ['status'=>'session'];
-		}
-	}
-
-	$request->session()->put( 'ip-api', $input );
-	return ['status'=>'ok'];
-});
-
 
 Route::get('registro-profesor', function () {
 	return view('teacher.registro');
@@ -148,11 +53,6 @@ Route::get('/gracias-profesor', function(){
 	return view('teacher.gracias-registro');
 })->name('gracias-profesor');
 
-Route::get('salir', function(){
-	\Illuminate\Support\Facades\Auth::logout();
-	return redirect('login');
-})->name('salir');
-
 Route::get('/email/verify/{id}/{hash}', function (EmailVerificationRequest $request) {
 	$request->fulfill();
 
@@ -160,14 +60,15 @@ Route::get('/email/verify/{id}/{hash}', function (EmailVerificationRequest $requ
 })->middleware(['auth', 'signed'])->name('verification.verify');
 
 
-Route::get('clases/disponibles', [ClassroomController::class, 'disponibles'])->name('clases.disponibles');
-
-Route::resource('clases', ClassroomController::class);
+Route::get('salir', function(){
+	\Illuminate\Support\Facades\Auth::logout();
+	return redirect('login');
+})->name('salir');
 
 /**
  * Estudante
  */
-Route::group(['prefix'=>'student','as'=>'student.','middleware' => ['auth','student']], function(){
+Route::group(['prefix'=>'student','as'=>'student.','middleware' => ['auth','student']], function() {
 
 	Route::get('', [StudentController::class, 'home'])->name('home');
 
@@ -192,16 +93,12 @@ Route::group(['prefix'=>'student','as'=>'student.','middleware' => ['auth','stud
 	Route::get('stripe/success', [StripeController::class, 'subscriptionCheckoutSuccess'])->name('stripe.success');
 
 	Route::any('stripe/create-portal-session', [StripeController::class,'customerPortalSession'])->name('stripe.create-portal-session');
-	/*
-
-
-	*/
 });
 
 /**
  * Teacher
  */
-Route::group(['prefix'=>'teacher','as'=>'teacher.','middleware' => ['auth','teacher']], function(){
+Route::group(['prefix'=>'teacher','as'=>'teacher.','middleware' => ['auth','teacher']], function() {
 
 	Route::get('', [TeacherController::class, 'home'])->name('home');
 
@@ -217,7 +114,7 @@ Route::group(['prefix'=>'teacher','as'=>'teacher.','middleware' => ['auth','teac
 /**
  * ADMINISTRADOR
  */
-Route::group(['prefix'=>'admin','as'=>'admin.','middleware' => ['auth','admin']], function(){
+Route::group(['prefix'=>'admin','as'=>'admin.','middleware' => ['auth','admin']], function() {
 
 	Route::get('/', function(){
 		return redirect()->route('admin.home');
@@ -252,10 +149,6 @@ Route::group(['prefix'=>'admin','as'=>'admin.','middleware' => ['auth','admin']]
 /**
  * test routes
  */
-Route::get('makeUS', function(Request $request){
-	session(['ip-api'=>['countryCode'=>'US']]);
-	return $request->session()->get('ip-api');
-});
 Route::get('carbon', function(Request $request){
 	ob_start();
 

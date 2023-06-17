@@ -3,6 +3,7 @@
 use App\Http\Controllers\PayPalController;
 use App\Http\Controllers\StripeController;
 use App\Http\Controllers\SubscriptionController;
+use App\Http\Controllers\WiseabcController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Log;
@@ -24,6 +25,7 @@ Route::get('/', function(Request $request){
 
     return base_path('public/img/wiseabc-logo-375x.png');
 });
+
 
 Route::get('client-ip', function(Request $request){
 
