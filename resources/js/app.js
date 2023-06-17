@@ -1,99 +1,29 @@
 import './bootstrap';
 import 'lazysizes';
 
-window.app = window.app || {};
-window.app.toggleDarkTheme = function(){
-  if (document.documentElement.classList.contains('dark') ) {
-    localStorage.setItem('theme', 'light');
-  }
-  else {
-    localStorage.setItem('theme', 'dark');
-  }
-  document.documentElement.classList.toggle('dark');
-};
+const app = window.app || {};
 
-window.app.paypalDateRegex = /^[0-9]{4}-(0[1-9]|1[0-2])-(0[1-9]|[1-2][0-9]|3[0-1])[T,t]([0-1][0-9]|2[0-3]):[0-5][0-9]:([0-5][0-9]|60)([.][0-9]+)?([Zz]|[+-][0-9]{2}:[0-9]{2})$/i
-
+app.paypalDateRegex = /^[0-9]{4}-(0[1-9]|1[0-2])-(0[1-9]|[1-2][0-9]|3[0-1])[T,t]([0-1][0-9]|2[0-3]):[0-5][0-9]:([0-5][0-9]|60)([.][0-9]+)?([Zz]|[+-][0-9]{2}:[0-9]{2})$/i
 
 import './modal';
 
 window.addEventListener('DOMContentLoaded',function(){
   console.log('app.js DOMContentLoaded');
 
-  let mydate = new Date(), mydatematch = mydate.toString().match(/([-\+][0-9]+)\s/)
+  let mydate = new Date(), mydatematch = mydate.toString().match(/([\-\+][0-9]+)\s/)
 
   const strTimezoneOffset = mydatematch && mydatematch.length>0 ? mydatematch[1] : null
 
   const strTimezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
 
-  (async function(){
-    window.app.ipapi = await (async function() {
-
-      if ( localStorage && localStorage.ipapi)
-      {
-        let ipapi = JSON.parse( localStorage.ipapi ),
-            ttl = ipapi && ipapi.ttl ? new Date( ipapi.ttl ) : null;
-
-        if ( ttl && ttl.getTime && ttl.getTime() > mydate.getTime() )
-        {
-          return ipapi
-        }
-      }
-
-      let resp = null
-      try
-      {
-        resp = await axios.get( window.app.home + '/country?tz='+strTimezone)
-      }
-      catch(e)
-      {
-        console.log('catch',e)
-      }
-      resp.data.ttl = ( new Date( mydate.getTime() + ( 60*60*1000 ) ) ).toJSON()
-
-      resp.data.timezone = strTimezoneOffset ? strTimezoneOffset : strTimezone
-
-      if ( localStorage && localStorage.setItem)
-      {
-        localStorage.setItem('ipapi', JSON.stringify(resp.data));
-      }
-
-      return resp.data
-    })();
-    return window.app.ipapi
-  })();
-
-
-  /*
-  //Stripe Helper
-  let searchParams = new URLSearchParams(window.location.search);
-  if (searchParams.has('session_id')) {
-    const session_id = searchParams.get('session_id')
-
-    document.querySelectorAll('[name="session_id"]').forEach(function(_input){
-      _input.setAttribute('value', session_id)
-      _input.value = session_id
-      console.log('input session_id', _input)
-    })
-  }
-  */
-
-  (function(scriptTags){
-    if ( !scriptTags || !scriptTags.length )  return false;
-
-    scriptTags.forEach(function(stag){
-      stag.src = stag.getAttribute('data-src');
-      stag.removeAttribute('data-src');
-    });
-
-  })(document.querySelectorAll('script[data-src]'));
-
   /**
    * Dark Theme toggler
    */
-  if (localStorage.theme === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+  if (localStorage.theme === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches))
+  {
     document.documentElement.classList.add('dark')
-  } else {
+  }
+  else {
     document.documentElement.classList.remove('dark')
   }
 
@@ -118,6 +48,17 @@ window.addEventListener('DOMContentLoaded',function(){
   /**
    * Global elements
    */
+  (function(scriptTags){
+    if ( !scriptTags || !scriptTags.length )  return false;
+
+    scriptTags.forEach(function(stag){
+      stag.src = stag.getAttribute('data-src');
+      stag.removeAttribute('data-src');
+    });
+
+  })(document.querySelectorAll('script[data-src]'));
+
+
   (function(btns){
     if (!btns || !btns.forEach) return false;
 
@@ -127,6 +68,7 @@ window.addEventListener('DOMContentLoaded',function(){
       });
     });
   })(document.querySelectorAll('.btn-toggle-mobilemenu'));
+
 
   (function(alertsbtns){
     if (!alertsbtns || !alertsbtns.forEach) return false;
@@ -140,6 +82,7 @@ window.addEventListener('DOMContentLoaded',function(){
     });
   })(document.querySelectorAll('.alert .btn-close'));
 
+
   (function(elements){
     if (!elements || !elements.forEach)  return false;
 
@@ -152,6 +95,7 @@ window.addEventListener('DOMContentLoaded',function(){
     })
 
   })(document.querySelectorAll('[data-append-to]'));
+
 
   const evTabShow = new Event('tabshow');
   const evTabVisible = new Event('tabvisible');
@@ -552,4 +496,17 @@ app.previewImgFile = function(file, imgTarget) {
     imgTarget.src = reader.result, imgTarget.removeAttribute('srcset')
   }
   return imgTarget;
+}
+
+app.toggleDarkTheme = function() {
+
+  if (document.documentElement.classList.contains('dark') )
+  {
+    localStorage.setItem('theme', 'light');
+  }
+  else
+  {
+    localStorage.setItem('theme', 'dark');
+  }
+  document.documentElement.classList.toggle('dark');
 }

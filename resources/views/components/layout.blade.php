@@ -24,7 +24,7 @@
       </label>
     </div>
   </header>
-  <aside id="MainAside" class="fixed top-0 left-0 -translate-x-full lg:translate-x-0 h-full shadow-md pt-[68px] px-5 pb-6 bg-azulw dark:bg-black/20 text-gray-400 font-accent font-medium z-10">
+  <aside id="MainAside" class="fixed top-0 left-0 -translate-x-full lg:translate-x-0 h-full shadow-md pt-[68px] px-5 pb-6 bg-azulw dark:bg-gray-900 text-gray-400 font-accent font-medium z-10">
     <nav class="flex flex-col font-accent text-center uppercase text-[10px]">
       @php
         $route_group = $user->user_type==2 ? 'student' : 'teacher';

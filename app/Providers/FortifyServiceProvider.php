@@ -75,25 +75,13 @@ class FortifyServiceProvider extends ServiceProvider
     Fortify::registerView(function(Request $request){
 
       $horarios = array(1=>array());
-      for($h=8; $h<21; $h++)
+      for($h=7; $h<22; $h++)
       {
-        $horarios[1][] = $h;
-      }
-
-      $timezone = session('ip-api');
-      if ( is_array($timezone) && !empty($timezone['timezone']) )
-      {
-        $horarios = WiseabcController::transformHorariosTimezone( $horarios, $timezone['timezone'] );
-      }
-
-      $horarios[2] = [];
-      foreach($horarios[1] AS $hr)
-      {
-        $horarios[2][$hr] = $hr.':00';
+        $horarios[1][] = $h.':00';
       }
 
       return view('auth.registro', [
-        'horarios' => $horarios[2]
+        'horarios' => $horarios[1]
       ]);
     });
     Fortify::loginView(function(){

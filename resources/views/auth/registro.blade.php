@@ -166,7 +166,7 @@
             <small class="block">Nosotros revisaremos disponibilidad de profesor para los días (de lunes a domingo).</small>
           </div>
 
-          <div id="clases-disponibles" class="hidden" data-ajx="{{ route('clases.disponibles') }}">
+          <div id="clases-disponibles" class="hidden" >
             <h4 class="my-2 text-lg font-accent font-medium">Clases disponibles</h4>
             <div class="result"></div>
           </div>
@@ -642,7 +642,7 @@
       const input = document.querySelector('input[name="user_phone"]');
       const itiData = input.__iti.getSelectedCountryData();
 
-      if ( window.app.ipapi.countryCode=='US' || itiData.iso2=='us' )
+      if ( itiData.iso2=='us' )
       {
         document.getElementById('SubscriptionPricesMX').classList.add('hidden');
         document.getElementById('SubscriptionPricesUS').classList.remove('hidden');
