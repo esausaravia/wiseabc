@@ -180,8 +180,8 @@ window.addEventListener('DOMContentLoaded',function(){
   /**
    * FORMS ALL FORMS
    */
-  const evFormSuccess = new Event('formsuccess');
-  const evFormError = new Event('formerror');
+  const evFormSuccess = new Event('form.success');
+  const evFormError = new Event('form.error');
 
   (function(forms){
     if (!forms || !forms.forEach)  return false;
@@ -196,7 +196,7 @@ window.addEventListener('DOMContentLoaded',function(){
           btn.setAttribute('data-submit-disabled','true')
         });
       });
-      form.addEventListener('formerror', function(ev){
+      form.addEventListener('form.error', function(ev){
         this.querySelectorAll('[data-submit-disabled]').forEach(function(btn){
           btn.disabled = false
           btn.removeAttribute('data-submit-disabled')
@@ -290,7 +290,7 @@ window.addEventListener('DOMContentLoaded',function(){
   })(document.querySelectorAll('form'));
 
   /**
-   * form.ajx-form
+   * form.ajx-form ajax
    */
   (function(forms){
     if (!forms || !forms.forEach)  return false;
@@ -301,9 +301,9 @@ window.addEventListener('DOMContentLoaded',function(){
       form.addEventListener('submit', function(ev) {
         if (ev && ev.preventDefault)  ev.preventDefault();
 
-        let errel = form.querySelector('.alert-error');
-        if (errel && errel.classList) {
-          errel.classList.add('hidden');
+        let alertError = form.querySelector('.alert-error');
+        if (alertError && alertError.classList) {
+          alertError.classList.add('hidden');
         }
 
         axios({
@@ -333,12 +333,16 @@ window.addEventListener('DOMContentLoaded',function(){
           form.dispatchEvent(evFormError);
 
           let respData = resp && resp.response && resp.response.data ? resp.response.data : null,
-            errel2 = errel && errel.querySelector ? errel.querySelector(".alert-msg") : null;
+            errel2 = alertError && alertError.querySelector ? alertError.querySelector(".alert-msg") : null;
 
-          respData.message && errel2 ? (errel2.innerText = respData.message, errel.classList.remove('hidden') )
-            : respData.message && errel ? ( errel.innerText = respData.message, errel.classList.remove('hidden') )
+          respData.message && errel2 ? (errel2.innerText = respData.message )
+            : respData.message && alertError ? ( alertError.innerText = respData.message )
               : respData.message ? alert(respData.message)
                 : null;
+
+          if ( alertError && alertError.classList ) {
+            alertError.classList.remove('hidden')
+          }
 
           if (respData && respData.errors) {
             console.log('axios.response.data.errors', respData.errors);

@@ -39,9 +39,6 @@ Route::get('client-ip', function(Request $request){
     return ['ip' => $ip];
 });
 
-Route::get('/cursos', function(Request $request){
-    return \App\Models\Curso::all();
-});
 
 Route::middleware('auth:sanctum')->group(function(){
 
@@ -100,6 +97,21 @@ Route::group(['prefix'=>'teacher','as'=>'api.teacher.','middleware' => ['auth','
  * Admin
  */
 Route::group(['prefix'=>'admin','as'=>'api.admin.','middleware' => ['auth:sanctum','admin']], function(){
+
+    Route::get('students/resend-verification-notice', function(Request $request){
+
+        $students = \App\Models\User::where('user_type',2)->where('email_verified_at')->get();
+
+        foreach($students as $student) {
+            //$student->sendEmailVerificationNotification();
+        }
+        return response()->json([
+            'message'=>'Emails enviados',
+            'students'=>$students
+        ]);
+    });
+
+
     Route::get('/curso/{id}/alumnos-sin-clase', function(Request $request, $id){
         $curso = App\Models\Curso::find($id);
 

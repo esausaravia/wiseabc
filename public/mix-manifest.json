@@ -1,9 +1,9 @@
 {
-    "/js/app.js": "/js/app.js",
-    "/js/students.js": "/js/students.js",
-    "/js/app-profile-form.js": "/js/app-profile-form.js",
-    "/js/admin.js": "/js/admin.js",
-    "/js/admin.pagos.js": "/js/admin.pagos.js",
-    "/js/admin.classroom.cforcurso.js": "/js/admin.classroom.cforcurso.js",
-    "/css/app.css": "/css/app.css"
+    "/js/app.js": "/js/app.js?id=ddae98f2beb09610de321c7ec39c0a3c",
+    "/js/students.js": "/js/students.js?id=2da96bf57024be78d49d65f236f6c153",
+    "/js/app-profile-form.js": "/js/app-profile-form.js?id=f902f9334af4d2ae003c9e41ffe1789b",
+    "/js/admin.js": "/js/admin.js?id=006e1fb822abcd5778f994bfa8869ba8",
+    "/js/admin.pagos.js": "/js/admin.pagos.js?id=6e03ddda111503060a03354ec1f9987a",
+    "/js/admin.classroom.cforcurso.js": "/js/admin.classroom.cforcurso.js?id=60db0299607eebd49b67200e2ffbbbad",
+    "/css/app.css": "/css/app.css?id=13efa89bed2abba199c7cc8d1bb00170"
 }

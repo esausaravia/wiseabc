@@ -73,9 +73,9 @@
 
   <section class="shadow-md mb-8 rounded-xl border-[3px] p-4 text-center border-azul-600 bg-gray-50 dark:bg-azulw text-">
 
-    <h3 class="mb-5 text-xl md:text-2xl font-semibold font-accent text-azul-600 dark:text-gray-300">¡Activa tu subscripción ahora!</h3>
+    <h3 class="mb-5 text-xl md:text-2xl font-semibold font-accent text-azul-600 dark:text-gray-300">Un Paso Más: Activa tu Suscripción</h3>
 
-    <p class="my-4">Por favor, haz tu pago para comenzar a aprender inglés en los horarios, nivel y curso que elegiste ¡Nos vemos en clase!</p>
+    <p class="my-4">Por favor, haz tu pago ahora para comenzar tus clases en los horarios y curso que elegiste, ¡nos vemos en línea!</p>
 
     <div class="md:flex md:-mx-3">
       <div class="md:w-1/2 md:px-3 dark:text-gray-300">

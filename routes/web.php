@@ -53,12 +53,13 @@ Route::get('/gracias-profesor', function(){
 	return view('teacher.gracias-registro');
 })->name('gracias-profesor');
 
+/*
 Route::get('/email/verify/{id}/{hash}', function (EmailVerificationRequest $request) {
 	$request->fulfill();
 
 	return redirect()->route('home');
-})->middleware(['auth', 'signed'])->name('verification.verify');
-
+})->middleware(['signed'])->name('verification.verify');
+*/
 
 Route::get('salir', function(){
 	\Illuminate\Support\Facades\Auth::logout();
