@@ -5,7 +5,7 @@
   @endpush
 
   <div class="flex mb-8">
-    <section class="shadow-md rounded-xl p-4 bg-gray-50">
+    <section class="shadow-md rounded-xl p-4 bg-gray-50 dark:bg-gray-900">
       <h2 class="font-accent font-semibold text-2xl md:text-3xl mb-4">¡Bienvenido a WiseABC English!</h2>
 
       <p>Estamos entusiasmados con tu llegada a nuestra institución. En esta página podrás consultar tu perfil y los detalles de tus cursos y clases, así como los avances y monitorear el progreso del estudiante.</p>
@@ -18,13 +18,26 @@
     @if ( empty( $user->email_verified_at ) )
     <div class="w-full max-w-2xl lg:w-1/2 px-3 mb-8">
       <section class="shadow-md rounded-xl p-4 bg-amber-100 text-amber-600">
-        <h2 class="text-xl font-semibold font-accent mb-4">Verificación de correo electrónico pendiente</h2>
+        <h2 class="text-xl font-semibold font-accent mb-4">Verificación del correo pendiente:</h2>
         <p class="mb-2 text-gray-700">
           Le enviamos un correo a su dirección <span class="font-medium underline">{{$user->email}}</span> para verificar su cuenta.
         </p>
-        <p class="text-base text-gray-500">
-          Por favor, revisé la bandeja de su correo electrónico o su carpeta de correo no deseado (spam).
+        <p class="mb-2 text-base text-gray-500">
+          Por favor, en su correo electrónico revise la bandeja o carpeta de Correo Deseado (Spam).
         </p>
+        <form id="fromSendVerification" method="POST" action="{{ route('verification.send') }}" class="ajx-form">
+          @csrf
+          <button type="submit" class="btn shadow-md rounded-full px-4 leading-12 bg-gray-100 text-gray-600">
+            <span class="inline-block mr-2 text-xl"><i class="fa-regular fa-paper-plane"></i></span>
+            <span class="btn-text">Reenviar correo de verificación</span></button>
+        </form>
+        <script>
+          document.getElementById('fromSendVerification').addEventListener('form.success', function(ev){
+            console.log('fromSendVerification form.success', ev);
+            const form = ev.currentTarget || ev.target;
+            form.querySelector('button[type="submit"]').innerHTML = 'Correo reenviado';
+          });
+        </script>
       </section>
     </div>
     @endif {{--/email_verified_at --}}
@@ -129,10 +142,15 @@
 
     @else {{-- SIN CLASE --}}
 
-    <h2 class="w-full my-8 px-3 text-xl lg:text-2xl font-accent font-semibold ">Aún no tiene una clase asignada</h2>
+    <div class="w-full my-8 px-3">
+      <h2 class=" text-xl lg:text-2xl font-accent font-semibold ">Aún no tiene clase asignada...</h2>
+      <p class="">porque tiene que hacer su pago para activar su suscripción</p>
+    </div>
+
+
     <div class="w-full max-w-2xl lg:w-1/2 px-3 mb-8">
       <section id="divSinClassroom" class="shadow-md rounded-xl overflow-clip bg-gray-50 dark:bg-white/10 p-4">
-        <p class="mb-5">Nuestro personal evaluará su perfil de estudiante para asignar un profesor y una clase con base en las opciones que eligió durante su registro. Mismas que puede modificar antes de tener su clase asignada, con el formulario a continuación:</p>
+        <p class="mb-5">Nuestro personal evaluará tu perfil de estudiante para asignar un profesor y una clase con base en las opciones que elegiste durante el registro y te haremos un exámen; AÚN puede modificarlas antes de comenzar tu clase asignada en el formulario a continuación:</p>
 
         <form action="{{ route('student.update-metas') }}" method="POST" class=" text-center">
           @csrf

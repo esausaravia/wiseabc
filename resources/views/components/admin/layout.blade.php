@@ -2,6 +2,10 @@
   'user' => request()->user(),
   'body' => null
 ])
+@php
+$route = \Illuminate\Support\Facades\Route::current();
+$routeName = $route->getName();
+@endphp
 <x-document :body="$body">
   <header id="AdminHeader" class="fixed top-0 left-0 w-full bg-gray-100 dark:bg-azulw shadow-md z-20 flex justify-between items-center">
     <button class="btn btn-toggle-aside w-12 text-azul-600 dark:text-gray-200 text-center text-[22px] leading-12"><i class="fa-light fa-bars"></i></button>
@@ -24,14 +28,23 @@
       </label>
     </div>
   </header>
-  <aside id="AdminAside" class="fixed top-0 left-0 h-full -translate-x-full xl:translate-x-0 shadow-md z-10 pt-[68px] px-3 md:px-4 xl:px-5 pb-5 bg-azulw dark:bg-black/30 font-accent text-gray-200 ">
+  <aside id="AdminAside" class="fixed top-0 left-0 h-full -translate-x-full xl:translate-x-0 shadow-md z-10 pt-[68px] pb-5 bg-azulw dark:bg-black/50 font-accent text-gray-200 ">
     <ul class="font-accent">
-      <li><a href="{{ route('admin.home') }}" class="block p-2">Inicio</a></li>
-      <li><a href="{{ route('admin.cursos.index') }}" class="block p-2">Cursos</a></li>
-      <li><a href="{{ route('admin.classroom.index') }}" class="block p-2">Clases</a></li>
-      <li><a href="{{ route('admin.teacher.index') }}" class="block p-2">Profesores</a></li>
-      <li><a href="{{ route('admin.student.index') }}" class="block p-2">Alumnos</a></li>
-      <li><a href="{{ route('admin.pagos.index') }}" class="block p-2">Pagos</a></li>
+      <li @class(['bg-black/5 dark:bg-white/5 font-semibold underline' => Str::is('admin.home', $routeName) ]) >
+        <a href="{{ route('admin.home') }}" class="block p-3 md:px-4 xl:px-5">Inicio</a></li>
+
+      <li @class(['bg-black/5 dark:bg-white/5 font-semibold underline' => $route->named('admin.cursos.*') ]) >
+        <a href="{{ route('admin.cursos.index') }}" class="block p-3 md:px-4 xl:px-5">Cursos</a></li>
+
+      <li @class(['bg-black/5 dark:bg-white/5 font-semibold underline' => $route->named('admin.classroom.*') ]) ><a href="{{ route('admin.classroom.index') }}" class="block p-3 md:px-4 xl:px-5">Clases</a></li>
+
+      <li @class(['bg-black/5 dark:bg-white/5 font-semibold underline' => $route->named('admin.teacher.*') ]) ><a href="{{ route('admin.teacher.index') }}" class="block p-3 md:px-4 xl:px-5">Profesores</a></li>
+
+      <li @class(['bg-black/5 dark:bg-white/5 font-semibold underline' => $route->named('admin.student.*') ]) ><a href="{{ route('admin.student.index') }}" class="block p-3 md:px-4 xl:px-5">Alumnos</a></li>
+
+      <li @class(['bg-black/5 dark:bg-white/5 font-semibold underline' => $route->named('admin.pagos.*') ]) ><a href="{{ route('admin.pagos.index') }}" class="block p-3 md:px-4 xl:px-5">Pagos</a></li>
+
+      <li class="hidden">{{ $routeName }}</li>
     </ul>
   </aside>
   <div id="AdminMainContainer" class="pt-16 px-3 pb-5 lg:pt-20 xl:pl-[170px]">
@@ -57,6 +70,6 @@
   </div>
 
   @push('scripts')
-    <script src="{{ asset('js/admin.js') }}" defer></script>
+    <script src="{{ mix('js/admin.js') }}" defer></script>
   @endpush
 </x-document>
