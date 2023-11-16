@@ -19,6 +19,9 @@ class Usermeta extends Model
     */
     protected $touches = ['user'];
 
+    /**
+     * Get the user parent
+     */
     public function user(){
         return $this->belongsTo(User::class);
     }

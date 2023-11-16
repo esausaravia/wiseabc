@@ -1,6 +1,9 @@
 
 window.addEventListener('DOMContentLoaded', function() {
 
+  const adminAside = document.getElementById('AdminAside');
+  const adminMainContainer = document.getElementById('AdminMainContainer');
+
   document.querySelectorAll('[data-delete-name][data-delete-url]').forEach( (btn)=>{
 
     btn.addEventListener('click', (ev)=>{

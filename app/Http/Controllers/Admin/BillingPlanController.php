@@ -1,7 +1,8 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Admin;
 
+use App\Http\Controllers\Controller;
 use App\Models\BillingPlan;
 use Illuminate\Http\Request;
 
@@ -12,9 +13,21 @@ class BillingPlanController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
-        //
+        $status = $request->get('status');
+
+        $billingPlans = BillingPlan::withCount('subscriptions')
+                        ->where('status', !empty($status) ? $status : 'ACTIVE' )
+                        ->orderBy('bill_region_id')
+                        ->orderBy('tipo')
+                        ->orderBy('ritmo')
+                        ->orderBy('created_at', 'desc')
+                        ->get();
+
+        return view('admin.billing-plan.index', [
+            'billingPlans' => $billingPlans,
+        ]);
     }
 
     /**
