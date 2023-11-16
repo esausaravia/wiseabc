@@ -14,8 +14,6 @@ class ClassroomController extends Controller
 {
     /**
      * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
      */
     public function index(Request $request): View
     {
@@ -70,7 +68,6 @@ class ClassroomController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  int  $id
      * @return \Illuminate\Http\Response
      */
     public function show(int $id)
@@ -105,9 +102,6 @@ class ClassroomController extends Controller
 
     /**
      * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
      */
     public function edit(int $id): View
     {
@@ -132,7 +126,6 @@ class ClassroomController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param  int  $id
      * @return \Illuminate\Http\Response
      */
     public function update(Request $request, int $id)
@@ -179,7 +172,6 @@ class ClassroomController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  int  $id
      * @return \Illuminate\Http\Response
      */
     public function destroy(int $id)
@@ -231,8 +223,6 @@ class ClassroomController extends Controller
 
     /**
      * Crear un classroom para profesor
-     *
-     * @return \Illuminate\Http\Response
      */
     public function createForTeacher(User $teacher): View
     {

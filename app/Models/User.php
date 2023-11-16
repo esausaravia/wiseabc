@@ -66,33 +66,21 @@ class User extends Authenticatable implements MustVerifyEmail
      * Relationships
      */
 
-    /**
-     * @return Illuminate\Database\Eloquent\Collection
-     */
     public function usermetas(): Collection
     {
         return $this->hasMany(Usermeta::class);
     }
 
-    /**
-     * @return Illuminate\Database\Eloquent\Collection
-     */
     public function horarios(): Collection
     {
         return $this->hasMany(UserHorario::class)->orderBy('dia');
     }
 
-    /**
-     * @return Illuminate\Database\Eloquent\Collection
-     */
     public function teachclasses(): Collection
     {
         return $this->hasMany(Classroom::class, 'teacher_id');
     }
 
-    /**
-     * @return Illuminate\Database\Eloquent\Collection
-     */
     public function classrooms(): Collection
     {
         return $this->belongsToMany(Classroom::class, 'class_student', 'user_id', 'class_id')->withTimestamps()->orderByPivot('created_at', 'desc');
@@ -199,10 +187,6 @@ class User extends Authenticatable implements MustVerifyEmail
      * Class Methods
      */
 
-    /**
-     * @param  string  $mkey
-     * @return string
-     */
     public function getMeta(string $mkey = ''): string
     {
         if (empty($mkey)) {
@@ -222,7 +206,6 @@ class User extends Authenticatable implements MustVerifyEmail
     /**
      * Guarda el $input array como metakey => metaval en la tabla usermetas
      *
-     * @param  array  $input
      * @return array metas actualizados
      */
     public function saveMetas(array $input = []): array
@@ -264,7 +247,6 @@ class User extends Authenticatable implements MustVerifyEmail
      * Actualiza los horarios eliminando todos los anteriores
      *
      * @param  array  $horarios [1=>[9,10,11]]
-     * @return array
      */
     public function saveHorarios(array $horarios = []): array
     {
@@ -295,8 +277,6 @@ class User extends Authenticatable implements MustVerifyEmail
 
     /**
      * Devuelve los horarios del usuario como Array
-     *
-     * @param  int  $dia
      */
     public function getHorariosArray(int $dia = 0): array
     {
@@ -377,7 +357,6 @@ class User extends Authenticatable implements MustVerifyEmail
     /**
      * Save profile pic
      *
-     * @param  UploadedFile  $file
      * @return bool|string failure|filename
      */
     public function saveProfilePic(\Illuminate\Http\UploadedFile $file)
@@ -419,7 +398,6 @@ class User extends Authenticatable implements MustVerifyEmail
     /**
      * Obtener public url de profile pic
      *
-     * @param  int  $size
      * @return string asset url
      */
     public function getProfilePic(int $size = 80): string

@@ -14,9 +14,6 @@ class StripeController extends Controller
 {
     /**
      * Guarda el identificador Customer de Stripe asociado al usuario actual
-     *
-     * @param  object  $checkoutSession
-     * @return \App\Models\User
      */
     public static function saveCustomerIdFromCheckoutSession(object $checkoutSession = null): User
     {
@@ -68,9 +65,6 @@ class StripeController extends Controller
 
     /**
      * Crea subscripción de estudiante con base en CheckoutSession de Stripe
-     *
-     * @param  object  $checkoutSession
-     * @return \App\Models\User
      */
     public static function saveSubscriptionFromCheckoutSession(object $checkoutSession = null): User
     {

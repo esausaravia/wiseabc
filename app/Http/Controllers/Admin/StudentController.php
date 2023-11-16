@@ -15,8 +15,6 @@ class StudentController extends Controller
 {
     /**
      * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
      */
     public function index(Request $request): View
     {
@@ -95,7 +93,6 @@ class StudentController extends Controller
      * Display the specified resource.
      *
      * @param  \App\Models\User  $user
-     * @return \Illuminate\Http\Response
      */
     public function show($id): View
     {
@@ -122,7 +119,6 @@ class StudentController extends Controller
      * Show the form for editing the specified resource.
      *
      * @param  \App\Models\User  $user
-     * @return \Illuminate\Http\Response
      */
     public function edit($id): View
     {
@@ -222,7 +218,6 @@ class StudentController extends Controller
      * Remove the specified resource from storage.
      *
      * @param  \App\Models\User  $user
-     * @return \Illuminate\Http\Response
      */
     public function destroy(User $student): RedirectResponse
     {
