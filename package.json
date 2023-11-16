@@ -1,7 +1,6 @@
 {
     "private": true,
     "scripts": {
-        "dev": "npm run development",
         "development": "npm-run-all -s dev:*",
         "dev:twcss": "tailwindcss -o resources/css/tailwind.css",
         "dev:mix": "mix",
@@ -9,13 +8,12 @@
         "watchbak": "mix watch",
         "watch:twcss": "tailwindcss -o resources/css/tailwind.css -w",
         "watch:mix": "mix watch -- --watch-options-poll=1000",
-        "watch-poll": "mix watch -- --watch-options-poll=1000",
-        "hot": "mix watch --hot",
-        "prod": "npm run production",
         "production": "npm-run-all -s prod:*",
         "productionbak": "mix --production",
         "prod:twcss": "npm run dev:twcss",
-        "prod:mix": "mix --production"
+        "prod:mix": "mix --production",
+        "dev": "vite",
+        "build": "vite build"
     },
     "devDependencies": {
         "@fullhuman/postcss-purgecss": "^5.0.0",
