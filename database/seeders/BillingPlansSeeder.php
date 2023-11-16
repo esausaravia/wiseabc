@@ -13,7 +13,7 @@ class BillingPlansSeeder extends Seeder
      *
      * @return void
      */
-    public function run()
+    public function run(): void
     {
         $billRegion1 = billRegion::create([
             'name' => 'General',

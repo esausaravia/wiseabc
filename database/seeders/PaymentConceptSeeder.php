@@ -12,7 +12,7 @@ class PaymentConceptSeeder extends Seeder
      *
      * @return void
      */
-    public function run()
+    public function run(): void
     {
 
         PaymentConcept::create(['concept' => 'Base', 'amount' => 500]);

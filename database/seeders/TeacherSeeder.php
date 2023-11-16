@@ -11,7 +11,7 @@ class TeacherSeeder extends Seeder
      *
      * @return void
      */
-    public function run()
+    public function run(): void
     {
 
         //horarios lun mie vie 9-10 y 11-12

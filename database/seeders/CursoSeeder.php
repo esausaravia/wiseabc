@@ -12,7 +12,7 @@ class CursoSeeder extends Seeder
      *
      * @return void
      */
-    public function run()
+    public function run(): void
     {
         //
         Curso::create(['edad' => 6, 'nivel' => 1, 'name' => 'Básico para juniors (RH1)']);

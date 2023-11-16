@@ -24,7 +24,7 @@ class FortifyServiceProvider extends ServiceProvider
      *
      * @return void
      */
-    public function register()
+    public function register(): void
     {
         /*
         $this->app->instance(LoginResponse::class, new class implements LoginResponse{
@@ -42,7 +42,7 @@ class FortifyServiceProvider extends ServiceProvider
      *
      * @return void
      */
-    public function boot()
+    public function boot(): void
     {
         Password::defaults(function () {
             $ruleProd = Password::min(8)

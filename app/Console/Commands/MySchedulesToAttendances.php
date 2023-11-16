@@ -29,7 +29,7 @@ class MySchedulesToAttendances extends Command
      *
      * @return int
      */
-    public function handle()
+    public function handle(): int
     {
         // Obtener horarios vencidos
         $schedules = Schedule::with(['classroom'])->where('fechahora', '<', now()->subHour())->get();

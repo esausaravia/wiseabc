@@ -11,7 +11,7 @@ class StudentSeeder extends Seeder
      *
      * @return void
      */
-    public function run()
+    public function run(): void
     {
         //
         $Edades = collect(config('wiseabc.edad_labels'));
