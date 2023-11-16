@@ -114,8 +114,5 @@ class MySchedules extends Command
 
             echo PHP_EOL;
         }//END foreach classes
-
-        return 'Cron job is working fine!';
-
     }
 }
