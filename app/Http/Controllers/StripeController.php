@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\User;
 use App\Models\BillingPlan;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\Request;
@@ -17,7 +18,7 @@ class StripeController extends Controller
      * @param  object  $checkoutSession
      * @return \App\Models\User
      */
-    public static function saveCustomerIdFromCheckoutSession($checkoutSession = null)
+    public static function saveCustomerIdFromCheckoutSession(object $checkoutSession = null): User
     {
         if (! is_object($checkoutSession)) {
             Log::error(__METHOD__, ['error' => '!is_object($checkoutSession)']);
@@ -71,7 +72,7 @@ class StripeController extends Controller
      * @param  object  $checkoutSession
      * @return \App\Models\User
      */
-    public static function saveSubscriptionFromCheckoutSession($checkoutSession = null)
+    public static function saveSubscriptionFromCheckoutSession(object $checkoutSession = null): User
     {
         if (! is_object($checkoutSession)) {
             Log::error(__METHOD__, ['error' => '!is_object($checkoutSession)']);

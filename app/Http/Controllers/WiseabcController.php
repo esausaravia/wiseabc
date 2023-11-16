@@ -16,7 +16,7 @@ class WiseabcController extends Controller
      * @param  string  $fromTz '-0600'
      * @return array [11,12,13]
      */
-    public static function transformHorariosTimezone($horarios, $timezone, $fromTz = '-0600')
+    public static function transformHorariosTimezone(array $horarios, string $timezone, string $fromTz = '-0600')
     {
         if (empty($horarios) || ! is_array($horarios)) {
             return [];

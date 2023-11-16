@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\View\View;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
@@ -70,7 +71,7 @@ class StudentController extends Controller
         ]);
     }
 
-    public function elegirRitmo(Request $request)
+    public function elegirRitmo(Request $request): View
     {
         $region = \App\Models\billRegion::find(2); // $user->bill_region_id );
 
@@ -112,7 +113,7 @@ class StudentController extends Controller
         return redirect()->route('student.home');
     }
 
-    public function pagos(Request $request)
+    public function pagos(Request $request): View
     {
         $user = $request->user();
 
@@ -154,7 +155,7 @@ class StudentController extends Controller
         ]);
     }
 
-    public function perfil(Request $request)
+    public function perfil(Request $request): View
     {
         return view('student.perfil', [
             'user' => $request->user(),

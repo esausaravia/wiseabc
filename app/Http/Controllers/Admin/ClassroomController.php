@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Admin;
 
+use Illuminate\View\View;
 use App\Http\Controllers\Controller;
 use App\Models\Classroom;
 use App\Models\Curso;
@@ -16,7 +17,7 @@ class ClassroomController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index(Request $request)
+    public function index(Request $request): View
     {
 
         $getEdad = $request->input('edad');
@@ -72,7 +73,7 @@ class ClassroomController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show(int $id)
     {
         //
     }
@@ -108,7 +109,7 @@ class ClassroomController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function edit($id)
+    public function edit(int $id): View
     {
         $clase = Classroom::with(['curso', 'teacher', 'students', 'horarios'])->find($id);
 
@@ -134,7 +135,7 @@ class ClassroomController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(Request $request, int $id)
     {
         $valid = $request->validate([
             'status' => 'string',
@@ -181,7 +182,7 @@ class ClassroomController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy(int $id)
     {
         //
     }
@@ -233,7 +234,7 @@ class ClassroomController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function createForTeacher(User $teacher)
+    public function createForTeacher(User $teacher): View
     {
         $arrHorarios = $teacher->horariosDisponibles();
         $arrHorariosDias = array_keys($arrHorarios);
@@ -249,7 +250,7 @@ class ClassroomController extends Controller
         ]);
     }
 
-    public function assignStudents($id)
+    public function assignStudents($id): View
     {
         ob_start();
         $Classroom = Classroom::find($id);

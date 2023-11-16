@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\View\View;
+use Illuminate\Http\RedirectResponse;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
@@ -9,7 +11,7 @@ use Illuminate\Validation\Rule;
 
 class TeacherController extends Controller
 {
-    public function registro(Request $request)
+    public function registro(Request $request): RedirectResponse
     {
         $validated = $request->validate([
             'fname' => 'required',
@@ -49,7 +51,7 @@ class TeacherController extends Controller
         return redirect()->route('gracias-profesor');
     }
 
-    public function home(Request $request)
+    public function home(Request $request): View
     {
         $user = $request->user();
 
@@ -93,14 +95,14 @@ class TeacherController extends Controller
         ]);
     }
 
-    public function pagos(Request $request)
+    public function pagos(Request $request): View
     {
         return view('teacher.pagos', [
             'user' => $request->user(),
         ]);
     }
 
-    public function perfil(Request $request)
+    public function perfil(Request $request): View
     {
         $profe = $request->user();
 
@@ -158,7 +160,7 @@ class TeacherController extends Controller
         return back();
     }
 
-    public function profileUpdateRequest(Request $request)
+    public function profileUpdateRequest(Request $request): RedirectResponse
     {
         return redirect()->route('teacher.home')->with('success', 'Solicitud recibda');
     }
