@@ -3,8 +3,8 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
-use Illuminate\Http\Request;
 use App\Models\Curso;
+use Illuminate\Http\Request;
 
 class CursoController extends Controller
 {
@@ -29,7 +29,6 @@ class CursoController extends Controller
             ->orderBy('edad')
             ->get();
 
-
         return view('admin.cursos', compact('cursos', 'request'));
     }
 
@@ -40,17 +39,16 @@ class CursoController extends Controller
      */
     public function create(Curso $curso)
     {
-		return view('admin.curso', [
+        return view('admin.curso', [
             'title' => 'Nuevo',
             'form_action' => route('admin.cursos.store'),
-            'curso'=>$curso
+            'curso' => $curso,
         ]);
     }
 
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
     public function store(Request $request)
@@ -60,7 +58,7 @@ class CursoController extends Controller
             'status' => 'required',
             'edad' => 'required|integer',
             'nivel' => 'required|integer',
-            'duracion' => 'required|integer'
+            'duracion' => 'required|integer',
         ]);
 
         $curso = Curso::create([
@@ -68,7 +66,7 @@ class CursoController extends Controller
             'status' => $valid['status'],
             'edad' => $valid['edad'],
             'nivel' => $valid['nivel'],
-            'duracion' => $valid['duracion']
+            'duracion' => $valid['duracion'],
         ]);
 
         return redirect()->route('admin.cursos.index')->with('success', $valid['name'].' creado con éxito');
@@ -93,17 +91,16 @@ class CursoController extends Controller
      */
     public function edit(Curso $curso)
     {
-		return view('admin.curso', [
+        return view('admin.curso', [
             'title' => 'Editar',
-            'form_action' => route('admin.cursos.update', ['curso'=> $curso]),
-            'curso'=>$curso
+            'form_action' => route('admin.cursos.update', ['curso' => $curso]),
+            'curso' => $curso,
         ]);
     }
 
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
@@ -114,7 +111,7 @@ class CursoController extends Controller
             'status' => 'required',
             'edad' => 'required|integer',
             'nivel' => 'required|integer',
-            'duracion' => 'required|integer'
+            'duracion' => 'required|integer',
         ]);
 
         $curso->update([
@@ -122,7 +119,7 @@ class CursoController extends Controller
             'status' => $valid['status'],
             'edad' => $valid['edad'],
             'nivel' => $valid['nivel'],
-            'duracion' => $valid['duracion']
+            'duracion' => $valid['duracion'],
         ]);
 
         return redirect()->route('admin.cursos.index')->with('success', $valid['name'].' actualizado con éxito');

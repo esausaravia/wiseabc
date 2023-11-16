@@ -9,20 +9,22 @@ class Usermeta extends Model
 {
     use HasFactory;
 
-    public $timestamps=false;
-    protected $fillable = ['metakey','metaval'];
+    public $timestamps = false;
+
+    protected $fillable = ['metakey', 'metaval'];
 
     /**
-    * All of the relationships to be touched.
-    *
-    * @var array
-    */
+     * All of the relationships to be touched.
+     *
+     * @var array
+     */
     protected $touches = ['user'];
 
     /**
      * Get the user parent
      */
-    public function user(){
+    public function user()
+    {
         return $this->belongsTo(User::class);
     }
 }

@@ -10,7 +10,7 @@ class billRegion extends Model
 {
     use HasFactory, SoftDeletes;
 
-    protected $fillable = ['name','countries'];
+    protected $fillable = ['name', 'countries'];
 
     /**
      * RelationShips

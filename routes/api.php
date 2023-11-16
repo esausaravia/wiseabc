@@ -3,12 +3,8 @@
 use App\Http\Controllers\PayPalController;
 use App\Http\Controllers\StripeController;
 use App\Http\Controllers\SubscriptionController;
-use App\Http\Controllers\WiseabcController;
 use Illuminate\Http\Request;
-use Illuminate\Support\Carbon;
-use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Route;
-use Illuminate\Support\Str;
 
 /*
 |--------------------------------------------------------------------------
@@ -21,13 +17,12 @@ use Illuminate\Support\Str;
 |
 */
 
-Route::get('/', function(Request $request){
+Route::get('/', function (Request $request) {
 
     return base_path('public/img/wiseabc-logo-375x.png');
 });
 
-
-Route::get('client-ip', function(Request $request){
+Route::get('client-ip', function (Request $request) {
 
     /*
     $_SERVER['HTTP_CF_CONNECTING_IP'];
@@ -35,30 +30,31 @@ Route::get('client-ip', function(Request $request){
     $_SERVER['REMOTE_ADDR'];
     */
 
-    $ip = !empty( $_SERVER['HTTP_CF_CONNECTING_IP'] ) ? $_SERVER['HTTP_CF_CONNECTING_IP'] : ( !empty($_SERVER['HTTP_X_FORWARDED_FOR']) ? $_SERVER['HTTP_X_FORWARDED_FOR'] : $_SERVER['REMOTE_ADDR'] );
+    $ip = ! empty($_SERVER['HTTP_CF_CONNECTING_IP']) ? $_SERVER['HTTP_CF_CONNECTING_IP'] : (! empty($_SERVER['HTTP_X_FORWARDED_FOR']) ? $_SERVER['HTTP_X_FORWARDED_FOR'] : $_SERVER['REMOTE_ADDR']);
+
     return ['ip' => $ip];
 });
 
+Route::middleware('auth:sanctum')->group(function () {
 
-Route::middleware('auth:sanctum')->group(function(){
+    Route::get('/token/create', function (Request $request) {
 
-    Route::get('/token/create', function(Request $request){
-
-        if ( empty($request->user()) ) {
+        if (empty($request->user())) {
             return response()->json([
-                'message'=>'Debe iniciar sesión'
-            ],400);
+                'message' => 'Debe iniciar sesión',
+            ], 400);
         }
 
-        $token_name = !empty($request->token_name) ? $request->token_name : 'localhost';
+        $token_name = ! empty($request->token_name) ? $request->token_name : 'localhost';
 
         return $request->user()->createToken($token_name);
 
         $token = $request->user()->createToken($token_name);
+
         return ['token' => $token->plainTextToken];
     });
 
-    Route::get('/user',function(Request $request){
+    Route::get('/user', function (Request $request) {
         return $request->user();
     });
 
@@ -70,11 +66,10 @@ Route::middleware('auth:sanctum')->group(function(){
 
 /**
  * Estudante
- *
  */
-Route::group(['prefix'=>'student','as'=>'api.student.','middleware' => ['auth','student']], function(){
+Route::group(['prefix' => 'student', 'as' => 'api.student.', 'middleware' => ['auth', 'student']], function () {
 
-    Route::get('/paypal/get-user-token', function(Request $request){
+    Route::get('/paypal/get-user-token', function (Request $request) {
         return PayPalController::getUserToken();
     })->name('paypal.get-user-token');
 
@@ -82,55 +77,55 @@ Route::group(['prefix'=>'student','as'=>'api.student.','middleware' => ['auth','
 
     Route::post('/paypal/orders/{id}/capture', [PayPalController::class, 'captureStudentOrder'])->name('paypal.orders.capture');
 
-	//Route::get('home', [StudentController::class, 'home'])->name('home');
+    //Route::get('home', [StudentController::class, 'home'])->name('home');
 });
 
 /**
  * Teacher
  */
-Route::group(['prefix'=>'teacher','as'=>'api.teacher.','middleware' => ['auth','teacher']], function(){
+Route::group(['prefix' => 'teacher', 'as' => 'api.teacher.', 'middleware' => ['auth', 'teacher']], function () {
 
-	//Route::get('home', [TeacherController::class, 'home'])->name('home');
+    //Route::get('home', [TeacherController::class, 'home'])->name('home');
 });
 
 /**
  * Admin
  */
-Route::group(['prefix'=>'admin','as'=>'api.admin.','middleware' => ['auth:sanctum','admin']], function(){
+Route::group(['prefix' => 'admin', 'as' => 'api.admin.', 'middleware' => ['auth:sanctum', 'admin']], function () {
 
-    Route::get('students/resend-verification-notice', function(Request $request){
+    Route::get('students/resend-verification-notice', function (Request $request) {
 
-        $students = \App\Models\User::where('user_type',2)->where('email_verified_at')->get();
+        $students = \App\Models\User::where('user_type', 2)->where('email_verified_at')->get();
 
-        foreach($students as $student) {
+        foreach ($students as $student) {
             //$student->sendEmailVerificationNotification();
         }
+
         return response()->json([
-            'message'=>'Emails enviados',
-            'students'=>$students
+            'message' => 'Emails enviados',
+            'students' => $students,
         ]);
     });
 
-
-    Route::get('/curso/{id}/alumnos-sin-clase', function(Request $request, $id){
+    Route::get('/curso/{id}/alumnos-sin-clase', function (Request $request, $id) {
         $curso = App\Models\Curso::find($id);
 
-        return response()->json( $curso->alumnosSinClase() );
+        return response()->json($curso->alumnosSinClase());
     });
-    Route::get('/curso/{id}/alumnos-sin-clase-nums', function(Request $request, $id){
+    Route::get('/curso/{id}/alumnos-sin-clase-nums', function (Request $request, $id) {
         $curso = App\Models\Curso::find($id);
 
-        return response()->json( $curso->alumnosSinClaseNums() );
+        return response()->json($curso->alumnosSinClaseNums());
     });
 });
 
 /**
  * Webhooks
  */
-Route::group(['prefix'=>'stripe','as'=>'api.stripe.'], function(){
-    Route::any('webhooks',[StripeController::class, 'webhooks'])->name('webhooks');
+Route::group(['prefix' => 'stripe', 'as' => 'api.stripe.'], function () {
+    Route::any('webhooks', [StripeController::class, 'webhooks'])->name('webhooks');
 });
 
-Route::group(['prefix'=>'webhooks','as'=>'webhooks.'],function(){
+Route::group(['prefix' => 'webhooks', 'as' => 'webhooks.'], function () {
     Route::any('paypal', [PayPalController::class, 'webhooks'])->name('paypal');
 });

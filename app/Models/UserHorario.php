@@ -9,22 +9,26 @@ use Illuminate\Database\Eloquent\Model;
 class UserHorario extends Model
 {
     use HasFactory;
+
     protected $primaryKey = null;
 
     public $timestamps = false;
+
     public $incrementing = false;
 
-    protected $fillable = ['curso_id','dia','hr'];
+    protected $fillable = ['curso_id', 'dia', 'hr'];
 
-    public function user() {
+    public function user()
+    {
         return $this->belongsTo(User::class);
     }
 
     protected function diaLabel(): Attribute
     {
         $arr = config('wiseabc.weekdays');
+
         return Attribute::make(
-            get: fn ($value, $attributes) => !empty($arr[( $attributes['dia'] )]) ? $arr[( $attributes['dia'] )] : $attributes['dia'],
+            get: fn ($value, $attributes) => ! empty($arr[($attributes['dia'])]) ? $arr[($attributes['dia'])] : $attributes['dia'],
         );
     }
 }

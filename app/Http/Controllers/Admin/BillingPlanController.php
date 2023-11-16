@@ -18,12 +18,12 @@ class BillingPlanController extends Controller
         $status = $request->get('status');
 
         $billingPlans = BillingPlan::withCount('subscriptions')
-                        ->where('status', !empty($status) ? $status : 'ACTIVE' )
-                        ->orderBy('bill_region_id')
-                        ->orderBy('tipo')
-                        ->orderBy('ritmo')
-                        ->orderBy('created_at', 'desc')
-                        ->get();
+            ->where('status', ! empty($status) ? $status : 'ACTIVE')
+            ->orderBy('bill_region_id')
+            ->orderBy('tipo')
+            ->orderBy('ritmo')
+            ->orderBy('created_at', 'desc')
+            ->get();
 
         return view('admin.billing-plan.index', [
             'billingPlans' => $billingPlans,
@@ -43,7 +43,6 @@ class BillingPlanController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
     public function store(Request $request)
@@ -76,7 +75,6 @@ class BillingPlanController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
