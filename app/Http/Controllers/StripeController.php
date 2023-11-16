@@ -2,8 +2,8 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\User;
 use App\Models\BillingPlan;
+use App\Models\User;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
@@ -51,10 +51,10 @@ class StripeController extends Controller
 
         if (! is_object($student->stripe)) {// && $checkoutSession->client_reference_id==$student->id
             $student->stripe()->create([
-                    'api' => 'stripe',
-                    'api_id' => $checkoutSession->customer,
-                    'api_object' => '{}',
-                ]);
+                'api' => 'stripe',
+                'api_id' => $checkoutSession->customer,
+                'api_object' => '{}',
+            ]);
         } else {
             $student->stripe->api_id = $checkoutSession->customer;
             $student->stripe->save();

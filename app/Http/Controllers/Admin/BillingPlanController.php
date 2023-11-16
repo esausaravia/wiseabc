@@ -2,10 +2,10 @@
 
 namespace App\Http\Controllers\Admin;
 
-use Illuminate\View\View;
 use App\Http\Controllers\Controller;
 use App\Models\BillingPlan;
 use Illuminate\Http\Request;
+use Illuminate\View\View;
 
 class BillingPlanController extends Controller
 {
