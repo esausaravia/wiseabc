@@ -1,4 +1,7 @@
-@import 'tailwind';
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
 :root {
   --color-rojo: #BE1F41;
   --color-azulw: #0B1F41;

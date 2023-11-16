@@ -11,7 +11,6 @@ export default defineConfig({
                 'resources/js/admin.pagos.js',
                 'resources/js/app-profile-form.js',
                 'resources/js/app.js',
-                'resources/js/fontawesome.js',
                 'resources/js/students.js',
             ],
             refresh: true,

@@ -1,7 +1,7 @@
 <x-layout class="student-pagos">
-  @push('scripts')
-  <script defer src="{{ asset('./js/students.js') }}"></script>
-  @endpush
+  @pushOnce('scripts')
+    @vite('resources/js/students.js')
+  @endPushOnce
   <h1 class="mb-5 text-2xl lg:text-3xl font-accent font-semibold">Pagos</h1>
 
   <div class="md:flex md:flex-wrap md:-mx-3">

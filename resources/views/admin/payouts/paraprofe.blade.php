@@ -113,13 +113,13 @@
 
   </form>
 
-  @pushOnce('scripts')
+@pushOnce('scripts')
   <script>
     const PageFile = 'pagos-paraprofe';
     const Attendances = @json($Attendances);
     const arrPagosPorConcepto = @json($arrPagosPorConcepto);
     let PaymentAmount = {{ $payout_amount }};
   </script>
-  <script defer src="{{ asset('js/admin.pagos.js') }}"></script>
-  @endPushOnce
+  @vite('resources/js/admin.pagos.js')
+@endPushOnce
 </x-admin.layout>

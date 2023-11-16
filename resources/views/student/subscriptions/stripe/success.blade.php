@@ -1,7 +1,7 @@
 <x-layout class="student-home text-lg">
-  @push('scripts')
-  <script defer src="{{ asset('./js/students.js') }}"></script>
-  @endpush
+  @pushOnce('scripts')
+    @vite('resources/js/students.js')
+  @endPushOnce
 
   <h1>Exito!</h1>
 
