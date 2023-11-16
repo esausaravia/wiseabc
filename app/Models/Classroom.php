@@ -4,11 +4,13 @@ namespace App\Models;
 
 use App\Models\Curso;
 use App\Models\User;
-use Illuminate\Database\Eloquent\Collection;
 use App\Models\Schedule;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Carbon;
 
@@ -53,7 +55,7 @@ class Classroom extends Model
      *
      * @return App\Models\Curso
      */
-    public function curso(): Curso
+    public function curso(): BelongsTo
     {
         return $this->belongsTo(Curso::class);
     }
@@ -63,7 +65,7 @@ class Classroom extends Model
      *
      * @return App\Models\User
      */
-    public function teacher(): User
+    public function teacher(): BelongsTo
     {
         return $this->belongsTo(User::class, 'teacher_id', 'id');
     }
@@ -73,7 +75,7 @@ class Classroom extends Model
      *
      * @return Illuminate\Database\Eloquent\Collection
      */
-    public function students(): Collection
+    public function students(): BelongsToMany
     {
         return $this->belongsToMany(User::class, 'class_student', 'class_id', 'user_id')->withTimestamps();
     }
@@ -239,7 +241,7 @@ class Classroom extends Model
      * @param  Carbon::class|string  $offset
      * @return Carbon::class
      */
-    public function sigFechaHora($offset = ''): \Carbon::class
+    public function sigFechaHora($offset = ''): Carbon
     {
         $enWeekdays = config('wiseabc.en_weekdays');
 
