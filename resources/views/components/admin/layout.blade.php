@@ -28,7 +28,12 @@ $routeName = $route->getName();
       </label>
     </div>
   </header>
-  <aside id="AdminAside" class="fixed top-0 left-0 h-full -translate-x-full xl:translate-x-0 shadow-md z-10 pt-[68px] pb-5 bg-azulw dark:bg-black/50 font-accent text-gray-200 ">
+
+  <div id="AdminMainContainer" class="pt-16 px-3 pb-5 lg:pt-20 xl:pl-[200px]">
+    {{ $slot }}
+  </div>
+
+  <aside id="AdminAside" class="fixed top-0 left-0 h-full -translate-x-full xl:translate-x-0 shadow-lg z-10 pt-[68px] pb-5 bg-azulw dark:bg-gray-950 text-gray-200 text-base font-accent">
     <ul class="font-accent">
       <li @class(['bg-black/5 dark:bg-white/5 font-semibold underline' => Str::is('admin.home', $routeName) ]) >
         <a href="{{ route('admin.home') }}" class="block p-3 md:px-4 xl:px-5">Inicio</a></li>
@@ -36,20 +41,27 @@ $routeName = $route->getName();
       <li @class(['bg-black/5 dark:bg-white/5 font-semibold underline' => $route->named('admin.cursos.*') ]) >
         <a href="{{ route('admin.cursos.index') }}" class="block p-3 md:px-4 xl:px-5">Cursos</a></li>
 
-      <li @class(['bg-black/5 dark:bg-white/5 font-semibold underline' => $route->named('admin.classroom.*') ]) ><a href="{{ route('admin.classroom.index') }}" class="block p-3 md:px-4 xl:px-5">Clases</a></li>
+      <li @class(['bg-black/5 dark:bg-white/5 font-semibold underline' => $route->named('admin.classroom.*') ]) >
+        <a href="{{ route('admin.classroom.index') }}" class="block p-3 md:px-4 xl:px-5">Clases</a></li>
 
-      <li @class(['bg-black/5 dark:bg-white/5 font-semibold underline' => $route->named('admin.teacher.*') ]) ><a href="{{ route('admin.teacher.index') }}" class="block p-3 md:px-4 xl:px-5">Profesores</a></li>
+      <li @class(['bg-black/5 dark:bg-white/5 font-semibold underline' => $route->named('admin.teacher.*') ]) >
+        <a href="{{ route('admin.teacher.index') }}" class="block p-3 md:px-4 xl:px-5">Profesores</a></li>
 
-      <li @class(['bg-black/5 dark:bg-white/5 font-semibold underline' => $route->named('admin.student.*') ]) ><a href="{{ route('admin.student.index') }}" class="block p-3 md:px-4 xl:px-5">Alumnos</a></li>
+      <li @class(['bg-black/5 dark:bg-white/5 font-semibold underline' => $route->named('admin.student.*') ]) >
+        <a href="{{ route('admin.student.index') }}" class="block p-3 md:px-4 xl:px-5">Alumnos</a></li>
 
-      <li @class(['bg-black/5 dark:bg-white/5 font-semibold underline' => $route->named('admin.pagos.*') ]) ><a href="{{ route('admin.pagos.index') }}" class="block p-3 md:px-4 xl:px-5">Pagos</a></li>
+      <li @class(['bg-black/5 dark:bg-white/5 font-semibold underline' => $route->named('admin.pagos.*') ]) >
+        <a href="{{ route('admin.pagos.index') }}" class="block p-3 md:px-4 xl:px-5">Pagos</a></li>
+
+      <li @class([
+        'bg-black/5 dark:bg-white/5 font-semibold underline' => $route->named([
+          'admin.billingplan*','admin.subscription*'])
+        ]) >
+        <a href="{{ route('admin.billingplans.index') }}" class="block p-3 md:px-4 xl:px-5">Subscripciones</a></li>
 
       <li class="hidden">{{ $routeName }}</li>
     </ul>
   </aside>
-  <div id="AdminMainContainer" class="pt-16 px-3 pb-5 lg:pt-20 xl:pl-[170px]">
-    {{ $slot }}
-  </div>
 
   <div id="modal-delete-entity" class="modal fixed inset-0 w-full h-full z-50 flex items-center justify-center bg-black/50 hidden" role="dialog">
     <form action="" method="post" class="modal-content rounded-2xl bg-gray-100 text-gray-600">

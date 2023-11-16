@@ -138,6 +138,7 @@ Route::group(['prefix'=>'admin','as'=>'admin.','middleware' => ['auth','admin']]
 	Route::post('student/{student}/assignclass', [\App\Http\Controllers\Admin\StudentController::class, 'assignClassroom2']);
 
 	Route::resources([
+		'billingplans' => \App\Http\Controllers\Admin\BillingPlanController::class,
 		'classroom' => \App\Http\Controllers\Admin\ClassroomController::class,
 		'cursos' => \App\Http\Controllers\Admin\CursoController::class,
 		'pagos' => \App\Http\Controllers\Admin\PayoutController::class,

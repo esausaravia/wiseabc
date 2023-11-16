@@ -7,12 +7,6 @@ module.exports = {
     "./resources/**/*.{php,html}"
   ],
   theme: {
-    fontFamily:{
-      'sans': ['"Open Sans"', defaultTheme.fontFamily.sans],
-      'serif': ['"Roboto Slab"', defaultTheme.fontFamily.serif],
-      'accent': ['Montserrat', defaultTheme.fontFamily.sans],
-      'mono': ['monospace']
-    },
     extend: {
       blur: {
         px: '1px'
@@ -40,11 +34,15 @@ module.exports = {
           '2xl': '1200px'
         }
       },
+      fontFamily:{
+        'sans': ['"Open Sans"', defaultTheme.fontFamily.sans],
+        'serif': ['"Roboto Slab"', defaultTheme.fontFamily.serif],
+        'accent': ['Montserrat', defaultTheme.fontFamily.sans]
+      },
       fontSize: {
         '40': '2.5rem'
       },
       lineHeight: {
-        '12': '3rem',
         '22px': '1.375rem'
       },
       spacing: {

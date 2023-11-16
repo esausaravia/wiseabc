@@ -213,21 +213,21 @@ class User extends Authenticatable implements MustVerifyEmail
      * @param array $input
      * @return array metas actualizados
      */
-    public function saveMetas( $input=array() ) {
-
-        $model_keys = array_keys($this->getAttributes());
-        array_push($model_keys, '_token', '_method', 'password_confirmation', 'horario', 'horarios');
+    public function saveMetas( $input=array() )
+    {
+        $model_cols = array_keys($this->getOriginal());
+        array_push($model_cols, '_token', '_method', 'password_confirmation');
 
         $metasrc = array();
         foreach($input AS $_input_key=>$_input_val)
         {
-            if ($_input_val===false || $_input_val===null || in_array($_input_key, $model_keys)!==false ) {
+            if ($_input_val===false || $_input_val===null || in_array($_input_key, $model_cols)!==false ) {
                 continue;
             }
             if ( is_array($_input_val) || is_object($_input_val) ) {
-                $_input_val = json_encode($_input_val, JSON_UNESCAPED_UNICODE);
+                $_input_val = json_encode($_input_val);
             }
-            if ( $this->$_input_key!==$_input_val ) {
+            if ( $this->getMeta($_input_key)!==$_input_val ) {
                 $metasrc[$_input_key] = $_input_val;
             }
         }
