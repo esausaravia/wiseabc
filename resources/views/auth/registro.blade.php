@@ -626,7 +626,7 @@
   @endpush
 
   @push('scripts')
-  <script src="{{ mix('js/app-profile-form.js') }}?v=1.20230616.1519" defer></script>
+  @vite('resources/js/app-profile-form.js')
   <script>
     window.addEventListener('beforeunload', function(ev) {
       if ( document.getElementById('frmRegStudent').querySelector('input[name="ritmo"]').value!="" )
