@@ -29,7 +29,7 @@ class MySchedules extends Command
      *
      * @re  turn int
      */
-    public function handle()
+    public function handle(): void
     {
         $paraSemanas = 2; //cuantas semanas hacia adelante
         $enWeekdays = config('wiseabc.en_weekdays'); //monday,tuesday,etc.

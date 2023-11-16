@@ -12,7 +12,7 @@ class ProductionSeeder extends Seeder
      *
      * @return void
      */
-    public function run()
+    public function run(): void
     {
         /**
          * php artisan db:seed --force
