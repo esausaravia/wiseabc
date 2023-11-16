@@ -3,9 +3,9 @@
 namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
-use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Casts\Attribute;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Foundation\Auth\User as Authenticatable;
@@ -65,7 +65,6 @@ class User extends Authenticatable implements MustVerifyEmail
     /**
      * Relationships
      */
-
     public function usermetas(): Collection
     {
         return $this->hasMany(Usermeta::class);
@@ -186,7 +185,6 @@ class User extends Authenticatable implements MustVerifyEmail
     /**
      * Class Methods
      */
-
     public function getMeta(string $mkey = ''): string
     {
         if (empty($mkey)) {
