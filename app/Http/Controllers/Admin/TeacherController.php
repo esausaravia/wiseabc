@@ -14,8 +14,6 @@ class TeacherController extends Controller
 {
     /**
      * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
      */
     public function index(Request $request): View
     {
@@ -49,8 +47,6 @@ class TeacherController extends Controller
 
     /**
      * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
      */
     public function create(User $teacher): View
     {
@@ -59,8 +55,6 @@ class TeacherController extends Controller
 
     /**
      * Store a newly created resource in storage.
-     *
-     * @return \Illuminate\Http\Response
      */
     public function store(Request $request): RedirectResponse
     {
@@ -98,7 +92,6 @@ class TeacherController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  int  $id
      * @return \Illuminate\Http\Response
      */
     public function show(int $id)
@@ -110,7 +103,6 @@ class TeacherController extends Controller
      * Show the form for editing the specified resource.
      *
      * @param  int  $id
-     * @return \Illuminate\Http\Response
      */
     public function edit(User $teacher): View
     {
@@ -205,7 +197,6 @@ class TeacherController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  int  $id
      * @return \Illuminate\Http\Response
      */
     public function destroy(int $id)
