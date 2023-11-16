@@ -67,7 +67,7 @@ Route::middleware('auth:sanctum')->group(function () {
 /**
  * Estudante
  */
-Route::group(['prefix' => 'student', 'as' => 'api.student.', 'middleware' => ['auth', 'student']], function () {
+Route::prefix('student')->name('api.student.')->middleware('auth', 'student')->group(function () {
 
     Route::get('/paypal/get-user-token', function (Request $request) {
         return PayPalController::getUserToken();
@@ -83,7 +83,7 @@ Route::group(['prefix' => 'student', 'as' => 'api.student.', 'middleware' => ['a
 /**
  * Teacher
  */
-Route::group(['prefix' => 'teacher', 'as' => 'api.teacher.', 'middleware' => ['auth', 'teacher']], function () {
+Route::prefix('teacher')->name('api.teacher.')->middleware('auth', 'teacher')->group(function () {
 
     //Route::get('home', [TeacherController::class, 'home'])->name('home');
 });
@@ -91,7 +91,7 @@ Route::group(['prefix' => 'teacher', 'as' => 'api.teacher.', 'middleware' => ['a
 /**
  * Admin
  */
-Route::group(['prefix' => 'admin', 'as' => 'api.admin.', 'middleware' => ['auth:sanctum', 'admin']], function () {
+Route::prefix('admin')->name('api.admin.')->middleware('auth:sanctum', 'admin')->group(function () {
 
     Route::get('students/resend-verification-notice', function (Request $request) {
 
@@ -122,10 +122,10 @@ Route::group(['prefix' => 'admin', 'as' => 'api.admin.', 'middleware' => ['auth:
 /**
  * Webhooks
  */
-Route::group(['prefix' => 'stripe', 'as' => 'api.stripe.'], function () {
+Route::prefix('stripe')->name('api.stripe.')->group(function () {
     Route::any('webhooks', [StripeController::class, 'webhooks'])->name('webhooks');
 });
 
-Route::group(['prefix' => 'webhooks', 'as' => 'webhooks.'], function () {
+Route::prefix('webhooks')->name('webhooks.')->group(function () {
     Route::any('paypal', [PayPalController::class, 'webhooks'])->name('paypal');
 });

@@ -61,7 +61,7 @@ Route::get('salir', function () {
 /**
  * Estudante
  */
-Route::group(['prefix' => 'student', 'as' => 'student.', 'middleware' => ['auth', 'student']], function () {
+Route::prefix('student')->name('student.')->middleware('auth', 'student')->group(function () {
 
     Route::get('', [StudentController::class, 'home'])->name('home');
 
@@ -91,7 +91,7 @@ Route::group(['prefix' => 'student', 'as' => 'student.', 'middleware' => ['auth'
 /**
  * Teacher
  */
-Route::group(['prefix' => 'teacher', 'as' => 'teacher.', 'middleware' => ['auth', 'teacher']], function () {
+Route::prefix('teacher')->name('teacher.')->middleware('auth', 'teacher')->group(function () {
 
     Route::get('', [TeacherController::class, 'home'])->name('home');
 
@@ -107,7 +107,7 @@ Route::group(['prefix' => 'teacher', 'as' => 'teacher.', 'middleware' => ['auth'
 /**
  * ADMINISTRADOR
  */
-Route::group(['prefix' => 'admin', 'as' => 'admin.', 'middleware' => ['auth', 'admin']], function () {
+Route::prefix('admin')->name('admin.')->middleware('auth', 'admin')->group(function () {
 
     Route::get('/', function () {
         return redirect()->route('admin.home');
