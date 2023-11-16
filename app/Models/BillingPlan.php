@@ -5,6 +5,9 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 class BillingPlan extends Model
@@ -16,7 +19,7 @@ class BillingPlan extends Model
     /**
      * Relationships
      */
-    public function billRegion()
+    public function billRegion(): BelongsTo
     {
         return $this->belongsTo(billRegion::class);
     }
@@ -26,12 +29,12 @@ class BillingPlan extends Model
         return $this->billRegion();
     }
 
-    public function users()
+    public function users(): BelongsToMany
     {
         return $this->belongsToMany(User::class, 'subscriptions', 'billing_plan_id', 'user_id')->as('subscription')->withTimestamps()->withPivot('status')->orderByPivot('created_at', 'desc');
     }
 
-    public function subscriptions()
+    public function subscriptions(): HasMany
     {
         return $this->hasMany(Subscription::class)->with('user');
     }

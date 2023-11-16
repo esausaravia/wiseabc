@@ -5,12 +5,12 @@ namespace App\Models;
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Casts\Attribute;
-use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
-use Illuminate\Support\Facades\Log;
 use Intervention\Image\Facades\Image;
 use Laravel\Sanctum\HasApiTokens;
 
@@ -65,32 +65,32 @@ class User extends Authenticatable implements MustVerifyEmail
     /**
      * Relationships
      */
-    public function usermetas(): Collection
+    public function usermetas(): HasMany
     {
         return $this->hasMany(Usermeta::class);
     }
 
-    public function horarios(): Collection
+    public function horarios(): HasMany
     {
         return $this->hasMany(UserHorario::class)->orderBy('dia');
     }
 
-    public function teachclasses(): Collection
+    public function teachclasses(): HasMany
     {
         return $this->hasMany(Classroom::class, 'teacher_id');
     }
 
-    public function classrooms(): Collection
+    public function classrooms(): BelongsToMany
     {
         return $this->belongsToMany(Classroom::class, 'class_student', 'user_id', 'class_id')->withTimestamps()->orderByPivot('created_at', 'desc');
     }
 
-    public function attendances()
+    public function attendances(): HasMany
     {
         return $this->hasMany(Attendance::class);
     }
 
-    public function asistencias()
+    public function asistencias(): HasMany
     {
         return $this->hasMany(Attendance::class);
     }
@@ -101,7 +101,7 @@ class User extends Authenticatable implements MustVerifyEmail
         return $this->belongsToMany(BillingPlan::class, 'subscriptions', 'user_id', 'billing_plan_id')->as('subscription')->withTimestamps()->withPivot('id', 'status')->orderByPivot('created_at', 'desc');
     }
 
-    public function subscriptions()
+    public function subscriptions(): HasMany
     {
         return $this->hasMany(Subscription::class)->orderBy('created_at', 'desc');
     }
@@ -182,10 +182,16 @@ class User extends Authenticatable implements MustVerifyEmail
         );
     }
 
+    public function activeSubscription()
+    {
+        return $this->subscriptions()->with(['billingPlan', 'paypal', 'stripe'])->where('status', 'ACTIVE')->first();
+    }
+
     /**
      * Class Methods
      */
-    public function getMeta(string $mkey = ''): string
+
+    public function getMeta(string $mkey = ''): string|null
     {
         if (empty($mkey)) {
             return null;
@@ -395,14 +401,12 @@ class User extends Authenticatable implements MustVerifyEmail
 
     /**
      * Obtener public url de profile pic
-     *
-     * @return string asset url
      */
     public function getProfilePic(int $size = 80): string
     {
         $fileName = $this->getMeta('profilepic');
         if (empty($fileName)) {
-            return null;
+            return '';
         }
 
         switch ($this->user_type) {
@@ -426,22 +430,17 @@ class User extends Authenticatable implements MustVerifyEmail
         return asset($filePath.'/'.$fileName);
     }
 
-    public function activeSubscription()
-    {
-        return $this->subscriptions()->with(['billingPlan', 'paypal', 'stripe'])->where('status', 'ACTIVE')->first();
-    }
-
     /**
      * Devuelve el atributo nativo del Modelo o el usermeta
      */
     public function __get($gkey)
     {
-        $attr = $this->getAttribute($gkey);
-        if ($attr !== null) {
-            return $attr;
-        }
-        $meta = $this->getMeta($gkey);
+        $val = parent::__get($gkey);
 
-        return $meta !== null ? $meta : $attr;
+		if ( $val!==NULL ) {
+			return $val;
+		}
+        $meta = $this->getMeta($gkey);
+        return $meta!==NULL ? $meta : $val;
     }
 }

@@ -11,6 +11,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Carbon;
 
@@ -36,10 +37,13 @@ class Classroom extends Model
 
             $semanas = ceil($clase->curso->duracion / $clase->ritmo);
 
-            if (is_object($clase->start) && class_basename($clase->start) === 'Carbon') {
+            if (is_object($clase->start) && class_basename($clase->start) === 'Carbon')
+            {
                 $clase->start->setTimezone('UTC');
                 $clase->ends_at = $clase->start->copy()->addWeek($semanas);
-            } elseif (is_string($clase->start)) {
+            }
+            elseif (is_string($clase->start))
+            {
                 $fecha = \Carbon\Carbon::parse($clase->start);
                 $clase->ends_at = $fecha->addWeek($semanas);
             }
@@ -50,57 +54,32 @@ class Classroom extends Model
      * Relationships
      */
 
-    /**
-     * Devuelve el Curso correspondiente
-     *
-     * @return App\Models\Curso
-     */
     public function curso(): BelongsTo
     {
         return $this->belongsTo(Curso::class);
     }
 
-    /**
-     * Devuelve profesor asignado a la clase
-     *
-     * @return App\Models\User
-     */
     public function teacher(): BelongsTo
     {
         return $this->belongsTo(User::class, 'teacher_id', 'id');
     }
 
-    /**
-     * Devuelve estudiantes asignados a la clase
-     *
-     * @return Illuminate\Database\Eloquent\Collection
-     */
     public function students(): BelongsToMany
     {
         return $this->belongsToMany(User::class, 'class_student', 'class_id', 'user_id')->withTimestamps();
     }
 
-    /**
-     * Devuelve los horarios de la clase
-     *
-     * @return Illuminate\Database\Eloquent\Collection
-     */
-    public function horarios(): Collection
+    public function horarios(): HasMany
     {
         return $this->hasMany(ClassHorario::class, 'class_id')->orderBy('dia');
     }
 
-    /**
-     * Devuelve las siguientes agendas
-     *
-     * @return Illuminate\Database\Eloquent\Collection
-     */
-    public function schedules(): Collection
+    public function schedules(): HasMany
     {
         return $this->hasMany(Schedule::class, 'class_id')->orderBy('fechahora');
     }
 
-    public function attendances()
+    public function attendances(): HasMany
     {
         return $this->hasMany(Attendance::class, 'class_id')->orderBy('fechahora', 'desc');
     }
@@ -198,7 +177,7 @@ class Classroom extends Model
         return $arrHorarios;
     }
 
-    public function getHorarioArray()
+    public function getHorarioArray(): array
     {
         return $this->getHorariosArray();
     }
@@ -207,9 +186,8 @@ class Classroom extends Model
      * Actualiza los horarios eliminando todos los anteriores
      *
      * @param array horarios [1=>[13,14], 3=>[13,14], 5=>[13,14] ]
-     * @return array
      */
-    public function saveHorarios($horarios): array
+    public function saveHorarios($horarios)
     {
 
         if (empty($horarios) || ! is_array($horarios)) {
@@ -239,7 +217,6 @@ class Classroom extends Model
      * Calcula la fecha y hora de la siguiente clase con base en los horarios
      *
      * @param  Carbon::class|string  $offset
-     * @return Carbon::class
      */
     public function sigFechaHora($offset = ''): Carbon
     {
@@ -271,9 +248,8 @@ class Classroom extends Model
 
     /**
      * @param  Carbon::class|string  $offset
-     * @return App\Models\Schedule
      */
-    public function nextSchedule($offset = null): Schedule
+    public function nextSchedule($offset = null): Schedule|null
     {
         if (! is_object($offset)) {
             if (is_string($offset)) {
