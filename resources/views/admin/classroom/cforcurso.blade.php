@@ -104,9 +104,9 @@
   </div>
 
 @pushOnce('scripts')
-<script>
-  const studentsCollection = @json($arrStudentsToJS);
-</script>
-<script defer src="{{ asset('js/admin.classroom.cforcurso.js') }}"></script>
+  <script>
+    const studentsCollection = @json($arrStudentsToJS);
+  </script>
+  @vite('resources/js/admin.classroom.cforcurso.js')
 @endPushOnce
 </x-admin.layout>
