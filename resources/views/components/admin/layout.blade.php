@@ -82,6 +82,6 @@ $routeName = $route->getName();
   </div>
 
   @push('scripts')
-    <script src="{{ mix('js/admin.js') }}" defer></script>
+    @vite('resources/js/admin.js')
   @endpush
 </x-document>
