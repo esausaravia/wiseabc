@@ -8,17 +8,15 @@ return new class extends Migration
 {
     /**
      * Run the migrations.
-     *
-     * @return void
      */
-    public function up()
+    public function up(): void
     {
         Schema::create('class_student', function (Blueprint $table) {
             $table->unsignedBigInteger('class_id');
             $table->foreign('class_id')->references('id')->on('classrooms');
             $table->unsignedBigInteger('user_id');
             $table->foreign('user_id')->references('id')->on('users');
-            $table->primary(['class_id','user_id']);
+            $table->primary(['class_id', 'user_id']);
 
             $table->timestamps();
         });
@@ -26,10 +24,8 @@ return new class extends Migration
 
     /**
      * Reverse the migrations.
-     *
-     * @return void
      */
-    public function down()
+    public function down(): void
     {
         Schema::dropIfExists('class_student');
     }

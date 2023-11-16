@@ -6,44 +6,50 @@ use Illuminate\View\Component;
 
 class img extends Component
 {
-    public $_src="";
-    public $src = "";
-    public $src_url = "";
+    public $_src = '';
+
+    public $src = '';
+
+    public $src_url = '';
+
     public $width = 0;
+
     public $height = 0;
-    public $srcset = "";
+
+    public $srcset = '';
 
     protected $except = ['_src'];
+
     /**
      * Create a new component instance.
      *
      * @return void
      */
-    public function __construct($src="", $width=1, $height=1, $srcset="")
+    public function __construct($src = '', $width = 1, $height = 1, $srcset = '')
     {
         $this->_src = $src;
         $this->width = $width;
         $this->height = $height;
         $this->srcset = $srcset;
 
-        if ( filter_var($src, FILTER_VALIDATE_URL)!==FALSE ) {
+        if (filter_var($src, FILTER_VALIDATE_URL) !== false) {
 
             $this->src_url = $src;
 
         } else {
-            $this->src_url = asset( 'img/'.$src );
+            $this->src_url = asset('img/'.$src);
 
-            if ($width===1 || $height===1 ) {
+            if ($width === 1 || $height === 1) {
 
                 $public_path = public_path('img/'.$src);
 
-                if ( file_exists( $public_path ) ) {
+                if (file_exists($public_path)) {
 
                     $info = getimagesize($public_path);
 
-                    if ($info && is_array($info) ) {
-                        $this->width = !empty($info[0]) ? $info[0] : 1;
-                        $this->height = !empty($info[1]) ? $info[1] : 1;
+                    if ($info && is_array($info)) {
+                        $this->width = ! empty($info[0]) ? $info[0] : 1;
+                        $this->height = ! empty($info[1]) ? $info[1] : 1;
                     }
                 }
             }

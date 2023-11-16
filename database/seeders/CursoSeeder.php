@@ -3,17 +3,14 @@
 namespace Database\Seeders;
 
 use App\Models\Curso;
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 
 class CursoSeeder extends Seeder
 {
     /**
      * Run the database seeds.
-     *
-     * @return void
      */
-    public function run()
+    public function run(): void
     {
         //
         Curso::create(['edad' => 6, 'nivel' => 1, 'name' => 'Básico para juniors (RH1)']);

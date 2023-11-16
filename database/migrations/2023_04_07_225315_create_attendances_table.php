@@ -8,10 +8,8 @@ return new class extends Migration
 {
     /**
      * Run the migrations.
-     *
-     * @return void
      */
-    public function up()
+    public function up(): void
     {
         Schema::create('attendances', function (Blueprint $table) {
             $table->id();
@@ -29,7 +27,7 @@ return new class extends Migration
             $table->foreign('payout_id')->references('id')->on('payouts')->onUpdate('cascade')->onDelete('set null');
 
             $table->dateTimeTz('fechahora')->index();
-            $table->unsignedInteger('duracion')->default(0);//40 mins * 60 seg = 2400 seg
+            $table->unsignedInteger('duracion')->default(0); //40 mins * 60 seg = 2400 seg
             $table->boolean('puntual')->default(false);
             $table->timestamps();
             $table->softDeletes();
@@ -38,10 +36,8 @@ return new class extends Migration
 
     /**
      * Reverse the migrations.
-     *
-     * @return void
      */
-    public function down()
+    public function down(): void
     {
         Schema::dropIfExists('attendances');
     }

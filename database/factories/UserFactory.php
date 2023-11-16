@@ -15,7 +15,7 @@ class UserFactory extends Factory
      *
      * @return array<string, mixed>
      */
-    public function definition()
+    public function definition(): array
     {
         /**
          * Faker documentation
@@ -28,29 +28,29 @@ class UserFactory extends Factory
             'password' => \Illuminate\Support\Facades\Hash::make('qwerasdf'), // password
             'remember_token' => Str::random(10),
             'status' => 'active',
-            'user_type' => 2
+            'user_type' => 2,
         ];
     }
 
     /**
      * Indicate that the model's email address should be unverified.
-     *
-     * @return static
      */
-    public function unverified()
+    public function unverified(): static
     {
         return $this->state(fn (array $attributes) => [
             'email_verified_at' => null,
         ]);
     }
 
-    public function isStudent() {
+    public function isStudent()
+    {
         return $this->state(fn (array $attributes) => [
             'user_type' => 2,
         ]);
     }
 
-    public function isTeacher() {
+    public function isTeacher()
+    {
         return $this->state(fn (array $attributes) => [
             'user_type' => 3,
         ]);

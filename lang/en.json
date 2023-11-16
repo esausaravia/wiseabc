@@ -1,11 +1,4 @@
 {
-  "APPROVAL_PENDINGa": "APPROVAL_PENDING",
-  "APPROVEDa": "APPROVED",
-  "ACTIVEa": "CTIVE",
-  "SUSPENDEDa": "USPENDED",
-  "CANCELLEDa": "CANCELLED",
-  "EXPIREDa": "EXPIRED",
-
   "Clases": "Classes",
 
   "Grupal":"Group",
@@ -17,7 +10,7 @@
   "Intenso":"Intense",
   "Intenso+":"Intense+",
 
-  "Información de colocación":"Colocation info",
+  "Información de colocación":"Assignment information",
   "Para cancelar su subscripción, debe ingresar a su cuenta de PayPal.":"You can cancel your subscription from your Paypal account.",
 
   "wiseabc":"WiseABC english"
