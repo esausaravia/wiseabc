@@ -3,6 +3,7 @@
 namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -68,7 +69,7 @@ class User extends Authenticatable implements MustVerifyEmail
     /**
      * @return Illuminate\Database\Eloquent\Collection
      */
-    public function usermetas()
+    public function usermetas(): Collection
     {
         return $this->hasMany(Usermeta::class);
     }
@@ -76,7 +77,7 @@ class User extends Authenticatable implements MustVerifyEmail
     /**
      * @return Illuminate\Database\Eloquent\Collection
      */
-    public function horarios()
+    public function horarios(): Collection
     {
         return $this->hasMany(UserHorario::class)->orderBy('dia');
     }
@@ -84,7 +85,7 @@ class User extends Authenticatable implements MustVerifyEmail
     /**
      * @return Illuminate\Database\Eloquent\Collection
      */
-    public function teachclasses()
+    public function teachclasses(): Collection
     {
         return $this->hasMany(Classroom::class, 'teacher_id');
     }
@@ -92,7 +93,7 @@ class User extends Authenticatable implements MustVerifyEmail
     /**
      * @return Illuminate\Database\Eloquent\Collection
      */
-    public function classrooms()
+    public function classrooms(): Collection
     {
         return $this->belongsToMany(Classroom::class, 'class_student', 'user_id', 'class_id')->withTimestamps()->orderByPivot('created_at', 'desc');
     }
@@ -202,7 +203,7 @@ class User extends Authenticatable implements MustVerifyEmail
      * @param  string  $mkey
      * @return string
      */
-    public function getMeta($mkey = '')
+    public function getMeta(string $mkey = ''): string
     {
         if (empty($mkey)) {
             return null;
@@ -224,7 +225,7 @@ class User extends Authenticatable implements MustVerifyEmail
      * @param  array  $input
      * @return array metas actualizados
      */
-    public function saveMetas($input = [])
+    public function saveMetas(array $input = []): array
     {
         $model_cols = array_keys($this->getOriginal());
         array_push($model_cols, '_token', '_method', 'password_confirmation');
@@ -265,7 +266,7 @@ class User extends Authenticatable implements MustVerifyEmail
      * @param  array  $horarios [1=>[9,10,11]]
      * @return array
      */
-    public function saveHorarios($horarios = [])
+    public function saveHorarios(array $horarios = []): array
     {
         if (empty($horarios) || ! is_array($horarios)) {
             return false;
@@ -297,7 +298,7 @@ class User extends Authenticatable implements MustVerifyEmail
      *
      * @param  int  $dia
      */
-    public function getHorariosArray($dia = 0): array
+    public function getHorariosArray(int $dia = 0): array
     {
         $arrHorarios = [];
         foreach ($this->horarios as $horario) {
@@ -421,7 +422,7 @@ class User extends Authenticatable implements MustVerifyEmail
      * @param  int  $size
      * @return string asset url
      */
-    public function getProfilePic($size = 80)
+    public function getProfilePic(int $size = 80): string
     {
         $fileName = $this->getMeta('profilepic');
         if (empty($fileName)) {

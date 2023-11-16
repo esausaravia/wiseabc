@@ -2,6 +2,10 @@
 
 namespace App\Models;
 
+use App\Models\Curso;
+use App\Models\User;
+use Illuminate\Database\Eloquent\Collection;
+use App\Models\Schedule;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -49,7 +53,7 @@ class Classroom extends Model
      *
      * @return App\Models\Curso
      */
-    public function curso()
+    public function curso(): Curso
     {
         return $this->belongsTo(Curso::class);
     }
@@ -59,7 +63,7 @@ class Classroom extends Model
      *
      * @return App\Models\User
      */
-    public function teacher()
+    public function teacher(): User
     {
         return $this->belongsTo(User::class, 'teacher_id', 'id');
     }
@@ -69,7 +73,7 @@ class Classroom extends Model
      *
      * @return Illuminate\Database\Eloquent\Collection
      */
-    public function students()
+    public function students(): Collection
     {
         return $this->belongsToMany(User::class, 'class_student', 'class_id', 'user_id')->withTimestamps();
     }
@@ -79,7 +83,7 @@ class Classroom extends Model
      *
      * @return Illuminate\Database\Eloquent\Collection
      */
-    public function horarios()
+    public function horarios(): Collection
     {
         return $this->hasMany(ClassHorario::class, 'class_id')->orderBy('dia');
     }
@@ -89,7 +93,7 @@ class Classroom extends Model
      *
      * @return Illuminate\Database\Eloquent\Collection
      */
-    public function schedules()
+    public function schedules(): Collection
     {
         return $this->hasMany(Schedule::class, 'class_id')->orderBy('fechahora');
     }
@@ -170,7 +174,7 @@ class Classroom extends Model
      *
      * @return int
      */
-    public function endsInWeeks()
+    public function endsInWeeks(): int
     {
         $start = Carbon::now();
 
@@ -182,7 +186,7 @@ class Classroom extends Model
      *
      * @return array
      */
-    public function getHorariosArray()
+    public function getHorariosArray(): array
     {
         $arrHorarios = [];
         foreach ($this->horarios as $horario) {
@@ -203,7 +207,7 @@ class Classroom extends Model
      * @param array horarios [1=>[13,14], 3=>[13,14], 5=>[13,14] ]
      * @return array
      */
-    public function saveHorarios($horarios)
+    public function saveHorarios($horarios): array
     {
 
         if (empty($horarios) || ! is_array($horarios)) {
@@ -235,7 +239,7 @@ class Classroom extends Model
      * @param  Carbon::class|string  $offset
      * @return Carbon::class
      */
-    public function sigFechaHora($offset = '')
+    public function sigFechaHora($offset = ''): \Carbon::class
     {
         $enWeekdays = config('wiseabc.en_weekdays');
 
@@ -267,7 +271,7 @@ class Classroom extends Model
      * @param  Carbon::class|string  $offset
      * @return App\Models\Schedule
      */
-    public function nextSchedule($offset = null)
+    public function nextSchedule($offset = null): Schedule
     {
         if (! is_object($offset)) {
             if (is_string($offset)) {

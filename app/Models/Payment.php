@@ -20,7 +20,7 @@ class Payment extends Model
      *
      * @return User::class
      */
-    public function user()
+    public function user(): \User::class
     {
         return $this->belongsTo(User::class);
     }

@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers\Admin;
 
+use Illuminate\View\View;
+use Illuminate\Http\RedirectResponse;
 use App\Http\Controllers\Controller;
 use App\Models\Curso;
 use Illuminate\Http\Request;
@@ -13,7 +15,7 @@ class CursoController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index(Request $request)
+    public function index(Request $request): View
     {
         //
         $nivel = $request->get('nivel');
@@ -37,7 +39,7 @@ class CursoController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function create(Curso $curso)
+    public function create(Curso $curso): View
     {
         return view('admin.curso', [
             'title' => 'Nuevo',
@@ -51,7 +53,7 @@ class CursoController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(Request $request): RedirectResponse
     {
         $valid = $request->validate([
             'name' => 'required',
@@ -78,7 +80,7 @@ class CursoController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show(int $id)
     {
         //
     }
@@ -89,7 +91,7 @@ class CursoController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function edit(Curso $curso)
+    public function edit(Curso $curso): View
     {
         return view('admin.curso', [
             'title' => 'Editar',
@@ -104,7 +106,7 @@ class CursoController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Curso $curso)
+    public function update(Request $request, Curso $curso): RedirectResponse
     {
         $valid = $request->validate([
             'name' => 'required',
@@ -131,7 +133,7 @@ class CursoController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy(int $id)
     {
         //
     }

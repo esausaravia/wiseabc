@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers\Admin;
 
+use Illuminate\Http\RedirectResponse;
+use Illuminate\View\View;
 use App\Http\Controllers\Controller;
 use App\Models\User;
 use Illuminate\Http\Request;
@@ -15,7 +17,7 @@ class TeacherController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index(Request $request)
+    public function index(Request $request): View
     {
 
         $search = $request->get('searchfor');
@@ -50,7 +52,7 @@ class TeacherController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function create(User $teacher)
+    public function create(User $teacher): View
     {
         return view('admin.profe', ['profe' => $teacher]);
     }
@@ -60,7 +62,7 @@ class TeacherController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(Request $request): RedirectResponse
     {
         $validated = $request->validate([
             'fname' => 'required',
@@ -99,7 +101,7 @@ class TeacherController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show(int $id)
     {
         //
     }
@@ -110,7 +112,7 @@ class TeacherController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function edit(User $teacher)
+    public function edit(User $teacher): View
     {
         if ($teacher->fname === null) {
             $arrName = explode(' ', $teacher->name);
@@ -206,7 +208,7 @@ class TeacherController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy(int $id)
     {
         //
     }

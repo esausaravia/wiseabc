@@ -103,7 +103,7 @@ class SubscriptionController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show(Request $request, $id)
+    public function show(Request $request, int $id)
     {
         if (preg_match('/^\d+$/i', $id)) {
             $subscription = Subscription::with(['paypal', 'stripe'])->find($id);
@@ -139,7 +139,7 @@ class SubscriptionController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function edit($id)
+    public function edit(int $id)
     {
         //
     }
@@ -150,7 +150,7 @@ class SubscriptionController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(Request $request, int $id)
     {
         $subscription = Subscription::with(['billingPlan', 'paypal', 'stripe'])->find($id);
         if (empty($subscription) || ! is_object($subscription)) {
@@ -173,7 +173,7 @@ class SubscriptionController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy(int $id)
     {
         //
     }
