@@ -1,36 +1,21 @@
 {
     "private": true,
     "scripts": {
-        "dev": "npm run development",
-        "development": "npm-run-all -s dev:*",
-        "dev:twcss": "tailwindcss -o resources/css/tailwind.css",
-        "dev:mix": "mix",
-        "watch": "npm-run-all -p watch:*",
-        "watchbak": "mix watch",
-        "watch:twcss": "tailwindcss -o resources/css/tailwind.css -w",
-        "watch:mix": "mix watch -- --watch-options-poll=1000",
-        "watch-poll": "mix watch -- --watch-options-poll=1000",
-        "hot": "mix watch --hot",
-        "prod": "npm run production",
-        "production": "npm-run-all -s prod:*",
-        "productionbak": "mix --production",
-        "prod:twcss": "npm run dev:twcss",
-        "prod:mix": "mix --production"
+        "dev": "vite",
+        "build": "vite build"
     },
     "devDependencies": {
-        "@fullhuman/postcss-purgecss": "^5.0.0",
         "@tailwindcss/aspect-ratio": "^0.4.2",
         "autoprefixer": "^10.4.12",
-        "axios": "^0.27",
-        "intl-tel-input": "^18.1.6",
-        "laravel-mix": "^6.0.49",
-        "lodash": "^4.17.19",
-        "npm-run-all": "^4.1.5",
+        "axios": "^1.1.2",
+        "laravel-vite-plugin": "^0.8.0",
         "postcss": "^8.4.16",
         "postcss-import": "^15.0.0",
-        "tailwindcss": "^3.3.1"
+        "tailwindcss": "^3.3.1",
+        "vite": "^4.0.0"
     },
     "dependencies": {
+        "intl-tel-input": "^18.2.1",
         "lazysizes": "^5.3.2"
     }
 }

@@ -71,9 +71,5 @@
   </form>
 
   @pushOnce('scripts')
-  <script>
-    console.log('assign-students.blade')
-  </script>
-  <!--<script defer src="{{ asset('js/admin.classroom.cforcurso.js') }}"></script>-->
   @endPushOnce
 </x-admin.layout>

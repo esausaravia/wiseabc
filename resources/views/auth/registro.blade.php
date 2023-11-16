@@ -625,34 +625,34 @@
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/intl-tel-input@18.1.1/build/css/intlTelInput.css">
   @endpush
 
-  @push('scripts')
-  <script src="{{ mix('js/app-profile-form.js') }}?v=1.20230616.1519" defer></script>
-  <script>
-    window.addEventListener('beforeunload', function(ev) {
-      if ( document.getElementById('frmRegStudent').querySelector('input[name="ritmo"]').value!="" )
-      {
+  @pushOnce('scripts')
+    @vite('resources/js/app-profile-form.js')
+    <script>
+      window.addEventListener('beforeunload', function(ev) {
+        if ( document.getElementById('frmRegStudent').querySelector('input[name="ritmo"]').value!="" )
+        {
+          return;
+        }
+        let confirmationMessage = "Si sales de esta página perderás tu progreso.";
+        ev.returnValue = confirmationMessage;
+        return confirmationMessage;
+      });
+      function checkCountrySubscriptions() {
         return;
-      }
-      let confirmationMessage = "Si sales de esta página perderás tu progreso.";
-      ev.returnValue = confirmationMessage;
-      return confirmationMessage;
-    });
-    function checkCountrySubscriptions() {
-      return;
-      const input = document.querySelector('input[name="user_phone"]');
-      const itiData = input.__iti.getSelectedCountryData();
+        const input = document.querySelector('input[name="user_phone"]');
+        const itiData = input.__iti.getSelectedCountryData();
 
-      if ( itiData.iso2=='us' )
-      {
-        document.getElementById('SubscriptionPricesMX').classList.add('hidden');
-        document.getElementById('SubscriptionPricesUS').classList.remove('hidden');
+        if ( itiData.iso2=='us' )
+        {
+          document.getElementById('SubscriptionPricesMX').classList.add('hidden');
+          document.getElementById('SubscriptionPricesUS').classList.remove('hidden');
+        }
+        else
+        {
+          document.getElementById('SubscriptionPricesMX').classList.remove('hidden');
+          document.getElementById('SubscriptionPricesUS').classList.add('hidden');
+        }
       }
-      else
-      {
-        document.getElementById('SubscriptionPricesMX').classList.remove('hidden');
-        document.getElementById('SubscriptionPricesUS').classList.add('hidden');
-      }
-    }
-  </script>
-  @endpush
+    </script>
+  @endPushOnce
 </x-layoutreg>

@@ -1,7 +1,7 @@
 <x-layout class="student-perfil">
-  @push('scripts')
-  <script defer src="{{ asset('./js/students.js') }}"></script>
-  @endpush
+  @pushOnce('scripts')
+    @vite('resources/js/students.js')
+  @endPushOnce
   <h1 class="text-2xl lg:text-3xl font-accent font-semibold mb-5">Perfil</h1>
 
   <form action="{{ route('student.update') }}" method="POST" class="grid gap-5 grid-cols-1 lg:grid-cols-2">

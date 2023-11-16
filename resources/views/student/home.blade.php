@@ -1,8 +1,8 @@
 <x-layout class="student-home">
 
-  @push('scripts')
-  <script defer src="{{ asset('./js/students.js') }}"></script>
-  @endpush
+  @pushOnce('scripts')
+  @vite('resources/js/students.js')
+  @endPushOnce
 
   <div class="flex mb-8">
     <section class="shadow-md rounded-xl p-4 bg-gray-50 dark:bg-gray-900">
