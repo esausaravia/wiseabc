@@ -5,25 +5,24 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\BillingPlan;
 use Illuminate\Http\Request;
+use Illuminate\View\View;
 
 class BillingPlanController extends Controller
 {
     /**
      * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
      */
-    public function index(Request $request)
+    public function index(Request $request): View
     {
         $status = $request->get('status');
 
         $billingPlans = BillingPlan::withCount('subscriptions')
-                        ->where('status', !empty($status) ? $status : 'ACTIVE' )
-                        ->orderBy('bill_region_id')
-                        ->orderBy('tipo')
-                        ->orderBy('ritmo')
-                        ->orderBy('created_at', 'desc')
-                        ->get();
+            ->where('status', ! empty($status) ? $status : 'ACTIVE')
+            ->orderBy('bill_region_id')
+            ->orderBy('tipo')
+            ->orderBy('ritmo')
+            ->orderBy('created_at', 'desc')
+            ->get();
 
         return view('admin.billing-plan.index', [
             'billingPlans' => $billingPlans,
@@ -43,7 +42,6 @@ class BillingPlanController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
     public function store(Request $request)
@@ -54,10 +52,9 @@ class BillingPlanController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show(int $id)
     {
         //
     }
@@ -65,10 +62,9 @@ class BillingPlanController extends Controller
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function edit($id)
+    public function edit(int $id)
     {
         //
     }
@@ -76,11 +72,9 @@ class BillingPlanController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(Request $request, int $id)
     {
         //
     }
@@ -88,10 +82,9 @@ class BillingPlanController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy(int $id)
     {
         //
     }

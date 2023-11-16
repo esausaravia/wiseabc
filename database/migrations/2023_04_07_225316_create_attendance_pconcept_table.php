@@ -8,10 +8,8 @@ return new class extends Migration
 {
     /**
      * Run the migrations.
-     *
-     * @return void
      */
-    public function up()
+    public function up(): void
     {
         Schema::create('attendance_pconcept', function (Blueprint $table) {
             $table->unsignedBigInteger('attendance_id');
@@ -22,16 +20,14 @@ return new class extends Migration
 
             $table->unsignedInteger('amount')->default(0);
 
-            $table->primary(['attendance_id','pconcept_id']);
+            $table->primary(['attendance_id', 'pconcept_id']);
         });
     }
 
     /**
      * Reverse the migrations.
-     *
-     * @return void
      */
-    public function down()
+    public function down(): void
     {
         Schema::dropIfExists('attendance_pconcept');
     }

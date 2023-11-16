@@ -8,26 +8,22 @@ return new class extends Migration
 {
     /**
      * Run the migrations.
-     *
-     * @return void
      */
-    public function up()
+    public function up(): void
     {
         Schema::create('class_horarios', function (Blueprint $table) {
             $table->unsignedBigInteger('class_id');
             $table->foreign('class_id')->references('id')->on('classrooms');
             $table->unsignedInteger('dia');
             $table->unsignedInteger('hr');
-            $table->primary(['class_id','dia','hr']);
+            $table->primary(['class_id', 'dia', 'hr']);
         });
     }
 
     /**
      * Reverse the migrations.
-     *
-     * @return void
      */
-    public function down()
+    public function down(): void
     {
         Schema::dropIfExists('class_horarios');
     }
