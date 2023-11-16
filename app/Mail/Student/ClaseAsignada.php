@@ -3,7 +3,6 @@
 namespace App\Mail\Student;
 
 use Illuminate\Bus\Queueable;
-use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Mail\Mailable;
 use Illuminate\Mail\Mailables\Address;
 use Illuminate\Mail\Mailables\Attachment;
@@ -15,7 +14,9 @@ class ClaseAsignada extends Mailable
 {
     use Queueable, SerializesModels;
 
-    public $student, $classroom;
+    public $student;
+
+    public $classroom;
 
     /**
      * Create a new message instance.
@@ -64,7 +65,7 @@ class ClaseAsignada extends Mailable
     public function attachments()
     {
         return [
-            Attachment::fromPath( base_path('public/img/wiseabc-logo-128x.png') )->as('logo.png'),
+            Attachment::fromPath(base_path('public/img/wiseabc-logo-128x.png'))->as('logo.png'),
         ];
     }
 }

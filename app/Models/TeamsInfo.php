@@ -9,13 +9,14 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 class TeamsInfo extends Model
 {
     use HasFactory, SoftDeletes;
-    protected $fillable = ['msid','link','info','report'];
+
+    protected $fillable = ['msid', 'link', 'info', 'report'];
 
     /**
      * Relationships
      */
-
-    public function schedules(){
+    public function schedules()
+    {
         return $this->hasMany(Schedule::class, 'teams_id', 'id');
     }
 }

@@ -22,7 +22,7 @@ return new class extends Migration
 
             $table->unsignedInteger('amount')->default(0);
 
-            $table->primary(['attendance_id','pconcept_id']);
+            $table->primary(['attendance_id', 'pconcept_id']);
         });
     }
 

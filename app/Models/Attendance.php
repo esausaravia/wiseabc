@@ -10,32 +10,43 @@ class Attendance extends Model
 {
     use HasFactory, SoftDeletes;
 
-    protected $fillable = ['user_id','class_id','teams_id','fechahora','duracion','puntual'];
+    protected $fillable = ['user_id', 'class_id', 'teams_id', 'fechahora', 'duracion', 'puntual'];
 
     protected $casts = [
-        'fechahora'=>'datetime'
+        'fechahora' => 'datetime',
     ];
 
     /**
      * Relationships
      */
-    public function classroom(){
+    public function classroom()
+    {
         return $this->belongsTo(Classroom::class, 'class_id', 'id');
     }
-    public function clase(){
+
+    public function clase()
+    {
         return $this->belongsTo(Classroom::class, 'class_id', 'id');
     }
-    public function user(){
+
+    public function user()
+    {
         return $this->belongsTo(User::class);
     }
-    public function payout() {
+
+    public function payout()
+    {
         return $this->belongsTo(Payout::class);
     }
-    public function pago(){
+
+    public function pago()
+    {
         return $this->belongsTo(Payout::class);
     }
-    public function pconcepts(){
+
+    public function pconcepts()
+    {
         //     $this->belongsToMany(Model::class, 'table', 'current_model_id', 'related_model_id');
-        return $this->belongsToMany(PaymentConcept::class, 'attendance_pconcept', 'attendance_id', 'pconcept_id' )->as('recibo')->withPivot('amount');
+        return $this->belongsToMany(PaymentConcept::class, 'attendance_pconcept', 'attendance_id', 'pconcept_id')->as('recibo')->withPivot('amount');
     }
 }

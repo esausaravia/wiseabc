@@ -30,7 +30,6 @@ class TeamsInfoController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
     public function store(Request $request)
@@ -41,7 +40,6 @@ class TeamsInfoController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  \App\Models\TeamsInfo  $teamsInfo
      * @return \Illuminate\Http\Response
      */
     public function show(TeamsInfo $teamsInfo)
@@ -52,7 +50,6 @@ class TeamsInfoController extends Controller
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  \App\Models\TeamsInfo  $teamsInfo
      * @return \Illuminate\Http\Response
      */
     public function edit(TeamsInfo $teamsInfo)
@@ -63,8 +60,6 @@ class TeamsInfoController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Models\TeamsInfo  $teamsInfo
      * @return \Illuminate\Http\Response
      */
     public function update(Request $request, TeamsInfo $teamsInfo)
@@ -75,7 +70,6 @@ class TeamsInfoController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\Models\TeamsInfo  $teamsInfo
      * @return \Illuminate\Http\Response
      */
     public function destroy(TeamsInfo $teamsInfo)

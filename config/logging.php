@@ -53,7 +53,7 @@ return [
     'channels' => [
         'stack' => [
             'driver' => 'stack',
-            'channels' => ['single','stderr'],
+            'channels' => ['single', 'stderr'],
             'ignore_exceptions' => false,
         ],
 
@@ -126,7 +126,7 @@ return [
 
         'stripe' => [
             'driver' => 'stack',
-            'channels' => ['stripe-log','stderr'],
+            'channels' => ['stripe-log', 'stderr'],
             'ignore_exceptions' => false,
         ],
 

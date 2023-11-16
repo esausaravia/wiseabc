@@ -18,7 +18,7 @@ return new class extends Migration
             $table->foreign('class_id')->references('id')->on('classrooms');
             $table->unsignedInteger('dia');
             $table->unsignedInteger('hr');
-            $table->primary(['class_id','dia','hr']);
+            $table->primary(['class_id', 'dia', 'hr']);
         });
     }
 
