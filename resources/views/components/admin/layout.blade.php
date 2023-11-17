@@ -1,12 +1,11 @@
 @props([
   'user' => request()->user(),
-  'body' => null
 ])
 @php
 $route = \Illuminate\Support\Facades\Route::current();
 $routeName = $route->getName();
 @endphp
-<x-document :body="$body">
+<x-document {{ $attributes }}>
   <header id="AdminHeader" class="fixed top-0 left-0 w-full bg-gray-100 dark:bg-azulw shadow-md z-20 flex justify-between items-center">
     <button class="btn btn-toggle-aside w-12 text-azul-600 dark:text-gray-200 text-center text-[22px] leading-12"><i class="fa-light fa-bars"></i></button>
 

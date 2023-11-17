@@ -1,5 +1,5 @@
 <x-admin.layout class="pagos-paraprofe">
-  <h1 class="mb-5 font-bold font-accent text-xl lg:text-2xl">Resumen de pago para profesor</h1>
+  <h1 class="mb-5 font-medium font-accent text-xl lg:text-2xl text-gray-800 dark:text-gray-300">Resumen de pago para profesor</h1>
   <section class="grid grid-cols-2 mb-5">
     <div>
       <h2 class="font-medium text-xl">{{ $Teacher->name }}</h2>
@@ -46,7 +46,7 @@
         <div class="md:grid md:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4 md:gap-4 lg:gap-5">
 
           @foreach( $_Attendances AS $attendance )
-          <div class="attendance bg-white shadow rounded-xl p-3" data-attendance-id="{{$attendance->id}}" >
+          <div class="attendance shadow-md rounded-xl p-3 bg-white dark:bg-gray-800" data-attendance-id="{{$attendance->id}}" >
             <input type="hidden" name="attendance_id[]" value="{{$attendance->id}}" />
 
             <p class=" mb-2">#{{ $attendance->classroom->id }} {{ $attendance->classroom->curso->name }}, {{$attendance->classroom->tipoLabel}}, {{$attendance->classroom->ritmoLabel}}, {{$attendance->fechahora->setTimezone('-0600')->format('H:i')}}</p>

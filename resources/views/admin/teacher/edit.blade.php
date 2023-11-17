@@ -1,5 +1,5 @@
 <x-admin.layout>
-  <h1 class="text-3xl font-accent font-bold">
+  <h1 class="text-3xl font-accent font-medium text-gray-800 dark:text-gray-300">
     {{ empty($profe->id) ? 'Nuevo' : 'Editar' }} Profesor
   </h1>
   <form action="{{ empty($profe->id) ? route('admin.teacher.store') : route('admin.teacher.update', ['teacher'=>$profe]) }}" method="POST" enctype="multipart/form-data" class="my-5">
@@ -16,8 +16,8 @@
 
     <div class="grid gap-5 grid-cols-1 xl:grid-cols-2 my-5">
 
-      <section class="rounded-xl py-3 px-4 bg-white text-gray-600">
-        <h3 class="mb-2 font-accent font-medium text-xs text-azul-600 dark:text-gray-600 uppercase">Visible para todos</h3>
+      <section class="rounded-xl py-3 px-4 bg-white dark:bg-gray-800">
+        <h3 class="mb-2 font-accent font-medium text-xs uppercase">Visible para todos</h3>
 
         <div class="md:flex">
           <div class="mb-4 md:mb-0 md:mr-4 flex-grow-0 flex-shrink-0">

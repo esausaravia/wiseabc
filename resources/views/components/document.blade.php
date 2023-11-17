@@ -27,7 +27,7 @@
   @endenv
 
 </head>
-<body {{ $body->attributes->class(['bg-gray-200 text-gray-600 dark:bg-gray-900 dark:text-gray-400 text-lg', $attributes->get('class')]) }}>
+<body {{ $body->attributes->class(['bg-gray-100 text-gray-600 dark:bg-gray-900 dark:text-gray-400 text-lg', $attributes->get('class')]) }}>
 
   {{ $slot }}
 

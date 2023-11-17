@@ -1,10 +1,10 @@
 <x-admin.layout>
-  <h1 class="text-xl md:text-2xl font-accent font-bold mb-5">Crear classroom para curso</h1>
+  <h1 class="mb-5 text-xl md:text-2xl font-accent font-medium text-gray-800 dark:text-gray-300 ">Crear classroom para curso</h1>
 
   <div class="lg:flex">
     <div class="lg:flex-grow">
       <section class="flex mb-5">
-        <div class="shadow-md rounded-lg bg-white dark:bg-white/10 p-5">
+        <div class="shadow-md rounded-lg bg-white dark:bg-gray-800 p-5">
           <h4 class="mb-3"><span>[#{{$curso->id}}]</span> {{ $curso->name }}</h4>
 
           <div class="text-sm">
@@ -37,7 +37,7 @@
             @foreach ( $profes as $prof )
             <li data-teacher-id="{{ $prof->id }}">
               <input type="radio" name="teacher_id" id="iprof{{$prof->id}}" value="{{$prof->id}}" class="sr-only peer" @checked( old('teacher_id')==$prof->id ) />
-              <label for="iprof{{$prof->id}}" class="block shadow-md rounded-lg bg-white dark:bg-white/10 p-3 lg:p-4 peer-checked:shadow-rose-400 peer-checked:border-2 peer-checked:border-rose-600">
+              <label for="iprof{{$prof->id}}" class="block shadow-md rounded-lg border-2 p-3 lg:p-4 bg-white dark:bg-gray-800 border-transparent peer-checked:shadow-azulw peer-checked:border-azulw peer-checked:dark:shadow-gray-500 peer-checked:dark:border-gray-500">
                 <div>{{$prof->name}} [{{$prof->id}}]</div>
                 <div class="text-sm">
                   <strong class="block">Horarios:</strong>
@@ -80,8 +80,8 @@
 
 
     </div>
-    <aside class="hidden lg:block lg:w-[300px] lg:flex-shrink-0 ml-5 bg-white p-2">
-      <div class="sticky top-[68px]">
+    <aside class="hidden lg:block lg:w-[300px] lg:flex-shrink-0 ml-5">
+      <div class="sticky top-[68px] p-2 bg-white dark:bg-gray-800">
         <h3 class="font-accent font-medium">Estudiantes disponibles (<span>{{ $curso->alumnos_sin_clase->count() }}</span>)</h3>
 
         <ul id="students-list" class="students-list">

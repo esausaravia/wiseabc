@@ -20,6 +20,17 @@ use Illuminate\Support\Facades\Route;
 | contains the "web" middleware group. Now create something great!
 |
 */
+
+Route::get('registro-profesor', function () {
+    return view('teacher.registro');
+})->name('regprof');
+
+Route::post('registro-profesor', [TeacherController::class, 'registro']);
+
+Route::get('/gracias-profesor', function () {
+    return view('teacher.gracias-registro');
+})->name('gracias-profesor');
+
 Route::get('/', function (Request $request) {
     $user = $request->user();
 
@@ -33,16 +44,6 @@ Route::get('/', function (Request $request) {
         return redirect()->route('teacher.home');
     }
 })->middleware(['auth'])->name('home');
-
-Route::get('registro-profesor', function () {
-    return view('teacher.registro');
-})->name('regprof');
-
-Route::post('registro-profesor', [TeacherController::class, 'registro']);
-
-Route::get('/gracias-profesor', function () {
-    return view('teacher.gracias-registro');
-})->name('gracias-profesor');
 
 /*
 Route::get('/email/verify/{id}/{hash}', function (EmailVerificationRequest $request) {
@@ -104,41 +105,7 @@ Route::prefix('teacher')->name('teacher.')->middleware('auth', 'teacher')->group
     Route::post('perfil-updreq', [TeacherController::class, 'profileUpdateRequest'])->name('perfil-updreq');
 });
 
-/**
- * ADMINISTRADOR
- */
-Route::prefix('admin')->name('admin.')->middleware('auth', 'admin')->group(function () {
 
-    Route::get('/', function () {
-        return redirect()->route('admin.home');
-    });
-
-    Route::get('dashboard', [AdminController::class, 'home'])->name('home');
-
-    Route::get('classroom/createforcurso/{curso}', [\App\Http\Controllers\Admin\ClassroomController::class, 'createForCurso'])->name('classroom.createforcurso');
-
-    Route::get('classroom/createforteacher/{teacher}', [\App\Http\Controllers\Admin\ClassroomController::class, 'createForTeacher'])->name('classroom.createforteacher');
-
-    Route::get('classroom/{id}/assignStudents', [\App\Http\Controllers\Admin\ClassroomController::class, 'assignStudents'])->name('classroom.assignStudents');
-
-    Route::post('classroom/{id}/assignStudents', [\App\Http\Controllers\Admin\ClassroomController::class, 'assignStudents2']);
-
-    Route::get('pagos/profesor/{id}', [\App\Http\Controllers\Admin\PayoutController::class, 'paraprofe'])->name('pagoparaprofe');
-
-    Route::get('student/{student}/assignclass', [\App\Http\Controllers\Admin\StudentController::class, 'assignClassroom'])->name('student.assignclass');
-
-    Route::post('student/{student}/assignclass', [\App\Http\Controllers\Admin\StudentController::class, 'assignClassroom2']);
-
-    Route::resources([
-        'billingplans' => \App\Http\Controllers\Admin\BillingPlanController::class,
-        'classroom' => \App\Http\Controllers\Admin\ClassroomController::class,
-        'cursos' => \App\Http\Controllers\Admin\CursoController::class,
-        'pagos' => \App\Http\Controllers\Admin\PayoutController::class,
-        'student' => \App\Http\Controllers\Admin\StudentController::class,
-        'teacher' => \App\Http\Controllers\Admin\TeacherController::class,
-    ]);
-
-});
 
 /**
  * test routes
@@ -212,3 +179,5 @@ Route::get('msapi', function (Request $request) {
 
     return [];
 });
+
+include __DIR__.'/admin.php';

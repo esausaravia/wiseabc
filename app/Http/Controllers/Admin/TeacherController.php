@@ -42,7 +42,7 @@ class TeacherController extends Controller
                 }
             })->orderBy('name')->get();
 
-        return view('admin.profes', compact('profes', 'search', 'request'));
+        return view('admin.teacher.index', compact('profes', 'search', 'request'));
     }
 
     /**
@@ -50,7 +50,7 @@ class TeacherController extends Controller
      */
     public function create(User $teacher): View
     {
-        return view('admin.profe', ['profe' => $teacher]);
+        return view('admin.teacher.edit', ['profe' => $teacher]);
     }
 
     /**
@@ -119,7 +119,7 @@ class TeacherController extends Controller
             ]);
         }
 
-        return view('admin.profe', [
+        return view('admin.teacher.edit', [
             'profe' => $teacher,
             'form_action' => route('admin.teacher.edit', ['teacher' => $teacher]),
         ]);

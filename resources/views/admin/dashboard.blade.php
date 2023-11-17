@@ -32,7 +32,7 @@
       @php
         $arrStudents = $curso->alumnosSinClaseNums();
       @endphp
-      <div class=" rounded-xl bg-white shadow p-3 mb-3">
+      <div class=" rounded-xl bg-gray-50 dark:bg-gray-800 shadow p-3 mb-3">
         <h4 class="mb-3">{{$curso->name}}
           <span>[{{ $curso->alumnos_sin_clase->count() }} estudiantes]</span>
         </h4>
@@ -64,7 +64,7 @@
         </div>
 
         <div class="flex justify-center">
-          <a href="{{ route('admin.classroom.createforcurso', $curso) }}" class="rounded-full border-gray-400 border-2 bg-white shadow-md px-4 font-medium text-sm leading-[44px]"> Crear clase</a>
+          <a href="{{ route('admin.classroom.createforcurso', $curso) }}" class="shadow-md rounded-full px-4 border-2 font-medium text-sm leading-[44px] border-gray-500 bg-white dark:bg-transparent "> Crear clase</a>
         </div>
 
       </div>
