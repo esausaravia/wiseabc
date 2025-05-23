@@ -5,6 +5,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Admin\ClassroomController;
 use App\Http\Controllers\Admin\PayoutController;
 use App\Http\Controllers\Admin\StudentController;
+use App\Http\Controllers\AdminController;
 
 /**
  * ADMINISTRADOR
